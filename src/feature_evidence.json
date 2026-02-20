@@ -1,0 +1,115 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-dark-ui-layout-with-background-color-0f0f0f-slightly-lighter-dark-grey-for-cards-and-panels-consistent-padding-and-margins-minimum-16px-between-major-sections-and-smooth-transitions-200-300ms-on-all-interactive-elements-optimize-for-android-devices-with-touch-targets-minimum-44x44px-and-mobile-responsive-design-for-screen-widths-320px-480px",
+      "featureTitle": "Implement dark UI layout with background color #0f0f0f, slightly lighter dark grey for cards and panels, consistent padding and margins (minimum 16px between major sections), and smooth transitions (200-300ms) on all interactive elements. Optimize for Android devices with touch targets minimum 44x44px and mobile-responsive design for screen widths 320px-480px.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-unified-overview-dashboard-structure-that-consolidates-chapter-completion-percentage-pcm-ratio-tracker-war-mode-hours-counter-and-weak-chapter-alerts-in-a-single-screen-do-not-include-focus-stability-index-consistency-dna-tracker-revision-module-top-pyqs-section-or-performance-vs-time-graph",
+      "featureTitle": "Create a unified Overview dashboard structure that consolidates chapter completion percentage, PCM ratio tracker, War Mode hours counter, and weak chapter alerts in a single screen. Do not include Focus Stability Index, Consistency DNA Tracker, revision module, Top PYQs section, or Performance vs Time graph.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/OverviewDashboard.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-real-time-countdown-timer-to-jee-advanced-2026-exam-on-may-17-2026-9-00-am-ist-display-days-hours-minutes-and-seconds-in-large-digital-font-with-updates-every-second-timer-text-and-styling-must-automatically-turn-red-when-fewer-than-30-days-remain",
+      "featureTitle": "Implement real-time countdown timer to JEE Advanced 2026 exam on May 17, 2026, 9:00 AM IST. Display days, hours, minutes, and seconds in large digital font with updates every second. Timer text and styling must automatically turn red when fewer than 30 days remain.",
+      "files": [
+        "frontend/src/components/OverviewDashboard.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-split-chemistry-subject-into-three-separate-sections-in-the-chapter-management-system-physical-chemistry-organic-chemistry-and-inorganic-chemistry-each-section-must-maintain-independent-chapter-lists-with-full-crud-capabilities",
+      "featureTitle": "Split Chemistry subject into three separate sections in the chapter management system: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry. Each section must maintain independent chapter lists with full CRUD capabilities.",
+      "files": [
+        "frontend/src/components/MasterPCMChapterSystem.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-full-chapter-management-system-with-modal-based-editing-for-each-chapter-users-must-be-able-to-edit-chapter-name-status-not-started-in-progress-completed-revised-once-revised-twice-mastered-weakness-level-weak-moderate-strong-accuracy-percentage-and-last-revision-date-through-modal-dialogs-include-delete-chapter-functionality-with-confirmation-modal-and-add-custom-chapter-functionality-with-validation",
+      "featureTitle": "Implement full chapter management system with modal-based editing. For each chapter, users must be able to edit chapter name, status (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Weak, Moderate, Strong), accuracy percentage, and last revision date through modal dialogs. Include delete chapter functionality with confirmation modal, and add custom chapter functionality with validation.",
+      "files": [
+        "frontend/src/components/MasterPCMChapterSystem.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-23"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-dynamic-chapter-completion-percentage-calculation-that-updates-in-real-time-as-chapter-status-changes-calculate-completion-percentage-based-on-the-number-of-chapters-marked-as-completed-revised-once-revised-twice-or-mastered-divided-by-total-number-of-chapters-across-all-subjects-physics-physical-chemistry-organic-chemistry-inorganic-chemistry-mathematics-display-the-percentage-prominently-on-the-overview-dashboard-and-update-immediately-when-any-chapter-status-is-modified",
+      "featureTitle": "Implement dynamic chapter completion percentage calculation that updates in real-time as chapter status changes. Calculate completion percentage based on the number of chapters marked as Completed, Revised Once, Revised Twice, or Mastered divided by total number of chapters across all subjects (Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics). Display the percentage prominently on the Overview dashboard and update immediately when any chapter status is modified.",
+      "files": [
+        "frontend/src/components/MasterPCMChapterSystem.tsx",
+        "frontend/src/components/OverviewDashboard.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-24"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

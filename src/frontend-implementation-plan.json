@@ -1,0 +1,185 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Phase 1: Core UI, Overview Dashboard, Countdown, and Chapter Management",
+  "requirements": [
+    {
+      "id": "REQ-19",
+      "summary": "Implement dark UI layout with #0f0f0f background, consistent spacing, smooth transitions, and Android-optimized touch targets",
+      "acceptanceCriteria": [
+        "Background color is #0f0f0f throughout the application",
+        "Cards and panels use a slightly lighter dark grey than background",
+        "All major sections have minimum 16px spacing between them",
+        "All interactive elements have 200-300ms smooth transitions",
+        "All touch targets are minimum 44x44px on mobile devices",
+        "Layout is fully responsive and functional on screen widths from 320px to 480px"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.css",
+          "operation": "modify",
+          "description": "Update CSS custom properties to set --background to #0f0f0f (oklch(0.059 0 0)), adjust --card to a slightly lighter dark grey (oklch(0.08 0 0)), and verify all major section spacing uses minimum 16px and all interactive elements have 200-300ms transitions defined in the existing design system."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Verify and adjust background color tokens to use #0f0f0f equivalent in OKLCH, ensure card/panel colors are slightly lighter, and confirm mobile-responsive utilities support 320px-480px screen widths with touch targets minimum 44x44px."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Update the main App component layout to enforce consistent 16px padding and margins between major sections (header, tab navigation, content area, footer). Verify all interactive elements (buttons, tabs, navigation) use smooth 200-300ms transitions and meet 44x44px minimum touch target requirements on mobile."
+        }
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "summary": "Create unified Overview dashboard with chapter completion %, PCM ratio tracker, War Mode hours counter, and weak chapter alerts",
+      "acceptanceCriteria": [
+        "Overview dashboard displays chapter completion percentage",
+        "Overview dashboard displays PCM ratio tracker",
+        "Overview dashboard displays War Mode hours counter",
+        "Overview dashboard displays weak chapter alerts",
+        "Focus Stability Index is not displayed on Overview dashboard",
+        "Consistency DNA Tracker is not displayed on Overview dashboard",
+        "Performance vs Time graph is not displayed anywhere",
+        "All metrics are consolidated in a single unified screen layout"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/OverviewDashboard.tsx",
+          "operation": "create",
+          "description": "Create a new OverviewDashboard component that consolidates four key metrics in a unified single-screen layout: (1) Chapter completion percentage calculated from chapter data, (2) PCM ratio tracker showing Physics/Chemistry/Mathematics distribution, (3) War Mode hours counter displaying total study time from war mode stats, and (4) Weak chapter alerts section listing chapters marked as 'Weak' weakness level. Use card-based layout with dark theme styling consistent with #0f0f0f background. Do not include Focus Stability Index, Consistency DNA Tracker, revision module, Top PYQs section, or Performance vs Time graph. Use existing useQueries hooks to fetch chapter and war mode data."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Replace the existing 'Overview' tab content with the new OverviewDashboard component. Ensure the Overview tab is the first tab in the navigation and displays the consolidated dashboard when selected. Remove any references to FocusStabilityIndex component in the Overview tab content area."
+        }
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "summary": "Implement real-time countdown timer to JEE Advanced 2026 with automatic red styling when <30 days remain",
+      "acceptanceCriteria": [
+        "Countdown timer targets May 17, 2026, 9:00 AM IST",
+        "Timer displays days, hours, minutes, and seconds",
+        "Timer updates every second without page refresh",
+        "Timer text is displayed in large digital font",
+        "Timer automatically turns red when fewer than 30 days remain",
+        "Timer styling and color change work correctly on mobile devices"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/CountdownTimer.tsx",
+          "operation": "modify",
+          "description": "Update the CountdownTimer component to target May 17, 2026, 9:00 AM IST as the exam date. Implement automatic red text styling (text-red-500 or equivalent) when days remaining is less than 30. Ensure the timer displays in large digital font (text-4xl or larger) with days, hours, minutes, and seconds clearly visible. Verify the component updates every second using setInterval and works correctly on mobile devices with touch-friendly sizing."
+        },
+        {
+          "path": "frontend/src/components/OverviewDashboard.tsx",
+          "operation": "modify",
+          "description": "Integrate the CountdownTimer component prominently at the top of the OverviewDashboard layout. Position it as a header or hero section above the four main metric cards to emphasize urgency and visibility on the unified Overview screen."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "Split Chemistry into Physical, Organic, and Inorganic sections with independent chapter lists",
+      "acceptanceCriteria": [
+        "Chemistry is split into three distinct sections: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry",
+        "Each Chemistry section displays its own independent list of chapters",
+        "Users can add, edit, and delete chapters within each Chemistry section independently",
+        "Backend data model supports storing chapters under Physical, Organic, and Inorganic Chemistry categories",
+        "Chapter completion percentage calculations account for all three Chemistry sections separately"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
+          "operation": "modify",
+          "description": "Modify the MasterPCMChapterSystem component to replace the single 'Chemistry' subject with three separate sections: 'Physical Chemistry', 'Organic Chemistry', and 'Inorganic Chemistry'. Update the subject filter/grouping logic to treat each Chemistry subsection independently with its own chapter list. Ensure the UI displays three distinct collapsible sections or tabs for Physical, Organic, and Inorganic Chemistry alongside Physics and Mathematics. Update any subject-based filtering, chapter addition, and completion percentage calculations to recognize all three Chemistry categories as separate entities."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update the chapter management hooks (useAddChapter, useGetAllChapters, useToggleChapterCompletion) to handle 'Physical Chemistry', 'Organic Chemistry', and 'Inorganic Chemistry' as distinct subject values. Ensure mutation and query logic correctly processes these three separate Chemistry subjects and calculates completion percentages independently for each. Update any subject validation or filtering logic to recognize the three Chemistry subsections."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Implement full chapter management system with modal-based editing, delete confirmation, and add custom chapter functionality",
+      "acceptanceCriteria": [
+        "Edit chapter functionality opens in a modal dialog",
+        "Modal allows editing chapter name with text input",
+        "Modal allows editing chapter status with dropdown or select (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered)",
+        "Modal allows editing weakness level with dropdown or select (Weak, Moderate, Strong)",
+        "Modal allows editing accuracy percentage with number input (0-100)",
+        "Modal allows editing last revision date with date picker",
+        "Delete chapter button opens confirmation modal before deletion",
+        "Add custom chapter functionality opens modal with form validation for required fields",
+        "All modal interactions work correctly on Android mobile devices with touch input",
+        "Backend API supports updating chapter name, status, weakness, accuracy, and revision date",
+        "Backend API supports deleting chapters by ID",
+        "Backend API supports creating new custom chapters with validation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ChapterEditModal.tsx",
+          "operation": "create",
+          "description": "Create a ChapterEditModal component using shadcn/ui Dialog component. Include form inputs for chapter name (text), status (Select dropdown with options: Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Select dropdown: Weak, Moderate, Strong), accuracy percentage (number input 0-100), and last revision date (date picker). Use shadcn/ui form components (Input, Select, DatePicker) with proper validation. Ensure all touch targets are minimum 44x44px and modal is mobile-responsive for 320px-480px screens. Include Save and Cancel buttons with 200-300ms transitions. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ChapterDeleteModal.tsx",
+          "operation": "create",
+          "description": "Create a ChapterDeleteModal component using shadcn/ui AlertDialog component. Display a confirmation message asking the user to confirm chapter deletion with clear warning text. Include Confirm Delete and Cancel buttons styled with appropriate danger colors (red accent) for the delete action. Ensure touch targets meet 44x44px minimum requirement and the modal works correctly on Android mobile devices. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AddChapterModal.tsx",
+          "operation": "create",
+          "description": "Create an AddChapterModal component using shadcn/ui Dialog component. Include form inputs for chapter name (required text input), subject (Select dropdown: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics), status (Select dropdown: Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Select dropdown: Weak, Moderate, Strong), accuracy percentage (number input 0-100), and last revision date (date picker). Implement client-side validation for required fields (name and subject). Use shadcn/ui form components with proper validation feedback. Ensure all touch targets are minimum 44x44px. Include Add Chapter and Cancel buttons. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
+          "operation": "modify",
+          "description": "Integrate ChapterEditModal, ChapterDeleteModal, and AddChapterModal into the MasterPCMChapterSystem component. Add Edit and Delete buttons to each chapter list item with minimum 44x44px touch targets. Wire Edit button to open ChapterEditModal with the selected chapter's current data. Wire Delete button to open ChapterDeleteModal with confirmation. Add 'Add Custom Chapter' button at the top or bottom of each subject section to open AddChapterModal. Ensure modals are triggered correctly with appropriate state management for selected chapter and modal visibility. Update the component to call backend mutation hooks (useUpdateChapter, useDeleteChapter, useAddChapter) when modal actions are confirmed."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add new mutation hooks: useUpdateChapter (to update chapter name, status, weakness, accuracy, and revision date), useDeleteChapter (to delete chapter by ID), and enhance useAddChapter to support all custom chapter fields including status, weakness, accuracy, and revision date. Ensure each mutation hook invalidates the 'chapters' query cache on success and displays toast notifications for success/error feedback. Wire these hooks to the corresponding backend capabilities for chapter update and delete operations."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Implement dynamic chapter completion percentage calculation with real-time updates",
+      "acceptanceCriteria": [
+        "Chapter completion percentage is calculated as (completed chapters / total chapters) * 100",
+        "Completed chapters include those with status: Completed, Revised Once, Revised Twice, or Mastered",
+        "Calculation includes chapters from all subjects: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, and Mathematics",
+        "Percentage displays prominently on Overview dashboard",
+        "Percentage updates immediately when any chapter status is changed through edit modal",
+        "Percentage updates immediately when new chapters are added or deleted",
+        "Backend API returns accurate chapter completion percentage on user data fetch",
+        "Frontend recalculates and displays updated percentage without requiring page refresh"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/OverviewDashboard.tsx",
+          "operation": "modify",
+          "description": "Add dynamic chapter completion percentage calculation to the OverviewDashboard component. Fetch all chapters using the useGetAllChapters hook, then calculate completion percentage as (chapters with status Completed, Revised Once, Revised Twice, or Mastered / total chapters) * 100. Include chapters from all five subjects: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, and Mathematics. Display the calculated percentage prominently in a large card or metric section at the top of the dashboard. Ensure the component re-renders and recalculates the percentage automatically whenever the chapters query data changes (triggered by query invalidation after add/edit/delete operations)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Ensure all chapter mutation hooks (useAddChapter, useUpdateChapter, useDeleteChapter, useToggleChapterCompletion) invalidate the 'chapters' query cache immediately on successful mutation. This will trigger automatic refetch of chapter data and cause the OverviewDashboard to recalculate and display the updated completion percentage in real-time without page refresh. Verify that query invalidation is configured correctly with queryClient.invalidateQueries(['chapters'])."
+        },
+        {
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
+          "operation": "modify",
+          "description": "Add a local display of the chapter completion percentage within the MasterPCMChapterSystem component. Calculate and display the percentage using the same logic as OverviewDashboard (completed chapters / total chapters * 100) where completed includes Completed, Revised Once, Revised Twice, or Mastered statuses across all five subjects. Position this percentage display prominently at the top of the chapter management interface. This provides users with immediate feedback on completion progress while managing chapters, and updates in real-time as chapter statuses change through modal edits."
+        }
+      ]
+    }
+  ]
+}

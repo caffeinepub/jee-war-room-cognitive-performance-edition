@@ -1,2 +1,3 @@
-# jee-war-room-cognitive-performance-edition
-Exported from Caffeine project: JEE WAR ROOM – Cognitive Performance Edition
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

@@ -1,0 +1,363 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "Full-stack web application called 'JEE WAR ROOM – Cognitive Performance Edition' for JEE Advanced 2026 preparation targeting AIR under 150. Features include real-time countdown (corrected to May 17, 2026), Focus Stability Index (FSI), performance analytics, consistency tracking, War Mode, comprehensive PCM chapter system with spaced repetition, daily goal tracker with study/work slots, and revision checklist. Dark-themed elite interface using React, Node.js, Express, MongoDB, and Chart.js. Fully optimized for Android mobile.",
+  "architectural_notes": [
+    "Dark mode only UI with #0f0f0f background, neon blue/orange accents, minimal distraction-free design",
+    "React frontend with TailwindCSS optimized for dark theme",
+    "Node.js + Express backend with MongoDB database",
+    "Chart.js for data visualization (FSI, performance graphs, consistency tracking)",
+    "Top banner displays 'AIR <150. No excuses.' motivational text",
+    "Fully mobile responsive with smooth premium animations",
+    "Android-optimized responsive design with touch-friendly controls",
+    "Daily goal tracker integrates study slots and customizable work slots",
+    "Chemistry subject split into Physical, Organic, and Inorganic subsections in chapter system",
+    "All major actions use modal pop-ups instead of inline editing"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-dark-mode-theme-with-background-color-0f0f0f-slightly-lighter-dark-grey-cards-neon-blue-and-orange-accent-colors-and-red-glow-for-critical-alerts-include-top-banner-displaying-air-150-no-excuses-ensure-smooth-premium-animations-throughout-the-interface",
+      "title": "Implement dark mode theme with background color #0f0f0f, slightly lighter dark grey cards, neon blue and orange accent colors, and red glow for critical alerts. Include top banner displaying 'AIR <150. No excuses.' Ensure smooth premium animations throughout the interface.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-real-time-countdown-timer-to-jee-advanced-2026-exam-on-may-24-2026-9-00-am-ist-display-days-hours-minutes-and-seconds-in-large-digital-font-with-updates-every-second-include-subtext-time-remaining-to-iit-delhi-timer-must-automatically-turn-red-when-fewer-than-30-days-remain",
+      "title": "Create a real-time countdown timer to JEE Advanced 2026 exam on May 24, 2026, 9:00 AM IST. Display days, hours, minutes, and seconds in large digital font with updates every second. Include subtext 'Time remaining to IIT Delhi'. Timer must automatically turn red when fewer than 30 days remain.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-focus-stability-index-fsi-with-score-range-0-100-calculated-using-40-deep-work-hours-20-task-switching-penalty-20-distraction-penalty-10-sleep-quality-and-10-war-mode-usage-display-as-circular-progress-indicator-with-color-coding-elite-80-100-green-stable-60-79-yellow-unstable-40-59-orange-distracted-below-40-red-include-7-day-rolling-trend-line-and-warning-alert-if-score-declines-for-3-consecutive-days",
+      "title": "Implement Focus Stability Index (FSI) with score range 0-100 calculated using: 40% deep work hours, 20% task switching penalty, 20% distraction penalty, 10% sleep quality, and 10% War Mode usage. Display as circular progress indicator with color coding: Elite (80-100, green), Stable (60-79, yellow), Unstable (40-59, orange), Distracted (below 40, red). Include 7-day rolling trend line and warning alert if score declines for 3 consecutive days.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-performance-vs-time-graph-dividing-the-day-into-5-blocks-7-10-am-10-1-pm-1-4-pm-4-7-pm-7-11-pm-track-accuracy-percentage-completion-rate-focus-score-and-average-deep-work-duration-per-block-display-as-dark-compatible-bar-chart-with-tooltips-showing-detailed-metrics-generate-automatic-productivity-suggestions-such-as-schedule-the-most-difficult-subject-during-your-peak-slot-and-avoid-weak-topics-during-low-performance-periods-based-on-performance-data",
+      "title": "Build Performance vs Time graph dividing the day into 5 blocks (7-10 AM, 10-1 PM, 1-4 PM, 4-7 PM, 7-11 PM). Track accuracy percentage, completion rate, focus score, and average deep work duration per block. Display as dark-compatible bar chart with tooltips showing detailed metrics. Generate automatic productivity suggestions such as 'Schedule the most difficult subject during your peak slot' and 'Avoid weak topics during low-performance periods' based on performance data.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-consistency-dna-tracker-with-score-range-0-100-calculated-using-40-study-consistency-days-studied-in-last-30-days-20-pcm-ratio-maintenance-20-revision-adherence-percentage-and-20-streak-strength-no-missed-day-streak-display-as-animated-vertical-dna-style-bar-with-30-day-trend-graph-volatility-detection-and-alerts-for-high-inconsistency",
+      "title": "Create Consistency DNA Tracker with score range 0-100 calculated using: 40% study consistency (days studied in last 30 days), 20% PCM ratio maintenance, 20% revision adherence percentage, and 20% streak strength (no-missed-day streak). Display as animated vertical DNA-style bar with 30-day trend graph, volatility detection, and alerts for high inconsistency.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-war-mode-feature-with-prominent-enter-war-mode-button-when-activated-hide-analytics-and-navigation-panels-display-only-current-task-countdown-timer-and-pomodoro-timer-with-50-minute-work-10-minute-break-cycles-darken-background-further-and-display-motivational-text-focus-execute-dominate-require-confirmation-before-exiting-track-total-war-mode-hours-in-the-backend",
+      "title": "Implement War Mode feature with prominent 'ENTER WAR MODE' button. When activated, hide analytics and navigation panels, display only current task, countdown timer, and Pomodoro timer with 50-minute work / 10-minute break cycles. Darken background further and display motivational text 'Focus. Execute. Dominate.' Require confirmation before exiting. Track total War Mode hours in the backend.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-master-pcm-chapter-system-covering-full-jee-advanced-syllabus-for-physics-chemistry-physical-organic-inorganic-and-mathematics-for-each-chapter-implement-status-tracking-not-started-in-progress-completed-revised-once-revised-twice-mastered-weakness-tags-weak-moderate-strong-mock-test-accuracy-percentage-last-revision-date-and-automatic-next-revision-scheduling-using-1-7-21-spaced-repetition-system-include-notes-section-for-each-chapter",
+      "title": "Build Master PCM Chapter System covering full JEE Advanced syllabus for Physics, Chemistry (Physical, Organic, Inorganic), and Mathematics. For each chapter, implement status tracking (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness tags (Weak/Moderate/Strong), mock test accuracy percentage, last revision date, and automatic next revision scheduling using 1-7-21 spaced repetition system. Include notes section for each chapter.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-entire-application-is-fully-mobile-responsive-with-minimal-distraction-free-interface-optimized-for-focus-and-performance-tracking-on-all-device-sizes",
+      "title": "Ensure the entire application is fully mobile responsive with minimal, distraction-free interface optimized for focus and performance tracking on all device sizes.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-retry-deployment-of-the-complete-jee-war-room-application-with-all-existing-features-dark-mode-theme-with-0f0f0f-background-real-time-countdown-to-jee-advanced-2026-may-24-2026-9-00-am-ist-focus-stability-index-tracking-performance-vs-time-analytics-with-5-daily-blocks-consistency-dna-tracker-war-mode-with-pomodoro-timer-and-master-pcm-chapter-system-with-spaced-repetition",
+      "title": "Retry deployment of the complete JEE War Room application with all existing features: dark mode theme with #0f0f0f background, real-time countdown to JEE Advanced 2026 (May 24, 2026, 9:00 AM IST), Focus Stability Index tracking, Performance vs Time analytics with 5 daily blocks, Consistency DNA Tracker, War Mode with Pomodoro timer, and Master PCM Chapter System with spaced repetition",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-daily-goal-tracker-component-that-allows-users-to-create-and-manage-customizable-time-slots-for-study-sessions-and-other-work-activities-each-slot-must-include-start-time-end-time-activity-type-study-other-work-custom-description-field-where-users-can-specify-what-task-they-need-to-do-completion-status-toggle-and-ability-to-add-edit-delete-slots-throughout-the-day",
+      "title": "Create a daily goal tracker component that allows users to create and manage customizable time slots for study sessions and other work activities. Each slot must include: start time, end time, activity type (study/other work), custom description field where users can specify what task they need to do, completion status toggle, and ability to add/edit/delete slots throughout the day.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-revision-checklist-component-that-displays-all-pcm-chapters-from-the-master-pcm-chapter-system-organized-by-subject-physics-chemistry-physical-organic-inorganic-mathematics-for-each-chapter-show-a-checkbox-to-mark-revision-completion-last-revision-date-and-visual-indicator-if-revision-is-due-based-on-the-1-7-21-spaced-repetition-schedule-include-bulk-actions-to-mark-multiple-chapters-as-revised-and-filter-view-by-subject-or-revision-status",
+      "title": "Build a revision checklist component that displays all PCM chapters from the Master PCM Chapter System organized by subject (Physics, Chemistry: Physical/Organic/Inorganic, Mathematics). For each chapter, show a checkbox to mark revision completion, last revision date, and visual indicator if revision is due based on the 1-7-21 spaced repetition schedule. Include bulk actions to mark multiple chapters as revised and filter view by subject or revision status.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-countdown-timer-component-to-target-may-17-2026-9-00-am-ist-as-the-jee-advanced-exam-date-instead-of-may-24-2026-ensure-the-countdown-calculations-and-display-accurately-reflect-this-corrected-date",
+      "title": "Update the countdown timer component to target May 17, 2026, 9:00 AM IST as the JEE Advanced exam date instead of May 24, 2026. Ensure the countdown calculations and display accurately reflect this corrected date.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-mobile-responsiveness-specifically-for-android-phone-display-by-optimizing-touch-targets-minimum-44x44px-ensuring-all-interactive-elements-are-easily-tappable-implementing-swipe-gestures-for-navigation-between-tabs-adjusting-font-sizes-and-spacing-for-smaller-screens-and-testing-that-all-features-daily-goal-tracker-revision-checklist-fsi-analytics-war-mode-chapter-system-render-correctly-and-remain-fully-functional-on-android-devices-with-screen-widths-from-320px-to-480px",
+      "title": "Enhance mobile responsiveness specifically for Android phone display by optimizing touch targets (minimum 44x44px), ensuring all interactive elements are easily tappable, implementing swipe gestures for navigation between tabs, adjusting font sizes and spacing for smaller screens, and testing that all features (daily goal tracker, revision checklist, FSI, analytics, War Mode, chapter system) render correctly and remain fully functional on Android devices with screen widths from 320px to 480px.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-focus-stability-index-fsi-calculation-to-accurately-compute-the-score-based-on-the-documented-formula-40-deep-work-hours-from-war-mode-sessions-20-task-switching-penalty-20-distraction-penalty-10-sleep-quality-and-10-war-mode-usage-ensure-the-circular-progress-indicator-and-color-coding-elite-80-100-green-stable-60-79-yellow-unstable-40-59-orange-distracted-40-red-display-correctly-with-real-time-updates",
+      "title": "Fix the Focus Stability Index (FSI) calculation to accurately compute the score based on the documented formula: 40% deep work hours from War Mode sessions, 20% task switching penalty, 20% distraction penalty, 10% sleep quality, and 10% War Mode usage. Ensure the circular progress indicator and color coding (Elite 80-100 green, Stable 60-79 yellow, Unstable 40-59 orange, Distracted <40 red) display correctly with real-time updates.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-functionality-to-the-revision-checklist-allowing-users-to-create-custom-chapters-or-units-include-input-fields-for-chapter-name-subject-selection-physics-chemistry-physical-organic-inorganic-mathematics-difficulty-level-and-importance-rating-provide-add-edit-and-delete-actions-with-proper-form-validation",
+      "title": "Add functionality to the revision checklist allowing users to create custom chapters or units. Include input fields for chapter name, subject selection (Physics, Chemistry: Physical/Organic/Inorganic, Mathematics), difficulty level, and importance rating. Provide add, edit, and delete actions with proper form validation.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-visual-tick-or-cross-indicators-to-each-chapter-in-the-revision-checklist-so-users-can-mark-chapters-as-completed-or-incomplete-display-a-checkbox-or-toggle-that-shows-a-green-checkmark-when-marked-complete-and-a-red-cross-or-empty-state-when-incomplete-update-the-backend-to-persist-these-completion-states-per-user",
+      "title": "Add visual tick or cross indicators to each chapter in the revision checklist so users can mark chapters as completed or incomplete. Display a checkbox or toggle that shows a green checkmark when marked complete and a red cross or empty state when incomplete. Update the backend to persist these completion states per user.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-date-based-validation-in-the-consistency-dna-tracker-to-restrict-users-to-marking-consistency-status-only-once-per-day-check-the-current-date-against-the-last-recorded-consistency-entry-date-if-the-user-has-already-marked-their-status-today-disable-the-consistency-buttons-and-display-a-message-indicating-they-can-mark-again-tomorrow-store-the-last-marked-date-in-the-backend",
+      "title": "Implement date-based validation in the Consistency DNA Tracker to restrict users to marking consistency status only once per day. Check the current date against the last recorded consistency entry date. If the user has already marked their status today, disable the consistency buttons and display a message indicating they can mark again tomorrow. Store the last marked date in the backend.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-the-overall-ui-across-all-components-to-achieve-a-clean-elegant-and-smooth-aesthetic-reduce-visual-clutter-by-optimizing-spacing-using-consistent-padding-and-margins-minimum-16px-between-major-sections-limiting-the-number-of-visible-elements-per-screen-and-ensuring-typography-hierarchy-is-clear-apply-smooth-transitions-200-300ms-to-all-interactive-elements-fix-any-layout-bugs-causing-overlapping-content-or-misaligned-elements-especially-on-mobile-screens-320px-480px-width",
+      "title": "Refine the overall UI across all components to achieve a clean, elegant, and smooth aesthetic. Reduce visual clutter by optimizing spacing, using consistent padding and margins (minimum 16px between major sections), limiting the number of visible elements per screen, and ensuring typography hierarchy is clear. Apply smooth transitions (200-300ms) to all interactive elements. Fix any layout bugs causing overlapping content or misaligned elements, especially on mobile screens (320px-480px width).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-dark-ui-layout-with-background-color-0f0f0f-slightly-lighter-dark-grey-for-cards-and-panels-consistent-padding-and-margins-minimum-16px-between-major-sections-and-smooth-transitions-200-300ms-on-all-interactive-elements-optimize-for-android-devices-with-touch-targets-minimum-44x44px-and-mobile-responsive-design-for-screen-widths-320px-480px",
+      "title": "Implement dark UI layout with background color #0f0f0f, slightly lighter dark grey for cards and panels, consistent padding and margins (minimum 16px between major sections), and smooth transitions (200-300ms) on all interactive elements. Optimize for Android devices with touch targets minimum 44x44px and mobile-responsive design for screen widths 320px-480px.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-unified-overview-dashboard-structure-that-consolidates-chapter-completion-percentage-pcm-ratio-tracker-war-mode-hours-counter-and-weak-chapter-alerts-in-a-single-screen-do-not-include-focus-stability-index-consistency-dna-tracker-revision-module-top-pyqs-section-or-performance-vs-time-graph",
+      "title": "Create a unified Overview dashboard structure that consolidates chapter completion percentage, PCM ratio tracker, War Mode hours counter, and weak chapter alerts in a single screen. Do not include Focus Stability Index, Consistency DNA Tracker, revision module, Top PYQs section, or Performance vs Time graph.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-real-time-countdown-timer-to-jee-advanced-2026-exam-on-may-17-2026-9-00-am-ist-display-days-hours-minutes-and-seconds-in-large-digital-font-with-updates-every-second-timer-text-and-styling-must-automatically-turn-red-when-fewer-than-30-days-remain",
+      "title": "Implement real-time countdown timer to JEE Advanced 2026 exam on May 17, 2026, 9:00 AM IST. Display days, hours, minutes, and seconds in large digital font with updates every second. Timer text and styling must automatically turn red when fewer than 30 days remain.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-split-chemistry-subject-into-three-separate-sections-in-the-chapter-management-system-physical-chemistry-organic-chemistry-and-inorganic-chemistry-each-section-must-maintain-independent-chapter-lists-with-full-crud-capabilities",
+      "title": "Split Chemistry subject into three separate sections in the chapter management system: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry. Each section must maintain independent chapter lists with full CRUD capabilities.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-full-chapter-management-system-with-modal-based-editing-for-each-chapter-users-must-be-able-to-edit-chapter-name-status-not-started-in-progress-completed-revised-once-revised-twice-mastered-weakness-level-weak-moderate-strong-accuracy-percentage-and-last-revision-date-through-modal-dialogs-include-delete-chapter-functionality-with-confirmation-modal-and-add-custom-chapter-functionality-with-validation",
+      "title": "Implement full chapter management system with modal-based editing. For each chapter, users must be able to edit chapter name, status (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Weak, Moderate, Strong), accuracy percentage, and last revision date through modal dialogs. Include delete chapter functionality with confirmation modal, and add custom chapter functionality with validation.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-dynamic-chapter-completion-percentage-calculation-that-updates-in-real-time-as-chapter-status-changes-calculate-completion-percentage-based-on-the-number-of-chapters-marked-as-completed-revised-once-revised-twice-or-mastered-divided-by-total-number-of-chapters-across-all-subjects-physics-physical-chemistry-organic-chemistry-inorganic-chemistry-mathematics-display-the-percentage-prominently-on-the-overview-dashboard-and-update-immediately-when-any-chapter-status-is-modified",
+      "title": "Implement dynamic chapter completion percentage calculation that updates in real-time as chapter status changes. Calculate completion percentage based on the number of chapters marked as Completed, Revised Once, Revised Twice, or Mastered divided by total number of chapters across all subjects (Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics). Display the percentage prominently on the Overview dashboard and update immediately when any chapter status is modified.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Real-time countdown to JEE Advanced 2026 (May 24, 2026, 9:00 AM IST) with days/hours/minutes/seconds, turns red at <30 days",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Focus Stability Index (FSI) 0-100 score with 40% deep work, 20% task switching penalty, 20% distraction penalty, 10% sleep, 10% War Mode usage, with 7-day trend and warnings",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Performance vs Time graph tracking accuracy, completion rate, focus score across 5 daily time blocks with automatic productivity suggestions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Consistency DNA Tracker with 0-100 score based on study consistency, PCM discipline, revision adherence, and streak strength with 30-day trend",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "War Mode with distraction-free interface showing only current task, countdown, and Pomodoro timer (50/10 cycle) with confirmation to exit",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Master PCM Chapter System with full JEE Advanced syllabus tracking, status progression, weakness tags, mock test accuracy, and 1-7-21 spaced repetition system",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Daily goal tracker with customizable study slots and other work slots where user can decide tasks",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Revision checklist with all PCM chapters (Physics, Chemistry: Physical/Organic/Inorganic, Mathematics)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update JEE Advanced countdown date to May 17, 2026",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Optimize entire app for Android phone compatibility",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Fix Focus Index calculation and display to work perfectly",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add ability to add/edit custom chapters or units in revision checklist with tick/cross marking",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Fix Consistency Tracker to only allow 1 click per day with proper date validation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Improve overall UI to be clean, elegant, smooth, minimal bugs, and not overcrowded",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Full chapter edit functionality via modals (edit name, status, weakness, accuracy, revision date) with delete and add custom chapter options",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Split Chemistry into three separate sections: Physical Chemistry, Organic Chemistry, Inorganic Chemistry",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Consolidate all major features into unified Overview dashboard, remove Performance vs Time graph completely",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Modify War Mode to allow user-selected duration, optional breaks with custom break time, remove Pomodoro system, add confirmation pop-ups",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Create revision tracking with three categories per chapter (Theory, PYQs, Advanced Practice) with tick/cross options and visual completion indicators",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Create Top PYQs section with year-based tracking (2025-2022 default) with tick/cross per year, plus ability to add custom years",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Implement confirmation pop-ups for all major actions (edits, deletes, War Mode entry/exit, marking revisions, adding PYQ years, resets, settings)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Make app fully Android-optimized with mobile-first responsive design, large touch targets, no horizontal scroll, PWA-ready for home screen installation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Dynamic chapter completion % calculation that updates in real-time based on chapter status changes",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Real-time countdown updates every second, turns red when <30 days remain to JEE Advanced 2026",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "JEE WAR ROOM – Cognitive Performance Edition",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
