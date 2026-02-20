@@ -1,56 +1,62 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useGetAllChapters, useGetWarModeStats } from '../hooks/useQueries';
-import { BookCheck, PieChart, Clock, AlertTriangle } from 'lucide-react';
+import { useGetAllChapters, useGetWarModeStats, useRevisionCoverage } from '../hooks/useQueries';
+import { BookCheck, PieChart, Clock, AlertTriangle, Target, Loader2, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import TopPYQsTracker from './TopPYQsTracker';
+import WarModeConfigModal from './WarModeConfigModal';
 
 function OverviewDashboard() {
   const { data: chapters, isLoading: chaptersLoading } = useGetAllChapters();
   const { data: warModeStats, isLoading: warModeLoading } = useGetWarModeStats();
+  const { data: revisionCoverage, isLoading: revisionLoading } = useRevisionCoverage();
+  const [warModeModalOpen, setWarModeModalOpen] = useState(false);
 
-  // Calculate chapter completion percentage
-  const completedStatuses = ['Completed', 'Revised Once', 'Revised Twice', 'Mastered'];
-  const completedChapters = chapters?.filter(ch => completedStatuses.includes(ch.difficulty)) || [];
   const totalChapters = chapters?.length || 0;
-  const completionPercentage = totalChapters > 0 ? Math.round((completedChapters.length / totalChapters) * 100) : 0;
+  const completedChapters = chapters?.filter(ch => ch?.isComplete).length || 0;
+  const completionPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
 
-  // Calculate PCM ratio
-  const physicsChapters = chapters?.filter(ch => ch.subject === 'Physics').length || 0;
+  const physicsChapters = chapters?.filter(ch => ch?.subject === 'Physics').length || 0;
   const chemistryChapters = chapters?.filter(ch => 
-    ch.subject === 'Physical Chemistry' || 
-    ch.subject === 'Organic Chemistry' || 
-    ch.subject === 'Inorganic Chemistry'
+    ch?.subject === 'Physical Chemistry' || 
+    ch?.subject === 'Organic Chemistry' || 
+    ch?.subject === 'Inorganic Chemistry'
   ).length || 0;
-  const mathsChapters = chapters?.filter(ch => ch.subject === 'Mathematics').length || 0;
+  const mathsChapters = chapters?.filter(ch => ch?.subject === 'Mathematics').length || 0;
 
-  // Calculate War Mode hours
   const totalStudyMinutes = warModeStats ? Number(warModeStats.totalStudyTime) : 0;
   const warModeHours = Math.floor(totalStudyMinutes / 60);
   const warModeMinutes = totalStudyMinutes % 60;
 
-  // Find weak chapters (using importance as proxy for weakness since backend doesn't have weakness field)
-  const weakChapters = chapters?.filter(ch => ch.importance === 'Critical' && !ch.isComplete) || [];
+  const weakChapters = chapters?.filter(ch => ch?.importance === 'Critical' && !ch?.isComplete) || [];
 
-  if (chaptersLoading || warModeLoading) {
+  if (chaptersLoading || warModeLoading || revisionLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        {[1, 2, 3, 4].map((i) => (
-          <Card key={i}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-center h-32">
-                <p className="text-muted-foreground">Loading...</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Main Metrics Grid */}
+      {/* War Mode Entry Button */}
+      <div className="flex justify-center">
+        <Button
+          onClick={() => setWarModeModalOpen(true)}
+          size="lg"
+          className="h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 touch-target shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-xl hover:shadow-primary/30"
+        >
+          <Zap className="h-5 w-5 mr-2" />
+          ENTER WAR MODE
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        {/* Chapter Completion Percentage */}
         <Card className="border-primary/30 transition-all duration-200 hover:border-primary/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
@@ -84,14 +90,53 @@ function OverviewDashboard() {
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-3xl sm:text-4xl font-bold text-primary">{completionPercentage}%</span>
-                  <span className="text-xs text-muted-foreground">{completedChapters.length}/{totalChapters}</span>
+                  <span className="text-xs text-muted-foreground">{completedChapters}/{totalChapters}</span>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* PCM Ratio Tracker */}
+        <Card className="border-chart-3/30 transition-all duration-200 hover:border-chart-3/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Target className="h-5 w-5 text-chart-3" />
+              Overall Revision Coverage
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="50%"
+                    cy="50%"
+                    r="45%"
+                    stroke="oklch(var(--muted))"
+                    strokeWidth="8"
+                    fill="none"
+                  />
+                  <circle
+                    cx="50%"
+                    cy="50%"
+                    r="45%"
+                    stroke="oklch(var(--chart-3))"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeDasharray={`${2 * Math.PI * 45} ${2 * Math.PI * 45}`}
+                    strokeDashoffset={2 * Math.PI * 45 * (1 - (revisionCoverage?.overall || 0) / 100)}
+                    className="transition-all duration-500"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl sm:text-4xl font-bold text-chart-3">{revisionCoverage?.overall || 0}%</span>
+                  <span className="text-xs text-muted-foreground">Revision</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="border-chart-1/30 transition-all duration-200 hover:border-chart-1/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
@@ -141,7 +186,39 @@ function OverviewDashboard() {
           </CardContent>
         </Card>
 
-        {/* War Mode Hours */}
+        <Card className="border-chart-4/30 transition-all duration-200 hover:border-chart-4/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Target className="h-5 w-5 text-chart-4" />
+              Subject-wise Revision
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Physics</span>
+                <span className="text-sm font-bold text-chart-2">{revisionCoverage?.physics || 0}%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Physical Chem</span>
+                <span className="text-sm font-bold text-chart-1">{revisionCoverage?.physicalChemistry || 0}%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Organic Chem</span>
+                <span className="text-sm font-bold text-chart-1">{revisionCoverage?.organicChemistry || 0}%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Inorganic Chem</span>
+                <span className="text-sm font-bold text-chart-1">{revisionCoverage?.inorganicChemistry || 0}%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Mathematics</span>
+                <span className="text-sm font-bold text-chart-3">{revisionCoverage?.mathematics || 0}%</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="border-destructive/30 transition-all duration-200 hover:border-destructive/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
@@ -164,7 +241,6 @@ function OverviewDashboard() {
           </CardContent>
         </Card>
 
-        {/* Weak Chapter Alerts */}
         <Card className="border-chart-4/30 transition-all duration-200 hover:border-chart-4/50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
@@ -201,6 +277,11 @@ function OverviewDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <TopPYQsTracker />
+
+      {/* War Mode Configuration Modal */}
+      <WarModeConfigModal open={warModeModalOpen} onOpenChange={setWarModeModalOpen} />
     </div>
   );
 }

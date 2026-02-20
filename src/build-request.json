@@ -1,169 +1,167 @@
 {
   "kind": "build_request",
-  "title": "Phase 1: Core UI, Overview Dashboard, Countdown, and Chapter Management",
-  "projectName": "JEE War Room",
+  "title": "Phase 3 Step 1: War Mode Entry UI with Duration and Break Configuration",
+  "projectName": "JEE WAR ROOM",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-19",
-      "text": "Implement dark UI layout with background color #0f0f0f, slightly lighter dark grey for cards and panels, consistent padding and margins (minimum 16px between major sections), and smooth transitions (200-300ms) on all interactive elements. Optimize for Android devices with touch targets minimum 44x44px and mobile-responsive design for screen widths 320px-480px.",
+      "id": "REQ-55",
+      "text": "Add 'ENTER WAR MODE' button to the OverviewDashboard component. Position it prominently near the top of the dashboard, styled with neon blue accent color to match the application theme. The button must be easily tappable on mobile (minimum 44x44px touch target).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-last"
         ],
         "quotes": [
-          "Dark UI layout",
-          "Android-optimized responsive design, 44x44px minimum touch targets"
+          "Add the 'ENTER WAR MODE' button on the Overview"
         ]
       },
       "acceptanceCriteria": [
-        "Background color is #0f0f0f throughout the application",
-        "Cards and panels use a slightly lighter dark grey than background",
-        "All major sections have minimum 16px spacing between them",
-        "All interactive elements have 200-300ms smooth transitions",
-        "All touch targets are minimum 44x44px on mobile devices",
-        "Layout is fully responsive and functional on screen widths from 320px to 480px"
+        "Button displays 'ENTER WAR MODE' text with appropriate styling",
+        "Button uses neon blue accent color from the theme",
+        "Button meets minimum 44x44px touch target requirement for mobile",
+        "Clicking the button opens the War Mode configuration modal"
       ]
     },
     {
-      "id": "REQ-20",
-      "text": "Create a unified Overview dashboard structure that consolidates chapter completion percentage, PCM ratio tracker, War Mode hours counter, and weak chapter alerts in a single screen. Do not include Focus Stability Index, Consistency DNA Tracker, revision module, Top PYQs section, or Performance vs Time graph.",
+      "id": "REQ-56",
+      "text": "Create a War Mode configuration modal component that displays when the 'ENTER WAR MODE' button is clicked. The modal must include a duration selector section with three preset buttons (60 minutes, 90 minutes, 120 minutes) and a custom input field for entering any duration in minutes. Style the modal with the dark theme background (#0f0f0f) and slightly lighter grey for the modal content area.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-last"
         ],
         "quotes": [
-          "Overview dashboard structure",
-          "Do not implement: Revision module, Top PYQs, War Mode, Consistency DNA, Focus Stability Index"
+          "Add duration selector (preset buttons + custom input)"
         ]
       },
       "acceptanceCriteria": [
-        "Overview dashboard displays chapter completion percentage",
-        "Overview dashboard displays PCM ratio tracker",
-        "Overview dashboard displays War Mode hours counter",
-        "Overview dashboard displays weak chapter alerts",
-        "Focus Stability Index is not displayed on Overview dashboard",
-        "Consistency DNA Tracker is not displayed on Overview dashboard",
-        "Performance vs Time graph is not displayed anywhere",
-        "All metrics are consolidated in a single unified screen layout"
+        "Modal opens when 'ENTER WAR MODE' button is clicked",
+        "Three preset buttons display: 60m, 90m, 120m",
+        "Custom input field accepts numeric values for minutes",
+        "Only one duration option (preset or custom) can be selected at a time",
+        "Selected duration is visually highlighted",
+        "Modal matches dark theme styling"
       ]
     },
     {
-      "id": "REQ-21",
-      "text": "Implement real-time countdown timer to JEE Advanced 2026 exam on May 17, 2026, 9:00 AM IST. Display days, hours, minutes, and seconds in large digital font with updates every second. Timer text and styling must automatically turn red when fewer than 30 days remain.",
+      "id": "REQ-57",
+      "text": "Add a 'Break needed?' toggle section to the War Mode configuration modal below the duration selector. Display two clear option buttons labeled 'Yes' and 'No'. When 'No' is selected, the break duration selector must be hidden. When 'Yes' is selected, show the break duration selector. Default selection should be 'No'.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-last"
         ],
         "quotes": [
-          "Real-time countdown: Updates every second to May 17, 2026, 9:00 AM IST, displays days/hours/minutes/seconds, turns red when <30 days remain"
+          "Add 'Break needed?' toggle"
         ]
       },
       "acceptanceCriteria": [
-        "Countdown timer targets May 17, 2026, 9:00 AM IST",
-        "Timer displays days, hours, minutes, and seconds",
-        "Timer updates every second without page refresh",
-        "Timer text is displayed in large digital font",
-        "Timer automatically turns red when fewer than 30 days remain",
-        "Timer styling and color change work correctly on mobile devices"
+        "Toggle section displays below duration selector",
+        "Two buttons labeled 'Yes' and 'No' are clearly visible",
+        "Only one option can be selected at a time",
+        "Default selection is 'No'",
+        "Break duration selector is hidden when 'No' is selected",
+        "Break duration selector appears when 'Yes' is selected"
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "Split Chemistry subject into three separate sections in the chapter management system: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry. Each section must maintain independent chapter lists with full CRUD capabilities.",
-      "target": "both",
+      "id": "REQ-58",
+      "text": "Implement a break duration selector that appears conditionally in the War Mode configuration modal when 'Break needed?' is set to 'Yes'. Include preset break duration buttons (5 minutes, 10 minutes, 15 minutes) and a custom input field for entering any break duration in minutes. Use the same styling pattern as the focus duration selector.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-last"
         ],
         "quotes": [
-          "Chemistry split into Physical / Organic / Inorganic"
+          "Add optional break duration selector"
         ]
       },
       "acceptanceCriteria": [
-        "Chemistry is split into three distinct sections: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry",
-        "Each Chemistry section displays its own independent list of chapters",
-        "Users can add, edit, and delete chapters within each Chemistry section independently",
-        "Backend data model supports storing chapters under Physical, Organic, and Inorganic Chemistry categories",
-        "Chapter completion percentage calculations account for all three Chemistry sections separately"
+        "Break duration selector only displays when 'Break needed?' is 'Yes'",
+        "Three preset buttons display: 5m, 10m, 15m",
+        "Custom input field accepts numeric values for minutes",
+        "Only one break duration option can be selected at a time",
+        "Selected break duration is visually highlighted",
+        "Break duration selector is completely hidden when 'No' is selected"
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Implement full chapter management system with modal-based editing. For each chapter, users must be able to edit chapter name, status (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Weak, Moderate, Strong), accuracy percentage, and last revision date through modal dialogs. Include delete chapter functionality with confirmation modal, and add custom chapter functionality with validation.",
-      "target": "both",
+      "id": "REQ-59",
+      "text": "Add a confirmation button to the War Mode configuration modal that displays a summary of the selected settings. When clicked, show a confirmation modal that previews: selected focus duration, whether break is enabled, and break duration (if enabled). Include 'Confirm & Enter War Mode' and 'Cancel' buttons in the confirmation modal. Clicking 'Cancel' returns to the configuration modal. Clicking 'Confirm' closes both modals without entering War Mode (War Mode screen not implemented yet).",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-last"
         ],
         "quotes": [
-          "Chapter management system with full modal editing",
-          "Full modal-based editing for chapter name, status, weakness level, accuracy %, and revision date. Chemistry split into Physical/Organic/Inorganic. Delete with confirmation, add custom chapters with validation"
+          "Only show confirmation modal"
         ]
       },
       "acceptanceCriteria": [
-        "Edit chapter functionality opens in a modal dialog",
-        "Modal allows editing chapter name with text input",
-        "Modal allows editing chapter status with dropdown or select (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered)",
-        "Modal allows editing weakness level with dropdown or select (Weak, Moderate, Strong)",
-        "Modal allows editing accuracy percentage with number input (0-100)",
-        "Modal allows editing last revision date with date picker",
-        "Delete chapter button opens confirmation modal before deletion",
-        "Add custom chapter functionality opens modal with form validation for required fields",
-        "All modal interactions work correctly on Android mobile devices with touch input",
-        "Backend API supports updating chapter name, status, weakness, accuracy, and revision date",
-        "Backend API supports deleting chapters by ID",
-        "Backend API supports creating new custom chapters with validation"
+        "Configuration modal includes a 'Continue' or 'Next' button at the bottom",
+        "Clicking continues to confirmation modal showing settings summary",
+        "Confirmation modal displays selected focus duration",
+        "Confirmation modal displays break status (Yes/No)",
+        "Confirmation modal displays break duration if break is enabled",
+        "Confirmation modal has 'Confirm & Enter War Mode' and 'Cancel' buttons",
+        "Cancel returns to configuration modal",
+        "Confirm closes both modals (no War Mode screen transition yet)"
       ]
     },
     {
-      "id": "REQ-24",
-      "text": "Implement dynamic chapter completion percentage calculation that updates in real-time as chapter status changes. Calculate completion percentage based on the number of chapters marked as Completed, Revised Once, Revised Twice, or Mastered divided by total number of chapters across all subjects (Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics). Display the percentage prominently on the Overview dashboard and update immediately when any chapter status is modified.",
-      "target": "both",
+      "id": "REQ-60",
+      "text": "Implement form validation for the War Mode configuration modal. Focus duration must be selected (either preset or custom with minimum 1 minute). If custom duration is selected, validate that it is a positive integer. If break is enabled, break duration must be selected with the same validation rules. Display validation error messages if requirements are not met when attempting to proceed to confirmation.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "Dynamic chapter completion percentage",
-          "Dynamic Chapter Completion %: Real-time calculation based on chapter status (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered)"
+          "msg-last"
         ]
       },
       "acceptanceCriteria": [
-        "Chapter completion percentage is calculated as (completed chapters / total chapters) * 100",
-        "Completed chapters include those with status: Completed, Revised Once, Revised Twice, or Mastered",
-        "Calculation includes chapters from all subjects: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, and Mathematics",
-        "Percentage displays prominently on Overview dashboard",
-        "Percentage updates immediately when any chapter status is changed through edit modal",
-        "Percentage updates immediately when new chapters are added or deleted",
-        "Backend API returns accurate chapter completion percentage on user data fetch",
-        "Frontend recalculates and displays updated percentage without requiring page refresh"
+        "Cannot proceed without selecting a focus duration",
+        "Custom focus duration must be a positive integer >= 1",
+        "If break is enabled, break duration must be selected",
+        "Custom break duration must be a positive integer >= 1",
+        "Clear validation error messages display for invalid inputs",
+        "Validation occurs before opening confirmation modal"
+      ]
+    },
+    {
+      "id": "REQ-61",
+      "text": "Ensure the War Mode configuration modal and confirmation modal are fully mobile-responsive with optimized touch targets (minimum 44x44px), appropriate spacing for small screens (320px-480px width), and no horizontal scrolling. All buttons, toggles, and input fields must be easily tappable on Android devices.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All buttons meet minimum 44x44px touch target size",
+        "Modal content fits within mobile viewport without horizontal scroll",
+        "Input fields are large enough for easy mobile interaction",
+        "Spacing between interactive elements prevents accidental taps",
+        "Modal displays correctly on screens 320px-480px wide",
+        "Text remains readable at mobile font sizes"
       ]
     }
   ],
   "constraints": [
-    "Do not implement Focus Stability Index in this phase",
-    "Do not implement Consistency DNA Tracker in this phase",
-    "Do not implement Revision module with Theory/PYQs/Advanced tracking in this phase",
-    "Do not implement Top PYQs section in this phase",
-    "Do not implement War Mode functionality in this phase",
-    "Do not implement Performance vs Time graph in this phase",
-    "All chapter edits must open in modal dialogs, not inline editing",
-    "Backend must use single-actor Motoko architecture with all logic in main actor file",
-    "Frontend must not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
+    "Do NOT implement the War Mode screen itself in this step",
+    "Do NOT implement any timer functionality yet",
+    "Do NOT modify dashboard metrics or data persistence",
+    "Do NOT touch Phase 1 or Phase 2 features",
+    "Do NOT modify the existing WarMode.tsx component that implements Pomodoro functionality",
+    "The confirmation action must only close the modals, not transition to War Mode screen"
   ],
   "nonGoals": [
-    "Implementing revision tracking with Theory/PYQs/Advanced categories",
-    "Creating Top PYQs section with year-based tracking",
-    "Building War Mode with custom duration and break options",
-    "Adding Focus Stability Index calculations and display",
-    "Adding Consistency DNA Tracker with daily validation",
-    "Implementing Performance vs Time graph with 5 daily blocks",
-    "Adding confirmation pop-ups for War Mode entry/exit",
-    "Implementing PWA functionality for home screen installation"
+    "War Mode screen implementation",
+    "Timer functionality (focus timer or break timer)",
+    "Session tracking or data persistence",
+    "Backend integration for War Mode sessions",
+    "Modifications to existing War Mode Pomodoro component",
+    "Dashboard metric updates based on War Mode usage",
+    "Exit confirmation for War Mode (not applicable yet)"
   ],
   "imageRequirements": {
     "required": [],

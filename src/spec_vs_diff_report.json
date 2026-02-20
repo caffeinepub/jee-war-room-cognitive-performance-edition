@@ -1,120 +1,15 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T19:35:22.980Z",
-  "summary": "The implementation covers most core requirements for Phase 1 including dark UI with correct styling, Overview dashboard structure, countdown timer, Chemistry split, and chapter management modals. However, several critical requirements are partially implemented or missing: modal-based edit/delete operations are non-functional (backend API gaps), completion percentage calculation uses wrong field ('difficulty' instead of 'status'), no weakness level field exists in backend, PCM ratio tracker is incomplete, and some acceptance criteria like specific status/weakness dropdowns and date picker are not verified in the diff.",
-  "missing_requirements": [
-    {
-      "id": "REQ-23",
-      "requirement": "Backend API must support updating chapter name, status, weakness level, accuracy percentage, and last revision date",
-      "reason": "MasterPCMChapterSystem.tsx shows error messages indicating backend methods 'updateChapter' and 'deleteChapter' do not exist. Edit and delete operations display toast errors rather than functioning.",
-      "evidence": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx"
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "requirement": "Modal must allow editing chapter status with dropdown containing: Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered",
-      "reason": "Backend Chapter type in main.mo uses 'difficulty' field with values 'Easy', 'Medium', 'Hard' instead of required 'status' field with completion-based values. OverviewDashboard.tsx incorrectly filters by 'difficulty' for completion calculation.",
-      "evidence": [
-        "backend/main.mo",
-        "frontend/src/components/OverviewDashboard.tsx"
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "requirement": "Modal must allow editing weakness level with dropdown (Weak, Moderate, Strong)",
-      "reason": "Backend Chapter type does not include a 'weakness' or 'weaknessLevel' field. Only 'importance' field exists with different values (Low, Medium, High, Critical).",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "requirement": "Modal must allow editing accuracy percentage with number input (0-100)",
-      "reason": "Backend Chapter type does not include an 'accuracy' or 'accuracyPercentage' field.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "requirement": "Modal must allow editing last revision date with date picker",
-      "reason": "Backend Chapter type does not include a 'lastRevisionDate' field. Only 'lastStudied' field exists which tracks study time, not revision dates.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "requirement": "Overview dashboard must display PCM ratio tracker showing distribution of Physics, Chemistry (all three sections), and Mathematics chapters",
-      "reason": "OverviewDashboard.tsx calculates physicsChapters, chemistryChapters, and mathsChapters counts but does not display them as a ratio tracker or visualization. Only raw counts exist without presentation.",
-      "evidence": [
-        "frontend/src/components/OverviewDashboard.tsx"
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "requirement": "Completed chapters must include those with status: Completed, Revised Once, Revised Twice, or Mastered",
-      "reason": "OverviewDashboard.tsx completion calculation filters by 'difficulty' field with statuses like 'Completed', 'Revised Once', etc., but backend Chapter type defines 'difficulty' as 'Easy', 'Medium', 'Hard'. Field mismatch prevents correct calculation.",
-      "evidence": [
-        "frontend/src/components/OverviewDashboard.tsx",
-        "backend/main.mo"
-      ]
-    }
-  ],
-  "hallucinated_features": [
-    {
-      "description": "ConsistencyDNA type and functionality in backend with daysTracked, daysConsistent, lastUpdate, and lastEntryDate fields",
-      "reason": "BuildRequest explicitly excludes Consistency DNA Tracker in Phase 1 constraints and non-goals. Backend main.mo implements full ConsistencyDNA type and comparison functions.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "description": "PerformanceBlock type tracking blockId, startTime, endTime, focusScore, and productivity with 5 daily time blocks",
-      "reason": "BuildRequest explicitly excludes Performance vs Time graph in Phase 1 constraints and non-goals. Backend includes PerformanceBlock type in UserData structure.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "description": "FocusStabilityIndex.tsx component with circular progress indicator, FSI calculation formula, and 7-day trend tracking",
-      "reason": "BuildRequest explicitly states 'Do not implement Focus Stability Index in this phase' in constraints. Component exists in frontend-file-summaries.txt.",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "PerformanceAnalytics.tsx component with bar chart visualization of 5 daily performance blocks",
-      "reason": "BuildRequest explicitly excludes Performance vs Time graph in constraints and non-goals. Component described in frontend-file-summaries.txt.",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "ConsistencyDNATracker.tsx component with DNA-style visualization and daily marking restricted by IST timezone",
-      "reason": "BuildRequest explicitly states 'Do not implement Consistency DNA Tracker in this phase' in constraints. Component exists in frontend-file-summaries.txt.",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "RevisionChecklist.tsx component with 1-7-21 day spaced repetition schedule and revision marking",
-      "reason": "BuildRequest explicitly excludes revision module tracking in Phase 1 non-goals. Component exists in frontend-file-summaries.txt with spaced repetition features.",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    }
-  ],
-  "confidence": 0.88,
+  "generatedAt": "2026-02-20T20:41:15.390Z",
+  "summary": "The diff implements War Mode Entry UI with configuration and confirmation modals. All 7 requirements (REQ-55 through REQ-61) appear to be implemented: the ENTER WAR MODE button is added to OverviewDashboard with proper styling and touch targets, a WarModeConfigModal component includes duration selectors with presets (60/90/120 minutes), break toggle with conditional break duration selector (5/10/15 minutes), validation logic, confirmation flow, and mobile-responsive design. No hallucinated features detected beyond the specified requirements.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.85,
   "changed_files": [
-    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/MasterPCMChapterSystem.tsx",
     "frontend/src/components/OverviewDashboard.tsx",
-    "frontend/src/index.css",
+    "frontend/src/components/WarModeConfigModal.tsx",
     "project_state.json"
   ]
 }

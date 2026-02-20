@@ -2,45 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-implement-dark-ui-layout-with-background-color-0f0f0f-slightly-lighter-dark-grey-for-cards-and-panels-consistent-padding-and-margins-minimum-16px-between-major-sections-and-smooth-transitions-200-300ms-on-all-interactive-elements-optimize-for-android-devices-with-touch-targets-minimum-44x44px-and-mobile-responsive-design-for-screen-widths-320px-480px",
-      "featureTitle": "Implement dark UI layout with background color #0f0f0f, slightly lighter dark grey for cards and panels, consistent padding and margins (minimum 16px between major sections), and smooth transitions (200-300ms) on all interactive elements. Optimize for Android devices with touch targets minimum 44x44px and mobile-responsive design for screen widths 320px-480px.",
-      "files": [
-        "frontend/src/App.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-19"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-unified-overview-dashboard-structure-that-consolidates-chapter-completion-percentage-pcm-ratio-tracker-war-mode-hours-counter-and-weak-chapter-alerts-in-a-single-screen-do-not-include-focus-stability-index-consistency-dna-tracker-revision-module-top-pyqs-section-or-performance-vs-time-graph",
-      "featureTitle": "Create a unified Overview dashboard structure that consolidates chapter completion percentage, PCM ratio tracker, War Mode hours counter, and weak chapter alerts in a single screen. Do not include Focus Stability Index, Consistency DNA Tracker, revision module, Top PYQs section, or Performance vs Time graph.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/OverviewDashboard.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-20"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-real-time-countdown-timer-to-jee-advanced-2026-exam-on-may-17-2026-9-00-am-ist-display-days-hours-minutes-and-seconds-in-large-digital-font-with-updates-every-second-timer-text-and-styling-must-automatically-turn-red-when-fewer-than-30-days-remain",
-      "featureTitle": "Implement real-time countdown timer to JEE Advanced 2026 exam on May 17, 2026, 9:00 AM IST. Display days, hours, minutes, and seconds in large digital font with updates every second. Timer text and styling must automatically turn red when fewer than 30 days remain.",
+      "featureId": "feature-add-enter-war-mode-button-to-the-overviewdashboard-component-position-it-prominently-near-the-top-of-the-dashboard-styled-with-neon-blue-accent-color-to-match-the-application-theme-the-button-must-be-easily-tappable-on-mobile-minimum-44x44px-touch-target",
+      "featureTitle": "Add 'ENTER WAR MODE' button to the OverviewDashboard component. Position it prominently near the top of the dashboard, styled with neon blue accent color to match the application theme. The button must be easily tappable on mobile (minimum 44x44px touch target).",
       "files": [
         "frontend/src/components/OverviewDashboard.tsx"
       ],
@@ -52,15 +15,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-55"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-split-chemistry-subject-into-three-separate-sections-in-the-chapter-management-system-physical-chemistry-organic-chemistry-and-inorganic-chemistry-each-section-must-maintain-independent-chapter-lists-with-full-crud-capabilities",
-      "featureTitle": "Split Chemistry subject into three separate sections in the chapter management system: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry. Each section must maintain independent chapter lists with full CRUD capabilities.",
+      "featureId": "feature-create-a-war-mode-configuration-modal-component-that-displays-when-the-enter-war-mode-button-is-clicked-the-modal-must-include-a-duration-selector-section-with-three-preset-buttons-60-minutes-90-minutes-120-minutes-and-a-custom-input-field-for-entering-any-duration-in-minutes-style-the-modal-with-the-dark-theme-background-0f0f0f-and-slightly-lighter-grey-for-the-modal-content-area",
+      "featureTitle": "Create a War Mode configuration modal component that displays when the 'ENTER WAR MODE' button is clicked. The modal must include a duration selector section with three preset buttons (60 minutes, 90 minutes, 120 minutes) and a custom input field for entering any duration in minutes. Style the modal with the dark theme background (#0f0f0f) and slightly lighter grey for the modal content area.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx"
+        "frontend/src/components/OverviewDashboard.tsx",
+        "frontend/src/components/WarModeConfigModal.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -70,15 +34,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-56"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-full-chapter-management-system-with-modal-based-editing-for-each-chapter-users-must-be-able-to-edit-chapter-name-status-not-started-in-progress-completed-revised-once-revised-twice-mastered-weakness-level-weak-moderate-strong-accuracy-percentage-and-last-revision-date-through-modal-dialogs-include-delete-chapter-functionality-with-confirmation-modal-and-add-custom-chapter-functionality-with-validation",
-      "featureTitle": "Implement full chapter management system with modal-based editing. For each chapter, users must be able to edit chapter name, status (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Weak, Moderate, Strong), accuracy percentage, and last revision date through modal dialogs. Include delete chapter functionality with confirmation modal, and add custom chapter functionality with validation.",
+      "featureId": "feature-add-a-break-needed-toggle-section-to-the-war-mode-configuration-modal-below-the-duration-selector-display-two-clear-option-buttons-labeled-yes-and-no-when-no-is-selected-the-break-duration-selector-must-be-hidden-when-yes-is-selected-show-the-break-duration-selector-default-selection-should-be-no",
+      "featureTitle": "Add a 'Break needed?' toggle section to the War Mode configuration modal below the duration selector. Display two clear option buttons labeled 'Yes' and 'No'. When 'No' is selected, the break duration selector must be hidden. When 'Yes' is selected, show the break duration selector. Default selection should be 'No'.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx"
+        "frontend/src/components/WarModeConfigModal.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -88,16 +52,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-23"
+        "REQ-57"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-dynamic-chapter-completion-percentage-calculation-that-updates-in-real-time-as-chapter-status-changes-calculate-completion-percentage-based-on-the-number-of-chapters-marked-as-completed-revised-once-revised-twice-or-mastered-divided-by-total-number-of-chapters-across-all-subjects-physics-physical-chemistry-organic-chemistry-inorganic-chemistry-mathematics-display-the-percentage-prominently-on-the-overview-dashboard-and-update-immediately-when-any-chapter-status-is-modified",
-      "featureTitle": "Implement dynamic chapter completion percentage calculation that updates in real-time as chapter status changes. Calculate completion percentage based on the number of chapters marked as Completed, Revised Once, Revised Twice, or Mastered divided by total number of chapters across all subjects (Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics). Display the percentage prominently on the Overview dashboard and update immediately when any chapter status is modified.",
+      "featureId": "feature-implement-a-break-duration-selector-that-appears-conditionally-in-the-war-mode-configuration-modal-when-break-needed-is-set-to-yes-include-preset-break-duration-buttons-5-minutes-10-minutes-15-minutes-and-a-custom-input-field-for-entering-any-break-duration-in-minutes-use-the-same-styling-pattern-as-the-focus-duration-selector",
+      "featureTitle": "Implement a break duration selector that appears conditionally in the War Mode configuration modal when 'Break needed?' is set to 'Yes'. Include preset break duration buttons (5 minutes, 10 minutes, 15 minutes) and a custom input field for entering any break duration in minutes. Use the same styling pattern as the focus duration selector.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx",
-        "frontend/src/components/OverviewDashboard.tsx"
+        "frontend/src/components/WarModeConfigModal.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -107,7 +70,61 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-24"
+        "REQ-58"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-confirmation-button-to-the-war-mode-configuration-modal-that-displays-a-summary-of-the-selected-settings-when-clicked-show-a-confirmation-modal-that-previews-selected-focus-duration-whether-break-is-enabled-and-break-duration-if-enabled-include-confirm-enter-war-mode-and-cancel-buttons-in-the-confirmation-modal-clicking-cancel-returns-to-the-configuration-modal-clicking-confirm-closes-both-modals-without-entering-war-mode-war-mode-screen-not-implemented-yet",
+      "featureTitle": "Add a confirmation button to the War Mode configuration modal that displays a summary of the selected settings. When clicked, show a confirmation modal that previews: selected focus duration, whether break is enabled, and break duration (if enabled). Include 'Confirm & Enter War Mode' and 'Cancel' buttons in the confirmation modal. Clicking 'Cancel' returns to the configuration modal. Clicking 'Confirm' closes both modals without entering War Mode (War Mode screen not implemented yet).",
+      "files": [
+        "frontend/src/components/WarModeConfigModal.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-59"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-form-validation-for-the-war-mode-configuration-modal-focus-duration-must-be-selected-either-preset-or-custom-with-minimum-1-minute-if-custom-duration-is-selected-validate-that-it-is-a-positive-integer-if-break-is-enabled-break-duration-must-be-selected-with-the-same-validation-rules-display-validation-error-messages-if-requirements-are-not-met-when-attempting-to-proceed-to-confirmation",
+      "featureTitle": "Implement form validation for the War Mode configuration modal. Focus duration must be selected (either preset or custom with minimum 1 minute). If custom duration is selected, validate that it is a positive integer. If break is enabled, break duration must be selected with the same validation rules. Display validation error messages if requirements are not met when attempting to proceed to confirmation.",
+      "files": [
+        "frontend/src/components/WarModeConfigModal.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-60"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-war-mode-configuration-modal-and-confirmation-modal-are-fully-mobile-responsive-with-optimized-touch-targets-minimum-44x44px-appropriate-spacing-for-small-screens-320px-480px-width-and-no-horizontal-scrolling-all-buttons-toggles-and-input-fields-must-be-easily-tappable-on-android-devices",
+      "featureTitle": "Ensure the War Mode configuration modal and confirmation modal are fully mobile-responsive with optimized touch targets (minimum 44x44px), appropriate spacing for small screens (320px-480px width), and no horizontal scrolling. All buttons, toggles, and input fields must be easily tappable on Android devices.",
+      "files": [
+        "frontend/src/components/WarModeConfigModal.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-61"
       ],
       "confidence": "high"
     }

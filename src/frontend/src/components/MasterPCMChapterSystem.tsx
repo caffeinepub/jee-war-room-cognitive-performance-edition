@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useGetAllChapters, useAddChapter, useToggleChapterCompletion, useRegisterUser } from '../hooks/useQueries';
-import { BookOpen, Plus, Check, X, Edit, Trash2 } from 'lucide-react';
+import { useGetAllChapters, useAddChapter, useToggleChapterCompletion, useRegisterUser, useUpdateChapterRevision } from '../hooks/useQueries';
+import { BookOpen, Plus, Check, X, Edit, Trash2, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
@@ -21,6 +21,7 @@ function MasterPCMChapterSystem() {
   const { data: chapters, isLoading, error } = useGetAllChapters();
   const addChapter = useAddChapter();
   const toggleCompletion = useToggleChapterCompletion();
+  const updateRevision = useUpdateChapterRevision();
   const registerUser = useRegisterUser();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -82,7 +83,6 @@ function MasterPCMChapterSystem() {
   const handleSaveEdit = async () => {
     if (!selectedChapter) return;
     
-    // Note: Backend doesn't support updateChapter yet
     toast.error('Edit functionality requires backend support. Please add updateChapter method to backend.');
     setIsEditDialogOpen(false);
   };
@@ -95,7 +95,6 @@ function MasterPCMChapterSystem() {
   const confirmDelete = async () => {
     if (!selectedChapter) return;
     
-    // Note: Backend doesn't support deleteChapter yet
     toast.error('Delete functionality requires backend support. Please add deleteChapter method to backend.');
     setIsDeleteDialogOpen(false);
   };
@@ -108,6 +107,28 @@ function MasterPCMChapterSystem() {
     }
   };
 
+  const handleToggleRevision = async (chapterId: bigint, field: 'theory' | 'pyqs' | 'advanced') => {
+    try {
+      await updateRevision.mutateAsync({ chapterId, field });
+    } catch (err) {
+      console.error('Failed to toggle revision:', err);
+    }
+  };
+
+  const calculateChapterRevision = (chapter: Chapter) => {
+    if (!chapter.isComplete && chapter.studyHours === BigInt(0)) {
+      return 0;
+    }
+    
+    const completed = [
+      chapter.theoryCompleted,
+      chapter.pyqsCompleted,
+      chapter.advancedPracticeCompleted,
+    ].filter(Boolean).length;
+    
+    return Math.round((completed / 3) * 100);
+  };
+
   const getImportanceColor = (importance: string) => {
     switch (importance) {
       case 'Critical':
@@ -115,7 +136,7 @@ function MasterPCMChapterSystem() {
       case 'High':
         return 'bg-chart-4 text-white';
       case 'Medium':
-        return 'bg-chart-1 text-white';
+        return 'bg-chart-3 text-white';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -124,36 +145,130 @@ function MasterPCMChapterSystem() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Hard':
-        return 'bg-destructive/20 text-destructive-foreground border-destructive';
+        return 'bg-destructive text-destructive-foreground';
       case 'Medium':
-        return 'bg-chart-1/20 text-chart-1 border-chart-1';
+        return 'bg-chart-4 text-white';
       default:
-        return 'bg-chart-2/20 text-chart-2 border-chart-2';
+        return 'bg-chart-2 text-white';
     }
   };
 
-  const groupedChapters = chapters?.reduce((acc, chapter) => {
-    if (!acc[chapter.subject]) {
-      acc[chapter.subject] = [];
-    }
-    acc[chapter.subject].push(chapter);
-    return acc;
-  }, {} as Record<string, typeof chapters>);
+  const [activeSubject, setActiveSubject] = useState('All');
+  const subjectTabs = ['All', ...SUBJECTS];
 
-  // Calculate completion percentage
-  const totalChapters = chapters?.length || 0;
-  const completedChapters = chapters?.filter(ch => ch.isComplete).length || 0;
-  const completionPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+  const filteredChapters = chapters?.filter(ch => 
+    activeSubject === 'All' || ch?.subject === activeSubject
+  ) || [];
 
   if (isLoading) {
     return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading chapters...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!chapters || chapters.length === 0) {
+    return (
       <Card>
         <CardHeader>
-          <CardTitle>Master PCM Chapter System</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              Master PCM Chapter System
+            </span>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="min-h-[44px] min-w-[44px]">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Chapter
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Chapter</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Chapter Name</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="e.g., Thermodynamics"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="subject">Subject</Label>
+                    <Select value={formData.subject} onValueChange={(value) => setFormData({ ...formData, subject: value })}>
+                      <SelectTrigger id="subject">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUBJECTS.map((subject) => (
+                          <SelectItem key={subject} value={subject}>
+                            {subject}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="difficulty">Difficulty</Label>
+                      <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
+                        <SelectTrigger id="difficulty">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {DIFFICULTIES.map((diff) => (
+                            <SelectItem key={diff} value={diff}>
+                              {diff}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="importance">Importance</Label>
+                      <Select value={formData.importance} onValueChange={(value) => setFormData({ ...formData, importance: value })}>
+                        <SelectTrigger id="importance">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {IMPORTANCE.map((imp) => (
+                            <SelectItem key={imp} value={imp}>
+                              {imp}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddChapter} disabled={addChapter.isPending}>
+                    {addChapter.isPending ? 'Adding...' : 'Add Chapter'}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Loading...</p>
+          <div className="text-center py-12">
+            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground mb-4">No chapters added yet</p>
+            <Button onClick={() => setIsAddDialogOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Your First Chapter
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -168,174 +283,195 @@ function MasterPCMChapterSystem() {
             <BookOpen className="h-5 w-5" />
             Master PCM Chapter System
           </span>
-          <div className="flex items-center gap-3">
-            <div className="text-sm">
-              <span className="text-muted-foreground">Completion: </span>
-              <span className="font-bold text-primary">{completionPercentage}%</span>
-              <span className="text-muted-foreground ml-1">({completedChapters}/{totalChapters})</span>
-            </div>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="min-h-[44px] min-w-[44px] transition-all duration-200">
-                  <Plus className="h-4 w-4 mr-0 sm:mr-2" />
-                  <span className="hidden sm:inline">Add Chapter</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-[95vw] sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Add New Chapter</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="min-h-[44px] min-w-[44px]">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Chapter
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Chapter</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Chapter Name</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="e.g., Thermodynamics"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Select value={formData.subject} onValueChange={(value) => setFormData({ ...formData, subject: value })}>
+                    <SelectTrigger id="subject">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SUBJECTS.map((subject) => (
+                        <SelectItem key={subject} value={subject}>
+                          {subject}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Chapter Name</Label>
-                    <Input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g., Thermodynamics"
-                      className="min-h-[44px]"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Subject</Label>
-                    <Select value={formData.subject} onValueChange={(v) => setFormData({ ...formData, subject: v })}>
-                      <SelectTrigger className="min-h-[44px]">
+                    <Label htmlFor="difficulty">Difficulty</Label>
+                    <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
+                      <SelectTrigger id="difficulty">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {SUBJECTS.map((subject) => (
-                          <SelectItem key={subject} value={subject}>
-                            {subject}
+                        {DIFFICULTIES.map((diff) => (
+                          <SelectItem key={diff} value={diff}>
+                            {diff}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Difficulty</Label>
-                      <Select
-                        value={formData.difficulty}
-                        onValueChange={(v) => setFormData({ ...formData, difficulty: v })}
-                      >
-                        <SelectTrigger className="min-h-[44px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {DIFFICULTIES.map((difficulty) => (
-                            <SelectItem key={difficulty} value={difficulty}>
-                              {difficulty}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Importance</Label>
-                      <Select
-                        value={formData.importance}
-                        onValueChange={(v) => setFormData({ ...formData, importance: v })}
-                      >
-                        <SelectTrigger className="min-h-[44px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {IMPORTANCE.map((importance) => (
-                            <SelectItem key={importance} value={importance}>
-                              {importance}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="importance">Importance</Label>
+                    <Select value={formData.importance} onValueChange={(value) => setFormData({ ...formData, importance: value })}>
+                      <SelectTrigger id="importance">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {IMPORTANCE.map((imp) => (
+                          <SelectItem key={imp} value={imp}>
+                            {imp}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="min-h-[44px]">
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddChapter} className="min-h-[44px]">
-                    Add Chapter
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddChapter} disabled={addChapter.isPending}>
+                  {addChapter.isPending ? 'Adding...' : 'Add Chapter'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="Physics" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 gap-1 h-auto p-1">
-            <TabsTrigger value="Physics" className="min-h-[44px] text-xs sm:text-sm transition-all duration-200">
-              Physics
-            </TabsTrigger>
-            <TabsTrigger value="Physical Chemistry" className="min-h-[44px] text-xs sm:text-sm transition-all duration-200">
-              Physical
-            </TabsTrigger>
-            <TabsTrigger value="Organic Chemistry" className="min-h-[44px] text-xs sm:text-sm transition-all duration-200">
-              Organic
-            </TabsTrigger>
-            <TabsTrigger value="Inorganic Chemistry" className="min-h-[44px] text-xs sm:text-sm transition-all duration-200">
-              Inorganic
-            </TabsTrigger>
-            <TabsTrigger value="Mathematics" className="min-h-[44px] text-xs sm:text-sm transition-all duration-200">
-              Maths
-            </TabsTrigger>
+        <Tabs value={activeSubject} onValueChange={setActiveSubject} className="space-y-4">
+          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1 h-auto p-1">
+            {subjectTabs.map((subject) => (
+              <TabsTrigger
+                key={subject}
+                value={subject}
+                className="text-xs sm:text-sm min-h-[44px] transition-all duration-200"
+              >
+                {subject}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          {SUBJECTS.map((subject) => (
-            <TabsContent key={subject} value={subject} className="space-y-3 mt-4">
-              {groupedChapters?.[subject]?.length === 0 || !groupedChapters?.[subject] ? (
+          {subjectTabs.map((subject) => (
+            <TabsContent key={subject} value={subject} className="space-y-4">
+              {filteredChapters.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No chapters added yet for {subject}</p>
-                  <p className="text-sm mt-1">Click "Add Chapter" to get started</p>
+                  No chapters in {subject === 'All' ? 'any subject' : subject}
                 </div>
               ) : (
-                <div className="space-y-2">
-                  {groupedChapters[subject].map((chapter) => (
-                    <div
-                      key={Number(chapter.id)}
-                      className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-card border border-border hover:border-primary/50 transition-all duration-200"
-                    >
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <button
-                          onClick={() => handleToggleCompletion(chapter.id)}
-                          className="flex-shrink-0 w-6 h-6 rounded border-2 border-primary flex items-center justify-center transition-all duration-200 hover:bg-primary/20 min-h-[44px] min-w-[44px] sm:min-h-[24px] sm:min-w-[24px]"
-                        >
-                          {chapter.isComplete && <Check className="h-4 w-4 text-primary" />}
-                        </button>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-sm sm:text-base truncate">{chapter.name}</h4>
-                          <div className="flex flex-wrap gap-2 mt-1">
-                            <Badge className={getDifficultyColor(chapter.difficulty)} variant="outline">
+                <div className="grid grid-cols-1 gap-4">
+                  {filteredChapters.map((chapter) => (
+                    <Card key={Number(chapter.id)} className="border-border/50 transition-all duration-200 hover:border-primary/50">
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-base sm:text-lg truncate">{chapter.name}</h3>
+                              <p className="text-sm text-muted-foreground">{chapter.subject}</p>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              <Button
+                                size="sm"
+                                variant={chapter.isComplete ? 'default' : 'outline'}
+                                onClick={() => handleToggleCompletion(chapter.id)}
+                                className="min-h-[44px] min-w-[44px]"
+                              >
+                                {chapter.isComplete ? (
+                                  <Check className="h-4 w-4" />
+                                ) : (
+                                  <X className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-2">
+                            <Badge className={getDifficultyColor(chapter.difficulty)}>
                               {chapter.difficulty}
                             </Badge>
                             <Badge className={getImportanceColor(chapter.importance)}>
                               {chapter.importance}
                             </Badge>
                           </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">Revision Coverage</span>
+                              <span className="font-semibold text-primary">
+                                {calculateChapterRevision(chapter)}%
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              <Button
+                                size="sm"
+                                variant={chapter.theoryCompleted ? 'default' : 'outline'}
+                                onClick={() => handleToggleRevision(chapter.id, 'theory')}
+                                className="min-h-[44px] text-xs"
+                              >
+                                {chapter.theoryCompleted ? (
+                                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                                ) : (
+                                  <XCircle className="mr-1 h-3 w-3" />
+                                )}
+                                Theory
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant={chapter.pyqsCompleted ? 'default' : 'outline'}
+                                onClick={() => handleToggleRevision(chapter.id, 'pyqs')}
+                                className="min-h-[44px] text-xs"
+                              >
+                                {chapter.pyqsCompleted ? (
+                                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                                ) : (
+                                  <XCircle className="mr-1 h-3 w-3" />
+                                )}
+                                PYQs
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant={chapter.advancedPracticeCompleted ? 'default' : 'outline'}
+                                onClick={() => handleToggleRevision(chapter.id, 'advanced')}
+                                className="min-h-[44px] text-xs"
+                              >
+                                {chapter.advancedPracticeCompleted ? (
+                                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                                ) : (
+                                  <XCircle className="mr-1 h-3 w-3" />
+                                )}
+                                Advanced
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-1 sm:gap-2 ml-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEditChapter(chapter)}
-                          className="min-h-[44px] min-w-[44px] transition-all duration-200"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteChapter(chapter)}
-                          className="min-h-[44px] min-w-[44px] text-destructive hover:text-destructive hover:bg-destructive/10 transition-all duration-200"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               )}
@@ -343,105 +479,6 @@ function MasterPCMChapterSystem() {
           ))}
         </Tabs>
       </CardContent>
-
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-[95vw] sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Chapter</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>Chapter Name</Label>
-              <Input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="min-h-[44px]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Subject</Label>
-              <Select value={formData.subject} onValueChange={(v) => setFormData({ ...formData, subject: v })}>
-                <SelectTrigger className="min-h-[44px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SUBJECTS.map((subject) => (
-                    <SelectItem key={subject} value={subject}>
-                      {subject}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Difficulty</Label>
-                <Select
-                  value={formData.difficulty}
-                  onValueChange={(v) => setFormData({ ...formData, difficulty: v })}
-                >
-                  <SelectTrigger className="min-h-[44px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DIFFICULTIES.map((difficulty) => (
-                      <SelectItem key={difficulty} value={difficulty}>
-                        {difficulty}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Importance</Label>
-                <Select
-                  value={formData.importance}
-                  onValueChange={(v) => setFormData({ ...formData, importance: v })}
-                >
-                  <SelectTrigger className="min-h-[44px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {IMPORTANCE.map((importance) => (
-                      <SelectItem key={importance} value={importance}>
-                        {importance}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="min-h-[44px]">
-              Cancel
-            </Button>
-            <Button onClick={handleSaveEdit} className="min-h-[44px]">
-              Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent className="max-w-[95vw] sm:max-w-md">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Chapter</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete "{selectedChapter?.name}"? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="min-h-[44px]">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="min-h-[44px] bg-destructive hover:bg-destructive/90">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Card>
   );
 }

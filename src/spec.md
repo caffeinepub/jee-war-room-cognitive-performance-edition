@@ -1,15 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Build Phase 1 of the JEE War Room application with core UI, Overview dashboard, real-time countdown, and complete chapter management system.
+**Goal:** Add War Mode entry UI with configuration modal for duration and break settings to the Overview Dashboard.
 
 **Planned changes:**
-- Implement dark UI layout (#0f0f0f background) optimized for Android devices with 44x44px minimum touch targets and mobile-responsive design (320px-480px)
-- Create unified Overview dashboard displaying chapter completion percentage, PCM ratio tracker, War Mode hours counter, and weak chapter alerts
-- Add real-time countdown timer to JEE Advanced 2026 (May 17, 2026, 9:00 AM IST) that updates every second and turns red when fewer than 30 days remain
-- Split Chemistry into three separate sections: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry, each with independent chapter lists
-- Implement full chapter management system with modal-based editing for chapter name, status (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Weak, Moderate, Strong), accuracy percentage, and last revision date
-- Add delete chapter functionality with confirmation modal and add custom chapter functionality with validation
-- Implement dynamic chapter completion percentage calculation that updates in real-time as chapter status changes across all subjects (Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics)
+- Add "ENTER WAR MODE" button to OverviewDashboard component with neon blue styling
+- Create War Mode configuration modal with focus duration selector (60m/90m/120m presets + custom input)
+- Add "Break needed?" toggle with Yes/No options
+- Implement conditional break duration selector (5m/10m/15m presets + custom input) that appears when break is enabled
+- Add confirmation modal showing settings summary with "Confirm & Enter War Mode" and "Cancel" buttons
+- Implement form validation for duration inputs (minimum 1 minute, positive integers)
+- Ensure mobile-responsive design with 44x44px minimum touch targets for all interactive elements
+- Confirmation button closes modals without entering War Mode (War Mode screen not implemented in this phase)
 
-**User-visible outcome:** Users can view a dark-themed Overview dashboard with real-time JEE countdown, track chapter completion across Physics, three Chemistry sections, and Mathematics, and manage chapters through modal dialogs with full CRUD capabilities including status updates, weakness tracking, and accuracy monitoring.
+**User-visible outcome:** Users can tap the "ENTER WAR MODE" button on the Overview Dashboard to open a configuration modal where they select focus duration (with preset or custom options), optionally enable breaks with duration selection, review their settings in a confirmation modal, and either confirm or cancel. The modals close after confirmation, but War Mode does not start yet.

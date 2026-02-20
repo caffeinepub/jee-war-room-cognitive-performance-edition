@@ -63,6 +63,11 @@
     * {
         @apply border-border;
     }
+    html, body, #root {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+    }
     body {
         @apply bg-background text-foreground;
         font-feature-settings: "rlig" 1, "calt" 1;

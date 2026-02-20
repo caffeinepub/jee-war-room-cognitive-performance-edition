@@ -36,8 +36,11 @@ export interface Chapter {
     difficulty: string;
     name: string;
     importance: string;
+    advancedPracticeCompleted: boolean;
     lastStudied?: Time;
     studyHours: bigint;
+    pyqsCompleted: boolean;
+    theoryCompleted: boolean;
     isComplete: boolean;
 }
 export interface backendInterface {

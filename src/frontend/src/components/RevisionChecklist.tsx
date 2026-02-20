@@ -3,22 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useGetAllChapters, useUpdateChapterRevision, useToggleChapterCompletion, useRegisterUser } from '../hooks/useQueries';
-import { CheckSquare, Filter, Check, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { useGetAllChapters, useToggleChapterCompletion, useRegisterUser } from '../hooks/useQueries';
+import { CheckSquare, Check, X } from 'lucide-react';
 import type { Chapter } from '../backend';
 
-const SUBJECTS = ['All', 'Physics', 'Chemistry - Physical', 'Chemistry - Organic', 'Chemistry - Inorganic', 'Mathematics'];
+const SUBJECTS = ['All', 'Physics', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Mathematics'];
 
 function RevisionChecklist() {
   const { data: chapters, isLoading, error } = useGetAllChapters();
-  const updateRevision = useUpdateChapterRevision();
   const toggleCompletion = useToggleChapterCompletion();
   const registerUser = useRegisterUser();
 
   const [selectedSubject, setSelectedSubject] = useState('All');
-  const [selectedChapters, setSelectedChapters] = useState<Set<number>>(new Set());
-  const [filterStatus, setFilterStatus] = useState<'all' | 'due' | 'completed'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'complete' | 'incomplete'>('all');
 
   useEffect(() => {
     if (error && error.message.includes('User not found')) {
@@ -26,32 +23,23 @@ function RevisionChecklist() {
     }
   }, [error]);
 
-  const isRevisionDue = (lastStudied: bigint | undefined) => {
-    if (!lastStudied) return true;
+  const getRevisionStatus = (chapter: Chapter) => {
+    const completed = [
+      chapter.theoryCompleted,
+      chapter.pyqsCompleted,
+      chapter.advancedPracticeCompleted,
+    ].filter(Boolean).length;
     
-    const now = Date.now();
-    const lastStudiedDate = Number(lastStudied) / 1_000_000;
-    const daysSinceStudied = (now - lastStudiedDate) / (1000 * 60 * 60 * 24);
+    const percentage = Math.round((completed / 3) * 100);
     
-    // Spaced repetition: 1, 7, 21 days
-    return daysSinceStudied >= 1;
-  };
-
-  const getRevisionStatus = (lastStudied: bigint | undefined) => {
-    if (!lastStudied) return { status: 'never', color: 'bg-muted text-muted-foreground', label: 'Not studied' };
-    
-    const now = Date.now();
-    const lastStudiedDate = Number(lastStudied) / 1_000_000;
-    const daysSinceStudied = (now - lastStudiedDate) / (1000 * 60 * 60 * 24);
-    
-    if (daysSinceStudied < 1) {
-      return { status: 'fresh', color: 'bg-chart-2 text-white', label: 'Fresh' };
-    } else if (daysSinceStudied < 7) {
-      return { status: 'due-soon', color: 'bg-chart-1 text-white', label: 'Due soon' };
-    } else if (daysSinceStudied < 21) {
-      return { status: 'due', color: 'bg-chart-4 text-white', label: 'Due' };
+    if (percentage === 100) {
+      return { status: 'complete', color: 'bg-chart-2 text-white', label: '100% Revised' };
+    } else if (percentage >= 66) {
+      return { status: 'good', color: 'bg-chart-1 text-white', label: '66% Revised' };
+    } else if (percentage >= 33) {
+      return { status: 'partial', color: 'bg-chart-4 text-white', label: '33% Revised' };
     } else {
-      return { status: 'overdue', color: 'bg-destructive text-destructive-foreground', label: 'Overdue' };
+      return { status: 'none', color: 'bg-muted text-muted-foreground', label: 'Not Revised' };
     }
   };
 
@@ -59,10 +47,10 @@ function RevisionChecklist() {
     const subjectMatch = selectedSubject === 'All' || chapter.subject === selectedSubject;
     
     let statusMatch = true;
-    if (filterStatus === 'due') {
-      statusMatch = isRevisionDue(chapter.lastStudied);
-    } else if (filterStatus === 'completed') {
-      statusMatch = !isRevisionDue(chapter.lastStudied);
+    if (filterStatus === 'complete') {
+      statusMatch = chapter.isComplete;
+    } else if (filterStatus === 'incomplete') {
+      statusMatch = !chapter.isComplete;
     }
     
     return subjectMatch && statusMatch;
@@ -75,50 +63,6 @@ function RevisionChecklist() {
     acc[chapter.subject].push(chapter);
     return acc;
   }, {} as Record<string, Chapter[]>);
-
-  const handleToggleChapter = (chapterId: number) => {
-    const newSelected = new Set(selectedChapters);
-    if (newSelected.has(chapterId)) {
-      newSelected.delete(chapterId);
-    } else {
-      newSelected.add(chapterId);
-    }
-    setSelectedChapters(newSelected);
-  };
-
-  const handleToggleAll = (subject: string) => {
-    const subjectChapters = groupedChapters?.[subject];
-    if (!subjectChapters) return;
-    
-    const subjectIds = subjectChapters.map(ch => Number(ch.id));
-    const allSelected = subjectIds.every(id => selectedChapters.has(id));
-    
-    const newSelected = new Set(selectedChapters);
-    if (allSelected) {
-      subjectIds.forEach(id => newSelected.delete(id));
-    } else {
-      subjectIds.forEach(id => newSelected.add(id));
-    }
-    setSelectedChapters(newSelected);
-  };
-
-  const handleMarkAsRevised = async () => {
-    if (selectedChapters.size === 0) {
-      toast.error('Please select chapters to mark as revised');
-      return;
-    }
-
-    try {
-      const promises = Array.from(selectedChapters).map(id =>
-        updateRevision.mutateAsync(BigInt(id))
-      );
-      await Promise.all(promises);
-      setSelectedChapters(new Set());
-      toast.success(`Marked ${selectedChapters.size} chapter(s) as revised`);
-    } catch (err) {
-      console.error('Failed to update revisions:', err);
-    }
-  };
 
   const handleToggleCompletion = async (chapterId: bigint) => {
     try {
@@ -146,21 +90,9 @@ function RevisionChecklist() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between flex-wrap gap-4">
-          <span className="flex items-center gap-2">
-            <CheckSquare className="h-5 w-5" />
-            Revision Checklist
-          </span>
-          {selectedChapters.size > 0 && (
-            <Button
-              onClick={handleMarkAsRevised}
-              size="sm"
-              className="bg-chart-2 hover:bg-chart-2/90 min-h-[44px] transition-all duration-200"
-              disabled={updateRevision.isPending}
-            >
-              {updateRevision.isPending ? 'Updating...' : `Mark ${selectedChapters.size} as Revised`}
-            </Button>
-          )}
+        <CardTitle className="flex items-center gap-2">
+          <CheckSquare className="h-5 w-5" />
+          Revision Checklist
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -187,8 +119,8 @@ function RevisionChecklist() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Chapters</SelectItem>
-                <SelectItem value="due">Due for Revision</SelectItem>
-                <SelectItem value="completed">Recently Revised</SelectItem>
+                <SelectItem value="complete">Completed</SelectItem>
+                <SelectItem value="incomplete">Incomplete</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -208,18 +140,13 @@ function RevisionChecklist() {
                 <div key={subject} className="space-y-3">
                   <div className="flex items-center justify-between border-b border-border pb-2">
                     <h3 className="font-semibold text-base sm:text-lg">{subject}</h3>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleToggleAll(subject)}
-                      className="min-h-[44px] text-xs sm:text-sm transition-all duration-200"
-                    >
-                      {subjectChapters.every(ch => selectedChapters.has(Number(ch.id))) ? 'Deselect All' : 'Select All'}
-                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      {subjectChapters.length} chapter{subjectChapters.length !== 1 ? 's' : ''}
+                    </span>
                   </div>
                   <div className="space-y-2">
                     {subjectChapters.map((chapter) => {
-                      const revisionStatus = getRevisionStatus(chapter.lastStudied);
+                      const revisionStatus = getRevisionStatus(chapter);
                       const chapterId = Number(chapter.id);
                       
                       return (
@@ -249,19 +176,24 @@ function RevisionChecklist() {
                                   <Badge className={revisionStatus.color}>
                                     {revisionStatus.label}
                                   </Badge>
-                                  {chapter.lastStudied && (
-                                    <Badge variant="outline" className="text-xs">
-                                      Last: {new Date(Number(chapter.lastStudied) / 1_000_000).toLocaleDateString()}
-                                    </Badge>
-                                  )}
                                   <Badge variant="outline" className="text-xs">
                                     {chapter.importance}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs">
+                                    {chapter.difficulty}
                                   </Badge>
                                   {chapter.isComplete && (
                                     <Badge className="bg-chart-2 text-white text-xs">
                                       Completed
                                     </Badge>
                                   )}
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                  <span>Theory: {chapter.theoryCompleted ? '✓' : '✗'}</span>
+                                  <span>•</span>
+                                  <span>PYQs: {chapter.pyqsCompleted ? '✓' : '✗'}</span>
+                                  <span>•</span>
+                                  <span>Advanced: {chapter.advancedPracticeCompleted ? '✓' : '✗'}</span>
                                 </div>
                               </div>
                             </div>

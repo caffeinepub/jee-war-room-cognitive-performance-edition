@@ -7,6 +7,9 @@ import Runtime "mo:core/Runtime";
 import List "mo:core/List";
 import Principal "mo:core/Principal";
 import Nat "mo:core/Nat";
+import Array "mo:core/Array";
+
+
 
 actor {
   type ConsistencyDNA = {
@@ -35,6 +38,9 @@ actor {
     importance : Text;
     studyHours : Nat;
     isComplete : Bool;
+    theoryCompleted : Bool; // Revision tracking fields
+    pyqsCompleted : Bool; // PYQs tracking field
+    advancedPracticeCompleted : Bool; // Advanced practice field
   };
 
   type PerformanceBlock = {
@@ -109,6 +115,9 @@ actor {
       importance;
       studyHours = 0;
       isComplete = false;
+      theoryCompleted = false;
+      pyqsCompleted = false;
+      advancedPracticeCompleted = false;
     };
 
     switch (users.get(caller)) {

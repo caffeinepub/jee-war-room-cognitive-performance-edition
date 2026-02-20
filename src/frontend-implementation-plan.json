@@ -1,183 +1,153 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Phase 1: Core UI, Overview Dashboard, Countdown, and Chapter Management",
+  "title": "Phase 3 Step 1: War Mode Entry UI with Duration and Break Configuration",
   "requirements": [
     {
-      "id": "REQ-19",
-      "summary": "Implement dark UI layout with #0f0f0f background, consistent spacing, smooth transitions, and Android-optimized touch targets",
+      "id": "REQ-55",
+      "summary": "Add 'ENTER WAR MODE' button to OverviewDashboard component with neon blue styling and mobile-optimized touch target",
       "acceptanceCriteria": [
-        "Background color is #0f0f0f throughout the application",
-        "Cards and panels use a slightly lighter dark grey than background",
-        "All major sections have minimum 16px spacing between them",
-        "All interactive elements have 200-300ms smooth transitions",
-        "All touch targets are minimum 44x44px on mobile devices",
-        "Layout is fully responsive and functional on screen widths from 320px to 480px"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/index.css",
-          "operation": "modify",
-          "description": "Update CSS custom properties to set --background to #0f0f0f (oklch(0.059 0 0)), adjust --card to a slightly lighter dark grey (oklch(0.08 0 0)), and verify all major section spacing uses minimum 16px and all interactive elements have 200-300ms transitions defined in the existing design system."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Verify and adjust background color tokens to use #0f0f0f equivalent in OKLCH, ensure card/panel colors are slightly lighter, and confirm mobile-responsive utilities support 320px-480px screen widths with touch targets minimum 44x44px."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Update the main App component layout to enforce consistent 16px padding and margins between major sections (header, tab navigation, content area, footer). Verify all interactive elements (buttons, tabs, navigation) use smooth 200-300ms transitions and meet 44x44px minimum touch target requirements on mobile."
-        }
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "summary": "Create unified Overview dashboard with chapter completion %, PCM ratio tracker, War Mode hours counter, and weak chapter alerts",
-      "acceptanceCriteria": [
-        "Overview dashboard displays chapter completion percentage",
-        "Overview dashboard displays PCM ratio tracker",
-        "Overview dashboard displays War Mode hours counter",
-        "Overview dashboard displays weak chapter alerts",
-        "Focus Stability Index is not displayed on Overview dashboard",
-        "Consistency DNA Tracker is not displayed on Overview dashboard",
-        "Performance vs Time graph is not displayed anywhere",
-        "All metrics are consolidated in a single unified screen layout"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/OverviewDashboard.tsx",
-          "operation": "create",
-          "description": "Create a new OverviewDashboard component that consolidates four key metrics in a unified single-screen layout: (1) Chapter completion percentage calculated from chapter data, (2) PCM ratio tracker showing Physics/Chemistry/Mathematics distribution, (3) War Mode hours counter displaying total study time from war mode stats, and (4) Weak chapter alerts section listing chapters marked as 'Weak' weakness level. Use card-based layout with dark theme styling consistent with #0f0f0f background. Do not include Focus Stability Index, Consistency DNA Tracker, revision module, Top PYQs section, or Performance vs Time graph. Use existing useQueries hooks to fetch chapter and war mode data."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Replace the existing 'Overview' tab content with the new OverviewDashboard component. Ensure the Overview tab is the first tab in the navigation and displays the consolidated dashboard when selected. Remove any references to FocusStabilityIndex component in the Overview tab content area."
-        }
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "summary": "Implement real-time countdown timer to JEE Advanced 2026 with automatic red styling when <30 days remain",
-      "acceptanceCriteria": [
-        "Countdown timer targets May 17, 2026, 9:00 AM IST",
-        "Timer displays days, hours, minutes, and seconds",
-        "Timer updates every second without page refresh",
-        "Timer text is displayed in large digital font",
-        "Timer automatically turns red when fewer than 30 days remain",
-        "Timer styling and color change work correctly on mobile devices"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/CountdownTimer.tsx",
-          "operation": "modify",
-          "description": "Update the CountdownTimer component to target May 17, 2026, 9:00 AM IST as the exam date. Implement automatic red text styling (text-red-500 or equivalent) when days remaining is less than 30. Ensure the timer displays in large digital font (text-4xl or larger) with days, hours, minutes, and seconds clearly visible. Verify the component updates every second using setInterval and works correctly on mobile devices with touch-friendly sizing."
-        },
-        {
-          "path": "frontend/src/components/OverviewDashboard.tsx",
-          "operation": "modify",
-          "description": "Integrate the CountdownTimer component prominently at the top of the OverviewDashboard layout. Position it as a header or hero section above the four main metric cards to emphasize urgency and visibility on the unified Overview screen."
-        }
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "summary": "Split Chemistry into Physical, Organic, and Inorganic sections with independent chapter lists",
-      "acceptanceCriteria": [
-        "Chemistry is split into three distinct sections: Physical Chemistry, Organic Chemistry, and Inorganic Chemistry",
-        "Each Chemistry section displays its own independent list of chapters",
-        "Users can add, edit, and delete chapters within each Chemistry section independently",
-        "Backend data model supports storing chapters under Physical, Organic, and Inorganic Chemistry categories",
-        "Chapter completion percentage calculations account for all three Chemistry sections separately"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
-          "operation": "modify",
-          "description": "Modify the MasterPCMChapterSystem component to replace the single 'Chemistry' subject with three separate sections: 'Physical Chemistry', 'Organic Chemistry', and 'Inorganic Chemistry'. Update the subject filter/grouping logic to treat each Chemistry subsection independently with its own chapter list. Ensure the UI displays three distinct collapsible sections or tabs for Physical, Organic, and Inorganic Chemistry alongside Physics and Mathematics. Update any subject-based filtering, chapter addition, and completion percentage calculations to recognize all three Chemistry categories as separate entities."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Update the chapter management hooks (useAddChapter, useGetAllChapters, useToggleChapterCompletion) to handle 'Physical Chemistry', 'Organic Chemistry', and 'Inorganic Chemistry' as distinct subject values. Ensure mutation and query logic correctly processes these three separate Chemistry subjects and calculates completion percentages independently for each. Update any subject validation or filtering logic to recognize the three Chemistry subsections."
-        }
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "summary": "Implement full chapter management system with modal-based editing, delete confirmation, and add custom chapter functionality",
-      "acceptanceCriteria": [
-        "Edit chapter functionality opens in a modal dialog",
-        "Modal allows editing chapter name with text input",
-        "Modal allows editing chapter status with dropdown or select (Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered)",
-        "Modal allows editing weakness level with dropdown or select (Weak, Moderate, Strong)",
-        "Modal allows editing accuracy percentage with number input (0-100)",
-        "Modal allows editing last revision date with date picker",
-        "Delete chapter button opens confirmation modal before deletion",
-        "Add custom chapter functionality opens modal with form validation for required fields",
-        "All modal interactions work correctly on Android mobile devices with touch input",
-        "Backend API supports updating chapter name, status, weakness, accuracy, and revision date",
-        "Backend API supports deleting chapters by ID",
-        "Backend API supports creating new custom chapters with validation"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ChapterEditModal.tsx",
-          "operation": "create",
-          "description": "Create a ChapterEditModal component using shadcn/ui Dialog component. Include form inputs for chapter name (text), status (Select dropdown with options: Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Select dropdown: Weak, Moderate, Strong), accuracy percentage (number input 0-100), and last revision date (date picker). Use shadcn/ui form components (Input, Select, DatePicker) with proper validation. Ensure all touch targets are minimum 44x44px and modal is mobile-responsive for 320px-480px screens. Include Save and Cancel buttons with 200-300ms transitions. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/ChapterDeleteModal.tsx",
-          "operation": "create",
-          "description": "Create a ChapterDeleteModal component using shadcn/ui AlertDialog component. Display a confirmation message asking the user to confirm chapter deletion with clear warning text. Include Confirm Delete and Cancel buttons styled with appropriate danger colors (red accent) for the delete action. Ensure touch targets meet 44x44px minimum requirement and the modal works correctly on Android mobile devices. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/AddChapterModal.tsx",
-          "operation": "create",
-          "description": "Create an AddChapterModal component using shadcn/ui Dialog component. Include form inputs for chapter name (required text input), subject (Select dropdown: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics), status (Select dropdown: Not Started, In Progress, Completed, Revised Once, Revised Twice, Mastered), weakness level (Select dropdown: Weak, Moderate, Strong), accuracy percentage (number input 0-100), and last revision date (date picker). Implement client-side validation for required fields (name and subject). Use shadcn/ui form components with proper validation feedback. Ensure all touch targets are minimum 44x44px. Include Add Chapter and Cancel buttons. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
-          "operation": "modify",
-          "description": "Integrate ChapterEditModal, ChapterDeleteModal, and AddChapterModal into the MasterPCMChapterSystem component. Add Edit and Delete buttons to each chapter list item with minimum 44x44px touch targets. Wire Edit button to open ChapterEditModal with the selected chapter's current data. Wire Delete button to open ChapterDeleteModal with confirmation. Add 'Add Custom Chapter' button at the top or bottom of each subject section to open AddChapterModal. Ensure modals are triggered correctly with appropriate state management for selected chapter and modal visibility. Update the component to call backend mutation hooks (useUpdateChapter, useDeleteChapter, useAddChapter) when modal actions are confirmed."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add new mutation hooks: useUpdateChapter (to update chapter name, status, weakness, accuracy, and revision date), useDeleteChapter (to delete chapter by ID), and enhance useAddChapter to support all custom chapter fields including status, weakness, accuracy, and revision date. Ensure each mutation hook invalidates the 'chapters' query cache on success and displays toast notifications for success/error feedback. Wire these hooks to the corresponding backend capabilities for chapter update and delete operations."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Implement dynamic chapter completion percentage calculation with real-time updates",
-      "acceptanceCriteria": [
-        "Chapter completion percentage is calculated as (completed chapters / total chapters) * 100",
-        "Completed chapters include those with status: Completed, Revised Once, Revised Twice, or Mastered",
-        "Calculation includes chapters from all subjects: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, and Mathematics",
-        "Percentage displays prominently on Overview dashboard",
-        "Percentage updates immediately when any chapter status is changed through edit modal",
-        "Percentage updates immediately when new chapters are added or deleted",
-        "Backend API returns accurate chapter completion percentage on user data fetch",
-        "Frontend recalculates and displays updated percentage without requiring page refresh"
+        "Button displays 'ENTER WAR MODE' text with appropriate styling",
+        "Button uses neon blue accent color from the theme",
+        "Button meets minimum 44x44px touch target requirement for mobile",
+        "Clicking the button opens the War Mode configuration modal"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/OverviewDashboard.tsx",
           "operation": "modify",
-          "description": "Add dynamic chapter completion percentage calculation to the OverviewDashboard component. Fetch all chapters using the useGetAllChapters hook, then calculate completion percentage as (chapters with status Completed, Revised Once, Revised Twice, or Mastered / total chapters) * 100. Include chapters from all five subjects: Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, and Mathematics. Display the calculated percentage prominently in a large card or metric section at the top of the dashboard. Ensure the component re-renders and recalculates the percentage automatically whenever the chapters query data changes (triggered by query invalidation after add/edit/delete operations)."
+          "description": "Add 'ENTER WAR MODE' button near the top of the dashboard component, positioned prominently after the title and before the statistics cards. Style with neon blue accent color (using existing theme colors from index.css), ensure minimum 44x44px touch target with appropriate padding, and wire the button to open the War Mode configuration modal using state management."
+        }
+      ]
+    },
+    {
+      "id": "REQ-56",
+      "summary": "Create War Mode configuration modal with duration selector featuring preset buttons and custom input",
+      "acceptanceCriteria": [
+        "Modal opens when 'ENTER WAR MODE' button is clicked",
+        "Three preset buttons display: 60m, 90m, 120m",
+        "Custom input field accepts numeric values for minutes",
+        "Only one duration option (preset or custom) can be selected at a time",
+        "Selected duration is visually highlighted",
+        "Modal matches dark theme styling"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "operation": "create",
+          "description": "Create a new War Mode configuration modal component using the shadcn-ui Dialog component. Verify the component's usage instructions before implementing. Include state management for modal open/close, duration selection (preset vs custom), break toggle, and break duration. Implement duration selector section with three preset buttons (60m, 90m, 120m) and a custom input field for entering minutes. Ensure only one duration option can be selected at a time with visual highlighting. Style with dark theme background (#0f0f0f) and slightly lighter grey content area matching the existing application theme."
         },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/components/OverviewDashboard.tsx",
           "operation": "modify",
-          "description": "Ensure all chapter mutation hooks (useAddChapter, useUpdateChapter, useDeleteChapter, useToggleChapterCompletion) invalidate the 'chapters' query cache immediately on successful mutation. This will trigger automatic refetch of chapter data and cause the OverviewDashboard to recalculate and display the updated completion percentage in real-time without page refresh. Verify that query invalidation is configured correctly with queryClient.invalidateQueries(['chapters'])."
+          "description": "Import and integrate the WarModeConfigModal component. Add state for controlling modal visibility. Wire the 'ENTER WAR MODE' button click handler to open the modal. Pass necessary props to the modal component for configuration data handling."
+        }
+      ]
+    },
+    {
+      "id": "REQ-57",
+      "summary": "Add 'Break needed?' toggle section to configuration modal with Yes/No options controlling break duration selector visibility",
+      "acceptanceCriteria": [
+        "Toggle section displays below duration selector",
+        "Two buttons labeled 'Yes' and 'No' are clearly visible",
+        "Only one option can be selected at a time",
+        "Default selection is 'No'",
+        "Break duration selector is hidden when 'No' is selected",
+        "Break duration selector appears when 'Yes' is selected"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "operation": "modify",
+          "description": "Add 'Break needed?' toggle section below the duration selector with two clearly visible option buttons labeled 'Yes' and 'No'. Implement state management with default selection set to 'No'. Ensure only one option can be selected at a time with visual highlighting. Add conditional rendering logic to control break duration selector visibility based on toggle state (hidden when 'No', visible when 'Yes')."
+        }
+      ]
+    },
+    {
+      "id": "REQ-58",
+      "summary": "Implement conditional break duration selector with preset buttons and custom input",
+      "acceptanceCriteria": [
+        "Break duration selector only displays when 'Break needed?' is 'Yes'",
+        "Three preset buttons display: 5m, 10m, 15m",
+        "Custom input field accepts numeric values for minutes",
+        "Only one break duration option can be selected at a time",
+        "Selected break duration is visually highlighted",
+        "Break duration selector is completely hidden when 'No' is selected"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "operation": "modify",
+          "description": "Add break duration selector section that conditionally renders when 'Break needed?' is set to 'Yes'. Include three preset buttons (5m, 10m, 15m) and a custom input field for entering break duration in minutes. Use the same styling pattern and layout structure as the focus duration selector. Implement state management to ensure only one break duration option can be selected at a time with visual highlighting. Ensure the section is completely hidden when 'No' is selected for break toggle."
+        }
+      ]
+    },
+    {
+      "id": "REQ-59",
+      "summary": "Add confirmation flow with settings summary and two-step modal confirmation process",
+      "acceptanceCriteria": [
+        "Configuration modal includes a 'Continue' or 'Next' button at the bottom",
+        "Clicking continues to confirmation modal showing settings summary",
+        "Confirmation modal displays selected focus duration",
+        "Confirmation modal displays break status (Yes/No)",
+        "Confirmation modal displays break duration if break is enabled",
+        "Confirmation modal has 'Confirm & Enter War Mode' and 'Cancel' buttons",
+        "Cancel returns to configuration modal",
+        "Confirm closes both modals (no War Mode screen transition yet)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "operation": "modify",
+          "description": "Add a 'Continue' or 'Next' button at the bottom of the configuration form. Implement state management to track configuration vs confirmation view. When clicked, transition to confirmation view showing a summary of selected settings including focus duration, break status (Yes/No), and break duration if enabled. The confirmation view should be part of the same modal component using conditional rendering."
         },
         {
-          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
           "operation": "modify",
-          "description": "Add a local display of the chapter completion percentage within the MasterPCMChapterSystem component. Calculate and display the percentage using the same logic as OverviewDashboard (completed chapters / total chapters * 100) where completed includes Completed, Revised Once, Revised Twice, or Mastered statuses across all five subjects. Position this percentage display prominently at the top of the chapter management interface. This provides users with immediate feedback on completion progress while managing chapters, and updates in real-time as chapter statuses change through modal edits."
+          "description": "Implement confirmation view within the modal that displays when user proceeds from configuration. Show formatted summary of focus duration, break enabled status, and break duration (if applicable). Add 'Confirm & Enter War Mode' and 'Cancel' buttons. Wire 'Cancel' to return to configuration view. Wire 'Confirm & Enter War Mode' to close the modal entirely without triggering any War Mode screen transition (as War Mode screen is not implemented in this phase)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-60",
+      "summary": "Implement form validation for focus duration and break duration with error messaging",
+      "acceptanceCriteria": [
+        "Cannot proceed without selecting a focus duration",
+        "Custom focus duration must be a positive integer >= 1",
+        "If break is enabled, break duration must be selected",
+        "Custom break duration must be a positive integer >= 1",
+        "Clear validation error messages display for invalid inputs",
+        "Validation occurs before opening confirmation modal"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "operation": "modify",
+          "description": "Add validation logic that runs when user clicks 'Continue' button. Ensure focus duration is selected (either preset or custom). If custom duration is used, validate it is a positive integer >= 1. If break is enabled, validate that break duration is selected with the same rules (positive integer >= 1 for custom). Display clear validation error messages using shadcn-ui toast or inline error displays when validation fails. Prevent transition to confirmation view until all validation passes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-61",
+      "summary": "Ensure full mobile responsiveness with optimized touch targets and no horizontal scrolling",
+      "acceptanceCriteria": [
+        "All buttons meet minimum 44x44px touch target size",
+        "Modal content fits within mobile viewport without horizontal scroll",
+        "Input fields are large enough for easy mobile interaction",
+        "Spacing between interactive elements prevents accidental taps",
+        "Modal displays correctly on screens 320px-480px wide",
+        "Text remains readable at mobile font sizes"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "operation": "modify",
+          "description": "Apply mobile-responsive design patterns throughout the modal component. Ensure all buttons and interactive elements meet minimum 44x44px touch target size. Use responsive padding and spacing to prevent accidental taps. Apply Tailwind responsive utilities to ensure modal content fits within mobile viewport (320px-480px) without horizontal scrolling. Use appropriate text sizes that remain readable on mobile screens. Test input field sizes for easy mobile interaction."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add any additional mobile-specific utility classes or touch target helpers needed for the War Mode configuration modal if the existing 44x44px touch target utilities are insufficient. Ensure modal-specific responsive breakpoints align with the 320px-480px mobile range."
         }
       ]
     }

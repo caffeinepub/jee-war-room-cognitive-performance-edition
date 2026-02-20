@@ -7,11 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CountdownTimer from './components/CountdownTimer';
 import OverviewDashboard from './components/OverviewDashboard';
 import MasterPCMChapterSystem from './components/MasterPCMChapterSystem';
-import { Target, BookOpen, LogIn, LogOut, Heart } from 'lucide-react';
+import { Target, BookOpen, LogIn, LogOut, Heart, Loader2 } from 'lucide-react';
 
 function App() {
-  const { identity, login, clear, isLoggingIn } = useInternetIdentity();
+  const { identity, login, clear, isLoggingIn, isInitializing } = useInternetIdentity();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isAppInitializing, setIsAppInitializing] = useState(true);
+  const [initError, setInitError] = useState<string | null>(null);
+  
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   // Touch swipe handling for mobile
@@ -19,8 +22,35 @@ function App() {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const minSwipeDistance = 50;
-
   const tabs = ['overview', 'chapters'];
+
+  // Initialize app with comprehensive error logging
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        console.log('[App] Initialization started at', new Date().toISOString());
+        console.log('[App] isInitializing:', isInitializing);
+        console.log('[App] identity:', identity ? 'Present' : 'Not present');
+        console.log('[App] isAuthenticated:', isAuthenticated);
+
+        // Wait for Internet Identity to initialize
+        if (!isInitializing) {
+          console.log('[App] Internet Identity initialization complete');
+          setIsAppInitializing(false);
+          console.log('[App] App initialization complete - ready to render');
+        } else {
+          console.log('[App] Still waiting for Internet Identity...');
+        }
+      } catch (error) {
+        console.error('[App] Initialization error:', error);
+        console.error('[App] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+        setInitError(error instanceof Error ? error.message : 'Unknown initialization error');
+        setIsAppInitializing(false);
+      }
+    };
+
+    initializeApp();
+  }, [isInitializing, identity, isAuthenticated]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -47,6 +77,42 @@ function App() {
       setActiveTab(tabs[currentIndex - 1]);
     }
   };
+
+  // Show loading state during initialization
+  if (isAppInitializing || isInitializing) {
+    console.log('[App] Rendering loading state');
+    return (
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+            <p className="text-lg text-muted-foreground">Initializing JEE WAR ROOM...</p>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  // Show error state if initialization failed
+  if (initError) {
+    console.error('[App] Rendering error state:', initError);
+    return (
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+          <div className="text-center space-y-4 max-w-md">
+            <Target className="h-16 w-16 text-destructive mx-auto" />
+            <h2 className="text-2xl font-bold text-destructive">Initialization Failed</h2>
+            <p className="text-muted-foreground">{initError}</p>
+            <Button onClick={() => window.location.reload()}>
+              Reload Application
+            </Button>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  console.log('[App] Rendering main application');
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

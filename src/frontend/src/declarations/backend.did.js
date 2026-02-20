@@ -16,8 +16,11 @@ export const Chapter = IDL.Record({
   'difficulty' : IDL.Text,
   'name' : IDL.Text,
   'importance' : IDL.Text,
+  'advancedPracticeCompleted' : IDL.Bool,
   'lastStudied' : IDL.Opt(Time),
   'studyHours' : IDL.Nat,
+  'pyqsCompleted' : IDL.Bool,
+  'theoryCompleted' : IDL.Bool,
   'isComplete' : IDL.Bool,
 });
 export const TimeSlot = IDL.Record({
@@ -98,8 +101,11 @@ export const idlFactory = ({ IDL }) => {
     'difficulty' : IDL.Text,
     'name' : IDL.Text,
     'importance' : IDL.Text,
+    'advancedPracticeCompleted' : IDL.Bool,
     'lastStudied' : IDL.Opt(Time),
     'studyHours' : IDL.Nat,
+    'pyqsCompleted' : IDL.Bool,
+    'theoryCompleted' : IDL.Bool,
     'isComplete' : IDL.Bool,
   });
   const TimeSlot = IDL.Record({

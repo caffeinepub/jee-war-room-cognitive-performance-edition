@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
+  "projectStateVersion": 19,
   "summary": "Full-stack web application called 'JEE WAR ROOM – Cognitive Performance Edition' for JEE Advanced 2026 preparation targeting AIR under 150. Features include real-time countdown (corrected to May 17, 2026), Focus Stability Index (FSI), performance analytics, consistency tracking, War Mode, comprehensive PCM chapter system with spaced repetition, daily goal tracker with study/work slots, and revision checklist. Dark-themed elite interface using React, Node.js, Express, MongoDB, and Chart.js. Fully optimized for Android mobile.",
   "architectural_notes": [
     "Dark mode only UI with #0f0f0f background, neon blue/orange accents, minimal distraction-free design",
@@ -208,6 +208,214 @@
         "REQ-24"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-masterpcmchaptersystem-component-to-display-revision-tracking-interface-within-each-chapter-card-or-detail-view-show-three-toggle-buttons-or-checkboxes-for-theory-pyqs-and-advanced-practice-display-the-calculated-revision-coverage-percentage-0-100-for-that-chapter-in-real-time-when-any-revision-field-is-toggled-immediately-call-the-backend-update-endpoint-and-refresh-the-chapter-data",
+      "title": "Update the MasterPCMChapterSystem component to display revision tracking interface within each chapter card or detail view. Show three toggle buttons or checkboxes for Theory, PYQs, and Advanced Practice. Display the calculated revision coverage percentage (0-100%) for that chapter in real-time. When any revision field is toggled, immediately call the backend update endpoint and refresh the chapter data.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-overviewdashboard-component-to-display-overall-revision-coverage-percentage-and-subject-wise-revision-coverage-breakdown-add-a-new-metrics-section-showing-overall-revision-coverage-physics-revision-physical-chemistry-revision-organic-chemistry-revision-inorganic-chemistry-revision-and-mathematics-revision-all-percentages-must-update-in-real-time-when-any-chapter-revision-status-changes-without-page-refresh-keep-revision-metrics-visually-separate-from-chapter-completion-percentage",
+      "title": "Update the OverviewDashboard component to display overall revision coverage percentage and subject-wise revision coverage breakdown. Add a new metrics section showing: Overall Revision Coverage (%), Physics Revision (%), Physical Chemistry Revision (%), Organic Chemistry Revision (%), Inorganic Chemistry Revision (%), and Mathematics Revision (%). All percentages must update in real-time when any chapter revision status changes without page refresh. Keep revision metrics visually separate from chapter completion percentage.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-toppyqstracker-component-for-the-overview-dashboard-display-default-pyq-years-2025-2024-2023-2022-in-a-horizontal-or-vertical-list-for-each-year-show-a-checkbox-or-toggle-for-completion-status-display-year-wise-progress-indicator-showing-completed-years-total-years-100-include-an-add-custom-year-button-that-opens-a-modal-for-adding-new-pyq-years-with-validation-when-any-year-completion-status-is-toggled-immediately-update-the-backend-and-refresh-the-display",
+      "title": "Create a new TopPYQsTracker component for the Overview dashboard. Display default PYQ years 2025, 2024, 2023, 2022 in a horizontal or vertical list. For each year, show a checkbox or toggle for completion status. Display year-wise progress indicator showing (completed years / total years) × 100%. Include an 'Add Custom Year' button that opens a modal for adding new PYQ years with validation. When any year completion status is toggled, immediately update the backend and refresh the display.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-per-chapter-pyq-status-display-within-the-chapter-detail-view-in-masterpcmchaptersystem-for-each-chapter-show-whether-pyqs-have-been-completed-with-visual-indicator-this-per-chapter-pyq-status-is-linked-to-the-chapter-s-pyqscompleted-field-which-is-separate-from-the-global-pyq-year-tracking-display-this-status-alongside-other-chapter-details-status-weakness-accuracy-revision-date",
+      "title": "Add per-chapter PYQ status display within the chapter detail view in MasterPCMChapterSystem. For each chapter, show whether PYQs have been completed with visual indicator. This per-chapter PYQ status is linked to the chapter's pyqsCompleted field, which is separate from the global PYQ year tracking. Display this status alongside other chapter details (status, weakness, accuracy, revision date).",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-react-query-hooks-in-frontend-src-hooks-usequeries-ts-for-all-new-revision-and-pyq-tracking-endpoints-create-hooks-for-updating-chapter-revision-fields-with-optimistic-updates-fetching-overall-and-subject-wise-revision-coverage-fetching-pyq-years-list-toggling-pyq-year-completion-and-adding-custom-pyq-year-configure-automatic-query-invalidation-to-refresh-overview-dashboard-metrics-and-chapter-data-when-any-revision-or-pyq-status-changes",
+      "title": "Implement React Query hooks in frontend/src/hooks/useQueries.ts for all new revision and PYQ tracking endpoints. Create hooks for: updating chapter revision fields with optimistic updates, fetching overall and subject-wise revision coverage, fetching PYQ years list, toggling PYQ year completion, and adding custom PYQ year. Configure automatic query invalidation to refresh Overview dashboard metrics and chapter data when any revision or PYQ status changes.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-that-when-a-chapter-is-deleted-it-is-immediately-removed-from-all-revision-coverage-calculations-overall-and-subject-wise-and-the-ui-updates-in-real-time-to-reflect-the-new-percentages-the-backend-must-recalculate-and-return-updated-revision-coverage-metrics-after-chapter-deletion",
+      "title": "Ensure that when a chapter is deleted, it is immediately removed from all revision coverage calculations (overall and subject-wise) and the UI updates in real-time to reflect the new percentages. The backend must recalculate and return updated revision coverage metrics after chapter deletion.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-react-error-boundary-component-to-catch-and-display-javascript-errors-that-prevent-the-application-from-rendering-the-error-boundary-must-wrap-the-root-app-component-display-a-user-friendly-error-message-with-details-when-errors-occur-and-provide-a-reload-app-button-to-attempt-recovery",
+      "title": "Add React error boundary component to catch and display JavaScript errors that prevent the application from rendering. The error boundary must wrap the root App component, display a user-friendly error message with details when errors occur, and provide a 'Reload App' button to attempt recovery.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-and-loading-states-to-the-app-tsx-component-wrap-all-authentication-checks-actor-initialization-and-data-fetching-operations-in-try-catch-blocks-display-loading-spinner-during-initialization-and-show-error-messages-if-authentication-or-actor-creation-fails",
+      "title": "Add comprehensive error handling and loading states to the App.tsx component. Wrap all authentication checks, actor initialization, and data fetching operations in try-catch blocks. Display loading spinner during initialization and show error messages if authentication or actor creation fails.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-and-fix-all-react-query-hooks-in-usequeries-ts-to-handle-undefined-actor-states-gracefully-add-enabled-conditions-to-prevent-queries-from-running-before-the-actor-is-initialized-ensure-all-mutations-handle-errors-without-crashing-the-ui",
+      "title": "Verify and fix all React Query hooks in useQueries.ts to handle undefined actor states gracefully. Add enabled conditions to prevent queries from running before the actor is initialized. Ensure all mutations handle errors without crashing the UI.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-defensive-null-checks-and-optional-chaining-to-all-components-that-depend-on-query-data-overviewdashboard-masterpcmchaptersystem-toppyqstracker-revisionchecklist-ensure-components-render-loading-states-or-empty-states-when-data-is-undefined-instead-of-crashing",
+      "title": "Add defensive null checks and optional chaining to all components that depend on query data (OverviewDashboard, MasterPCMChapterSystem, TopPYQsTracker, RevisionChecklist). Ensure components render loading states or empty states when data is undefined instead of crashing.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-console-logging-to-track-application-initialization-sequence-log-when-main-tsx-executes-when-app-component-mounts-when-internet-identity-initializes-when-actor-is-created-and-when-first-queries-execute-this-will-help-diagnose-where-the-rendering-breaks",
+      "title": "Add console logging to track application initialization sequence. Log when main.tsx executes, when App component mounts, when Internet Identity initializes, when actor is created, and when first queries execute. This will help diagnose where the rendering breaks.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-css-styles-in-index-css-and-tailwind-configuration-do-not-cause-rendering-issues-verify-that-background-color-0f0f0f-is-properly-applied-no-styles-set-visibility-hidden-or-display-none-on-root-elements-and-no-z-index-issues-hide-the-entire-ui",
+      "title": "Ensure all CSS styles in index.css and Tailwind configuration do not cause rendering issues. Verify that background color #0f0f0f is properly applied, no styles set visibility:hidden or display:none on root elements, and no z-index issues hide the entire UI.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-all-imports-in-app-tsx-main-tsx-and-component-files-resolve-correctly-check-that-all-imported-components-exist-paths-are-correct-and-no-circular-dependencies-exist-add-fallback-exports-if-any-imports-fail",
+      "title": "Verify all imports in App.tsx, main.tsx, and component files resolve correctly. Check that all imported components exist, paths are correct, and no circular dependencies exist. Add fallback exports if any imports fail.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-fallback-loading-ui-that-displays-immediately-while-the-application-initializes-show-a-centered-loading-spinner-with-loading-jee-war-room-text-on-the-dark-background-to-prevent-users-from-seeing-a-blank-black-screen-during-initialization",
+      "title": "Add fallback loading UI that displays immediately while the application initializes. Show a centered loading spinner with 'Loading JEE WAR ROOM...' text on the dark background to prevent users from seeing a blank black screen during initialization.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-targeted-error-logging-at-critical-initialization-points-in-app-tsx-to-capture-the-exact-failure-during-the-1-second-loading-period-log-when-authentication-initializes-when-actor-is-created-when-react-query-queries-execute-and-any-errors-that-occur-during-component-mounting-use-console-error-for-failures-and-console-log-for-successful-steps-to-trace-where-the-rendering-breaks",
+      "title": "Add targeted error logging at critical initialization points in App.tsx to capture the exact failure during the 1-second loading period. Log when authentication initializes, when actor is created, when React Query queries execute, and any errors that occur during component mounting. Use console.error for failures and console.log for successful steps to trace where the rendering breaks.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-all-react-query-hooks-in-usequeries-ts-have-proper-enabled-conditions-that-prevent-queries-from-executing-when-actor-is-null-or-undefined-add-defensive-checks-to-ensure-hooks-return-loading-states-instead-of-attempting-to-call-methods-on-undefined-actors-ensure-all-query-functions-handle-actor-initialization-failures-gracefully-without-throwing-uncaught-errors",
+      "title": "Verify that all React Query hooks in useQueries.ts have proper enabled conditions that prevent queries from executing when actor is null or undefined. Add defensive checks to ensure hooks return loading states instead of attempting to call methods on undefined actors. Ensure all query functions handle actor initialization failures gracefully without throwing uncaught errors.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-errorboundary-component-in-errorboundary-tsx-is-properly-wrapping-the-app-component-in-main-tsx-ensure-the-error-boundary-catches-all-javascript-errors-during-rendering-lifecycle-methods-and-constructors-of-the-component-tree-below-it-the-error-boundary-must-display-a-user-friendly-error-message-with-the-error-details-and-a-reload-app-button-instead-of-showing-a-black-screen-when-errors-occur",
+      "title": "Verify that the ErrorBoundary component in ErrorBoundary.tsx is properly wrapping the App component in main.tsx. Ensure the error boundary catches all JavaScript errors during rendering, lifecycle methods, and constructors of the component tree below it. The error boundary must display a user-friendly error message with the error details and a 'Reload App' button instead of showing a black screen when errors occur.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-try-catch-blocks-around-the-authentication-initialization-logic-in-app-tsx-to-catch-any-errors-during-internet-identity-setup-or-actor-creation-if-authentication-fails-display-an-error-message-in-the-ui-instead-of-rendering-a-black-screen-log-the-full-error-to-console-for-debugging",
+      "title": "Add try-catch blocks around the authentication initialization logic in App.tsx to catch any errors during Internet Identity setup or actor creation. If authentication fails, display an error message in the UI instead of rendering a black screen. Log the full error to console for debugging.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-the-loading-spinner-in-index-html-displays-immediately-on-page-load-and-remains-visible-until-react-successfully-mounts-and-renders-the-app-component-ensure-the-spinner-div-is-removed-or-hidden-only-after-react-takes-control-of-the-root-div-if-react-fails-to-mount-the-spinner-should-remain-visible-with-an-error-message-appended-below-it",
+      "title": "Verify that the loading spinner in index.html displays immediately on page load and remains visible until React successfully mounts and renders the App component. Ensure the spinner div is removed or hidden only after React takes control of the #root div. If React fails to mount, the spinner should remain visible with an error message appended below it.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-enter-war-mode-button-to-the-overviewdashboard-component-position-it-prominently-near-the-top-of-the-dashboard-styled-with-neon-blue-accent-color-to-match-the-application-theme-the-button-must-be-easily-tappable-on-mobile-minimum-44x44px-touch-target",
+      "title": "Add 'ENTER WAR MODE' button to the OverviewDashboard component. Position it prominently near the top of the dashboard, styled with neon blue accent color to match the application theme. The button must be easily tappable on mobile (minimum 44x44px touch target).",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-war-mode-configuration-modal-component-that-displays-when-the-enter-war-mode-button-is-clicked-the-modal-must-include-a-duration-selector-section-with-three-preset-buttons-60-minutes-90-minutes-120-minutes-and-a-custom-input-field-for-entering-any-duration-in-minutes-style-the-modal-with-the-dark-theme-background-0f0f0f-and-slightly-lighter-grey-for-the-modal-content-area",
+      "title": "Create a War Mode configuration modal component that displays when the 'ENTER WAR MODE' button is clicked. The modal must include a duration selector section with three preset buttons (60 minutes, 90 minutes, 120 minutes) and a custom input field for entering any duration in minutes. Style the modal with the dark theme background (#0f0f0f) and slightly lighter grey for the modal content area.",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-break-needed-toggle-section-to-the-war-mode-configuration-modal-below-the-duration-selector-display-two-clear-option-buttons-labeled-yes-and-no-when-no-is-selected-the-break-duration-selector-must-be-hidden-when-yes-is-selected-show-the-break-duration-selector-default-selection-should-be-no",
+      "title": "Add a 'Break needed?' toggle section to the War Mode configuration modal below the duration selector. Display two clear option buttons labeled 'Yes' and 'No'. When 'No' is selected, the break duration selector must be hidden. When 'Yes' is selected, show the break duration selector. Default selection should be 'No'.",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-break-duration-selector-that-appears-conditionally-in-the-war-mode-configuration-modal-when-break-needed-is-set-to-yes-include-preset-break-duration-buttons-5-minutes-10-minutes-15-minutes-and-a-custom-input-field-for-entering-any-break-duration-in-minutes-use-the-same-styling-pattern-as-the-focus-duration-selector",
+      "title": "Implement a break duration selector that appears conditionally in the War Mode configuration modal when 'Break needed?' is set to 'Yes'. Include preset break duration buttons (5 minutes, 10 minutes, 15 minutes) and a custom input field for entering any break duration in minutes. Use the same styling pattern as the focus duration selector.",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-confirmation-button-to-the-war-mode-configuration-modal-that-displays-a-summary-of-the-selected-settings-when-clicked-show-a-confirmation-modal-that-previews-selected-focus-duration-whether-break-is-enabled-and-break-duration-if-enabled-include-confirm-enter-war-mode-and-cancel-buttons-in-the-confirmation-modal-clicking-cancel-returns-to-the-configuration-modal-clicking-confirm-closes-both-modals-without-entering-war-mode-war-mode-screen-not-implemented-yet",
+      "title": "Add a confirmation button to the War Mode configuration modal that displays a summary of the selected settings. When clicked, show a confirmation modal that previews: selected focus duration, whether break is enabled, and break duration (if enabled). Include 'Confirm & Enter War Mode' and 'Cancel' buttons in the confirmation modal. Clicking 'Cancel' returns to the configuration modal. Clicking 'Confirm' closes both modals without entering War Mode (War Mode screen not implemented yet).",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-form-validation-for-the-war-mode-configuration-modal-focus-duration-must-be-selected-either-preset-or-custom-with-minimum-1-minute-if-custom-duration-is-selected-validate-that-it-is-a-positive-integer-if-break-is-enabled-break-duration-must-be-selected-with-the-same-validation-rules-display-validation-error-messages-if-requirements-are-not-met-when-attempting-to-proceed-to-confirmation",
+      "title": "Implement form validation for the War Mode configuration modal. Focus duration must be selected (either preset or custom with minimum 1 minute). If custom duration is selected, validate that it is a positive integer. If break is enabled, break duration must be selected with the same validation rules. Display validation error messages if requirements are not met when attempting to proceed to confirmation.",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-war-mode-configuration-modal-and-confirmation-modal-are-fully-mobile-responsive-with-optimized-touch-targets-minimum-44x44px-appropriate-spacing-for-small-screens-320px-480px-width-and-no-horizontal-scrolling-all-buttons-toggles-and-input-fields-must-be-easily-tappable-on-android-devices",
+      "title": "Ensure the War Mode configuration modal and confirmation modal are fully mobile-responsive with optimized touch targets (minimum 44x44px), appropriate spacing for small screens (320px-480px width), and no horizontal scrolling. All buttons, toggles, and input fields must be easily tappable on Android devices.",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -314,24 +522,6 @@
       "status": "pending"
     },
     {
-      "id": "AR-18",
-      "summary": "Modify War Mode to allow user-selected duration, optional breaks with custom break time, remove Pomodoro system, add confirmation pop-ups",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-19",
-      "summary": "Create revision tracking with three categories per chapter (Theory, PYQs, Advanced Practice) with tick/cross options and visual completion indicators",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-20",
-      "summary": "Create Top PYQs section with year-based tracking (2025-2022 default) with tick/cross per year, plus ability to add custom years",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
       "id": "AR-21",
       "summary": "Implement confirmation pop-ups for all major actions (edits, deletes, War Mode entry/exit, marking revisions, adding PYQ years, resets, settings)",
       "reqIds": [],
@@ -352,6 +542,100 @@
     {
       "id": "AR-24",
       "summary": "Real-time countdown updates every second, turns red when <30 days remain to JEE Advanced 2026",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Add revision tracking fields to each chapter in the backend data model. Each chapter must store three boolean fields: theoryCompleted (default false), pyqsCompleted (default false), and advancedPracticeCompleted (default false). Update the Chapter type in backend/main.mo to include these fields and modify all CRUD operations to handle them.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Create backend endpoint to update individual revision tracking fields (theory, PYQs, advanced practice) for a specific chapter identified by chapter ID. The endpoint must return the updated chapter data including the new revision coverage percentage calculated as (number of completed revision categories / 3) × 100, rounded to the nearest whole number.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Implement backend calculation for overall revision coverage percentage as the average of all chapter revision percentages across all subjects. Chapters marked as 'Not Started' status must contribute 0% to this calculation. Create an endpoint that returns overall revision coverage along with subject-wise revision coverage breakdown (Physics, Physical Chemistry, Organic Chemistry, Inorganic Chemistry, Mathematics).",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Add global PYQ years tracking to the backend. Create a data structure to store PYQ years with their completion status per year. Include default years 2025, 2024, 2023, 2022 with initial completion status false. Implement endpoints to: get all PYQ years, toggle completion status for a specific year, and add custom PYQ year with validation (must be a valid 4-digit year between 2000-2026).",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Verify Internet Identity authentication flow in useInternetIdentity.ts handles initialization failures gracefully. Add error recovery logic for cases where AuthClient creation fails, delegation is invalid, or identity cannot be retrieved. Log errors to console for debugging.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Test that the root #root div in index.html properly mounts the React application. Verify that main.tsx calls ReactDOM.createRoot() correctly and renders without errors. Add a simple test element to confirm mounting works before rendering the full App.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Add null checks and optional chaining to OverviewDashboard component to handle cases where query data is undefined or loading. Ensure the component renders a loading skeleton or empty state when data is not yet available instead of attempting to access properties on undefined objects. Wrap all data access in defensive checks.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-41",
+      "summary": "Add null checks and optional chaining to MasterPCMChapterSystem component to handle cases where chapter data or query results are undefined. Ensure the component renders a loading state or empty message when data is not available instead of crashing. Verify all map operations check array existence before iterating.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Add defensive null checks to TopPYQsTracker component to handle undefined query results. Ensure the component renders a loading state when data is being fetched and an empty state when no PYQ years exist. Verify all array operations check for undefined before executing.",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-46",
+      "summary": "Add defensive null checks to RevisionChecklist component to handle cases where chapter data is undefined or loading. Ensure the component renders a loading skeleton when queries are fetching and an empty state message when no chapters exist. Verify all filter and map operations check array existence before executing.",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-47",
+      "summary": "Verify that all CSS styles in index.css and the Tailwind configuration do not cause the #root div or any parent container to be hidden via display:none, visibility:hidden, opacity:0, or negative z-index. Ensure the background color #0f0f0f is applied to the body element and not obscuring the app content. Check that no CSS rules inadvertently hide the rendered React application.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-48",
+      "summary": "Phase 3 Step 1: Add 'ENTER WAR MODE' button on Overview with duration selector (preset 60m/90m/120m + custom input), 'Break needed?' toggle, optional break duration selector, and confirmation modal. Do not implement War Mode screen, timers, or data persistence yet.",
       "reqIds": [],
       "status": "pending"
     }

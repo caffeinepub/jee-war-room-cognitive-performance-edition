@@ -118,8 +118,11 @@ export interface Chapter {
     difficulty: string;
     name: string;
     importance: string;
+    advancedPracticeCompleted: boolean;
     lastStudied?: Time;
     studyHours: bigint;
+    pyqsCompleted: boolean;
+    theoryCompleted: boolean;
     isComplete: boolean;
 }
 export interface backendInterface {
@@ -410,8 +413,11 @@ function from_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint
     difficulty: string;
     name: string;
     importance: string;
+    advancedPracticeCompleted: boolean;
     lastStudied: [] | [_Time];
     studyHours: bigint;
+    pyqsCompleted: boolean;
+    theoryCompleted: boolean;
     isComplete: boolean;
 }): {
     id: bigint;
@@ -420,8 +426,11 @@ function from_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint
     difficulty: string;
     name: string;
     importance: string;
+    advancedPracticeCompleted: boolean;
     lastStudied?: Time;
     studyHours: bigint;
+    pyqsCompleted: boolean;
+    theoryCompleted: boolean;
     isComplete: boolean;
 } {
     return {
@@ -431,8 +440,11 @@ function from_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint
         difficulty: value.difficulty,
         name: value.name,
         importance: value.importance,
+        advancedPracticeCompleted: value.advancedPracticeCompleted,
         lastStudied: record_opt_to_undefined(from_candid_opt_n3(_uploadFile, _downloadFile, value.lastStudied)),
         studyHours: value.studyHours,
+        pyqsCompleted: value.pyqsCompleted,
+        theoryCompleted: value.theoryCompleted,
         isComplete: value.isComplete
     };
 }

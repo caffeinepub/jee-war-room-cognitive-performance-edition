@@ -7,8 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useGetTimeSlots, useAddTimeSlot, useUpdateTimeSlot, useDeleteTimeSlot, useToggleCompletion, useRegisterUser } from '../hooks/useQueries';
-import { Calendar, Plus, Trash2, Edit2, Clock } from 'lucide-react';
+import { useGetTimeSlots, useAddTimeSlot, useUpdateTimeSlot, useDeleteTimeSlot, useToggleTimeSlotCompletion, useRegisterUser } from '../hooks/useQueries';
+import { Calendar, Plus, Trash2, Edit2, Clock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 function DailyGoalTracker() {
@@ -16,7 +16,7 @@ function DailyGoalTracker() {
   const addSlot = useAddTimeSlot();
   const updateSlot = useUpdateTimeSlot();
   const deleteSlot = useDeleteTimeSlot();
-  const toggleCompletion = useToggleCompletion();
+  const toggleCompletion = useToggleTimeSlotCompletion();
   const registerUser = useRegisterUser();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -119,11 +119,17 @@ function DailyGoalTracker() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Daily Goal Tracker</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Daily Goal Tracker
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Loading...</p>
+            <div className="text-center space-y-4">
+              <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+              <p className="text-muted-foreground">Loading time slots...</p>
+            </div>
           </div>
         </CardContent>
       </Card>
