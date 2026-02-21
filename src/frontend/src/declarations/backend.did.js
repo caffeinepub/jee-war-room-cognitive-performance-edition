@@ -66,8 +66,10 @@ export const idlService = IDL.Service({
       [],
       [
         IDL.Record({
+          'totalWarModeStudyTime' : IDL.Nat,
           'lastSession' : IDL.Opt(Time),
           'totalStudyTime' : IDL.Nat,
+          'warModeOnlyStudyTime' : IDL.Nat,
           'completedPomodoros' : IDL.Nat,
         }),
       ],
@@ -81,6 +83,11 @@ export const idlService = IDL.Service({
   'registerUser' : IDL.Func([], [], []),
   'toggleChapterCompletion' : IDL.Func([IDL.Nat], [Chapter], []),
   'toggleCompletion' : IDL.Func([IDL.Nat], [TimeSlot], []),
+  'updateChapterRevision' : IDL.Func(
+      [IDL.Nat, IDL.Bool, IDL.Bool, IDL.Bool],
+      [],
+      [],
+    ),
   'updateConsistency' : IDL.Func([IDL.Bool, IDL.Text], [ConsistencyDNA], []),
   'updateTimeSlot' : IDL.Func(
       [IDL.Nat, Time, Time, IDL.Text, IDL.Text],
@@ -155,8 +162,10 @@ export const idlFactory = ({ IDL }) => {
         [],
         [
           IDL.Record({
+            'totalWarModeStudyTime' : IDL.Nat,
             'lastSession' : IDL.Opt(Time),
             'totalStudyTime' : IDL.Nat,
+            'warModeOnlyStudyTime' : IDL.Nat,
             'completedPomodoros' : IDL.Nat,
           }),
         ],
@@ -170,6 +179,11 @@ export const idlFactory = ({ IDL }) => {
     'registerUser' : IDL.Func([], [], []),
     'toggleChapterCompletion' : IDL.Func([IDL.Nat], [Chapter], []),
     'toggleCompletion' : IDL.Func([IDL.Nat], [TimeSlot], []),
+    'updateChapterRevision' : IDL.Func(
+        [IDL.Nat, IDL.Bool, IDL.Bool, IDL.Bool],
+        [],
+        [],
+      ),
     'updateConsistency' : IDL.Func([IDL.Bool, IDL.Text], [ConsistencyDNA], []),
     'updateTimeSlot' : IDL.Func(
         [IDL.Nat, Time, Time, IDL.Text, IDL.Text],

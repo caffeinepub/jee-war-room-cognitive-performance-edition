@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-enter-war-mode-button-to-the-overviewdashboard-component-position-it-prominently-near-the-top-of-the-dashboard-styled-with-neon-blue-accent-color-to-match-the-application-theme-the-button-must-be-easily-tappable-on-mobile-minimum-44x44px-touch-target",
-      "featureTitle": "Add 'ENTER WAR MODE' button to the OverviewDashboard component. Position it prominently near the top of the dashboard, styled with neon blue accent color to match the application theme. The button must be easily tappable on mobile (minimum 44x44px touch target).",
+      "featureId": "feature-update-the-masterpcmchaptersystem-component-to-display-three-prominent-toggle-buttons-or-checkboxes-for-each-chapter-showing-theory-pyqs-and-advanced-practice-completion-status-each-toggle-must-visually-indicate-completion-state-with-a-green-checkmark-icon-when-true-and-a-red-cross-or-empty-state-when-false",
+      "featureTitle": "Update the MasterPCMChapterSystem component to display three prominent toggle buttons or checkboxes for each chapter showing Theory, PYQs, and Advanced Practice completion status. Each toggle must visually indicate completion state with a green checkmark icon when true and a red cross or empty state when false.",
       "files": [
-        "frontend/src/components/OverviewDashboard.tsx"
+        "frontend/src/components/MasterPCMChapterSystem.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,16 +15,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-55"
+        "REQ-94"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-war-mode-configuration-modal-component-that-displays-when-the-enter-war-mode-button-is-clicked-the-modal-must-include-a-duration-selector-section-with-three-preset-buttons-60-minutes-90-minutes-120-minutes-and-a-custom-input-field-for-entering-any-duration-in-minutes-style-the-modal-with-the-dark-theme-background-0f0f0f-and-slightly-lighter-grey-for-the-modal-content-area",
-      "featureTitle": "Create a War Mode configuration modal component that displays when the 'ENTER WAR MODE' button is clicked. The modal must include a duration selector section with three preset buttons (60 minutes, 90 minutes, 120 minutes) and a custom input field for entering any duration in minutes. Style the modal with the dark theme background (#0f0f0f) and slightly lighter grey for the modal content area.",
+      "featureId": "feature-wire-the-revision-tracking-toggles-to-call-the-backend-updatechapterrevision-endpoint-when-any-toggle-is-clicked-pass-the-chapter-id-and-the-specific-field-being-updated-theorycompleted-pyqscompleted-or-advancedpracticecompleted-with-the-new-boolean-value",
+      "featureTitle": "Wire the revision tracking toggles to call the backend updateChapterRevision endpoint when any toggle is clicked. Pass the chapter ID and the specific field being updated (theoryCompleted, pyqsCompleted, or advancedPracticeCompleted) with the new boolean value.",
       "files": [
-        "frontend/src/components/OverviewDashboard.tsx",
-        "frontend/src/components/WarModeConfigModal.tsx"
+        "frontend/src/components/MasterPCMChapterSystem.tsx",
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -34,15 +34,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-56"
+        "REQ-95"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-break-needed-toggle-section-to-the-war-mode-configuration-modal-below-the-duration-selector-display-two-clear-option-buttons-labeled-yes-and-no-when-no-is-selected-the-break-duration-selector-must-be-hidden-when-yes-is-selected-show-the-break-duration-selector-default-selection-should-be-no",
-      "featureTitle": "Add a 'Break needed?' toggle section to the War Mode configuration modal below the duration selector. Display two clear option buttons labeled 'Yes' and 'No'. When 'No' is selected, the break duration selector must be hidden. When 'Yes' is selected, show the break duration selector. Default selection should be 'No'.",
+      "featureId": "feature-display-the-calculated-revision-coverage-percentage-0-100-for-each-chapter-alongside-the-toggle-buttons-the-percentage-must-be-calculated-as-number-of-completed-revision-fields-3-100-and-update-in-real-time-when-any-toggle-changes",
+      "featureTitle": "Display the calculated revision coverage percentage (0-100%) for each chapter alongside the toggle buttons. The percentage must be calculated as (number of completed revision fields / 3) × 100 and update in real-time when any toggle changes.",
       "files": [
-        "frontend/src/components/WarModeConfigModal.tsx"
+        "frontend/src/components/MasterPCMChapterSystem.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -52,15 +52,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-57"
+        "REQ-96"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-a-break-duration-selector-that-appears-conditionally-in-the-war-mode-configuration-modal-when-break-needed-is-set-to-yes-include-preset-break-duration-buttons-5-minutes-10-minutes-15-minutes-and-a-custom-input-field-for-entering-any-break-duration-in-minutes-use-the-same-styling-pattern-as-the-focus-duration-selector",
-      "featureTitle": "Implement a break duration selector that appears conditionally in the War Mode configuration modal when 'Break needed?' is set to 'Yes'. Include preset break duration buttons (5 minutes, 10 minutes, 15 minutes) and a custom input field for entering any break duration in minutes. Use the same styling pattern as the focus duration selector.",
+      "featureId": "feature-ensure-the-revision-toggle-ui-integrates-seamlessly-with-the-existing-chapter-display-layout-in-masterpcmchaptersystem-position-the-toggles-prominently-within-each-chapter-card-or-expanded-detail-view-without-causing-layout-overflow-or-horizontal-scrolling-on-mobile-screens-320px-480px-width",
+      "featureTitle": "Ensure the revision toggle UI integrates seamlessly with the existing chapter display layout in MasterPCMChapterSystem. Position the toggles prominently within each chapter card or expanded detail view without causing layout overflow or horizontal scrolling on mobile screens (320px-480px width).",
       "files": [
-        "frontend/src/components/WarModeConfigModal.tsx"
+        "frontend/src/components/MasterPCMChapterSystem.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -70,61 +70,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-58"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-confirmation-button-to-the-war-mode-configuration-modal-that-displays-a-summary-of-the-selected-settings-when-clicked-show-a-confirmation-modal-that-previews-selected-focus-duration-whether-break-is-enabled-and-break-duration-if-enabled-include-confirm-enter-war-mode-and-cancel-buttons-in-the-confirmation-modal-clicking-cancel-returns-to-the-configuration-modal-clicking-confirm-closes-both-modals-without-entering-war-mode-war-mode-screen-not-implemented-yet",
-      "featureTitle": "Add a confirmation button to the War Mode configuration modal that displays a summary of the selected settings. When clicked, show a confirmation modal that previews: selected focus duration, whether break is enabled, and break duration (if enabled). Include 'Confirm & Enter War Mode' and 'Cancel' buttons in the confirmation modal. Clicking 'Cancel' returns to the configuration modal. Clicking 'Confirm' closes both modals without entering War Mode (War Mode screen not implemented yet).",
-      "files": [
-        "frontend/src/components/WarModeConfigModal.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-59"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-form-validation-for-the-war-mode-configuration-modal-focus-duration-must-be-selected-either-preset-or-custom-with-minimum-1-minute-if-custom-duration-is-selected-validate-that-it-is-a-positive-integer-if-break-is-enabled-break-duration-must-be-selected-with-the-same-validation-rules-display-validation-error-messages-if-requirements-are-not-met-when-attempting-to-proceed-to-confirmation",
-      "featureTitle": "Implement form validation for the War Mode configuration modal. Focus duration must be selected (either preset or custom with minimum 1 minute). If custom duration is selected, validate that it is a positive integer. If break is enabled, break duration must be selected with the same validation rules. Display validation error messages if requirements are not met when attempting to proceed to confirmation.",
-      "files": [
-        "frontend/src/components/WarModeConfigModal.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-60"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-war-mode-configuration-modal-and-confirmation-modal-are-fully-mobile-responsive-with-optimized-touch-targets-minimum-44x44px-appropriate-spacing-for-small-screens-320px-480px-width-and-no-horizontal-scrolling-all-buttons-toggles-and-input-fields-must-be-easily-tappable-on-android-devices",
-      "featureTitle": "Ensure the War Mode configuration modal and confirmation modal are fully mobile-responsive with optimized touch targets (minimum 44x44px), appropriate spacing for small screens (320px-480px width), and no horizontal scrolling. All buttons, toggles, and input fields must be easily tappable on Android devices.",
-      "files": [
-        "frontend/src/components/WarModeConfigModal.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-61"
+        "REQ-97"
       ],
       "confidence": "high"
     }

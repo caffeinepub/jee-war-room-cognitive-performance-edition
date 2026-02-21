@@ -8,9 +8,9 @@ import List "mo:core/List";
 import Principal "mo:core/Principal";
 import Nat "mo:core/Nat";
 import Array "mo:core/Array";
+import Migration "migration";
 
-
-
+(with migration = Migration.run)
 actor {
   type ConsistencyDNA = {
     daysTracked : Nat;
@@ -60,15 +60,19 @@ actor {
     isComplete : Bool;
   };
 
+  type WarModeStats = {
+    completedPomodoros : Nat;
+    totalStudyTime : Nat;
+    lastSession : ?Time.Time;
+    warModeOnlyStudyTime : Nat;
+    totalWarModeStudyTime : Nat;
+  };
+
   type UserData = {
     consistency : ConsistencyDNA;
     chapters : [Chapter];
     performanceBlocks : [PerformanceBlock];
-    warModeStats : {
-      completedPomodoros : Nat;
-      totalStudyTime : Nat;
-      lastSession : ?Time.Time;
-    };
+    warModeStats : WarModeStats;
     timeSlots : [TimeSlot];
   };
 
@@ -91,6 +95,8 @@ actor {
         completedPomodoros = 0;
         totalStudyTime = 0;
         lastSession = null;
+        warModeOnlyStudyTime = 0;
+        totalWarModeStudyTime = 0;
       };
       timeSlots = [];
     };
@@ -253,6 +259,8 @@ actor {
           completedPomodoros = userData.warModeStats.completedPomodoros + pomodoros;
           totalStudyTime = userData.warModeStats.totalStudyTime + studyTime;
           lastSession = ?Time.now();
+          warModeOnlyStudyTime = userData.warModeStats.warModeOnlyStudyTime + studyTime;
+          totalWarModeStudyTime = userData.warModeStats.totalWarModeStudyTime + studyTime;
         };
         let updatedUserData : UserData = {
           consistency = userData.consistency;
@@ -292,6 +300,8 @@ actor {
     completedPomodoros : Nat;
     totalStudyTime : Nat;
     lastSession : ?Time.Time;
+    warModeOnlyStudyTime : Nat;
+    totalWarModeStudyTime : Nat;
   } {
     switch (users.get(caller)) {
       case (?userData) { userData.warModeStats };
@@ -472,4 +482,40 @@ actor {
   };
 
   // END COMP-DAILY-GOAL-TRACKER
+
+  public shared ({ caller }) func updateChapterRevision(chapterId : Nat, theoryCompleted : Bool, pyqsCompleted : Bool, advancedPracticeCompleted : Bool) : async () {
+    switch (users.get(caller)) {
+      case (?userData) {
+        var chapterFound = false : Bool;
+
+        let updatedChapters = userData.chapters.map(
+          func(chapter) {
+            if (chapter.id == chapterId) {
+              chapterFound := true;
+              {
+                chapter with
+                theoryCompleted;
+                pyqsCompleted;
+                advancedPracticeCompleted;
+              };
+            } else { chapter };
+          }
+        );
+
+        if (chapterFound) {
+          let updatedUserData : UserData = {
+            consistency = userData.consistency;
+            chapters = updatedChapters;
+            performanceBlocks = userData.performanceBlocks;
+            warModeStats = userData.warModeStats;
+            timeSlots = userData.timeSlots;
+          };
+          users.add(caller, updatedUserData);
+        } else {
+          Runtime.trap("Chapter not found");
+        };
+      };
+      case (null) { Runtime.trap("User not found") };
+    };
+  };
 };

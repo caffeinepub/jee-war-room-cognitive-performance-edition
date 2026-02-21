@@ -1,106 +1,76 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T20:41:15.397Z",
+  "generatedAt": "2026-02-21T03:39:58.744Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 7,
-    "implemented": 7,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-55",
-        "summary": "Add 'ENTER WAR MODE' button to the OverviewDashboard component. Position it prominently near the top of the dashboard, styled with neon blue accent color to match the application theme. The button must be easily tappable on mobile (minimum 44x44px touch target).",
+        "id": "REQ-94",
+        "summary": "Update the MasterPCMChapterSystem component to display three prominent toggle buttons or checkboxes for each chapter showing Theory, PYQs, and Advanced Practice completion status. Each toggle must visually indicate completion state with a green checkmark icon when true and a red cross or empty state when false.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/OverviewDashboard.tsx"
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/OverviewDashboard.tsx"
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ]
       },
       {
-        "id": "REQ-56",
-        "summary": "Create a War Mode configuration modal component that displays when the 'ENTER WAR MODE' button is clicked. The modal must include a duration selector section with three preset buttons (60 minutes, 90 minutes, 120 minutes) and a custom input field for entering any duration in minutes. Style the modal with the dark theme background (#0f0f0f) and slightly lighter grey for the modal content area.",
+        "id": "REQ-95",
+        "summary": "Wire the revision tracking toggles to call the backend updateChapterRevision endpoint when any toggle is clicked. Pass the chapter ID and the specific field being updated (theoryCompleted, pyqsCompleted, or advancedPracticeCompleted) with the new boolean value.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx",
-          "frontend/src/components/OverviewDashboard.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx",
-          "frontend/src/components/OverviewDashboard.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ]
       },
       {
-        "id": "REQ-57",
-        "summary": "Add a 'Break needed?' toggle section to the War Mode configuration modal below the duration selector. Display two clear option buttons labeled 'Yes' and 'No'. When 'No' is selected, the break duration selector must be hidden. When 'Yes' is selected, show the break duration selector. Default selection should be 'No'.",
+        "id": "REQ-96",
+        "summary": "Display the calculated revision coverage percentage (0-100%) for each chapter alongside the toggle buttons. The percentage must be calculated as (number of completed revision fields / 3) × 100 and update in real-time when any toggle changes.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ]
       },
       {
-        "id": "REQ-58",
-        "summary": "Implement a break duration selector that appears conditionally in the War Mode configuration modal when 'Break needed?' is set to 'Yes'. Include preset break duration buttons (5 minutes, 10 minutes, 15 minutes) and a custom input field for entering any break duration in minutes. Use the same styling pattern as the focus duration selector.",
+        "id": "REQ-97",
+        "summary": "Ensure the revision toggle UI integrates seamlessly with the existing chapter display layout in MasterPCMChapterSystem. Position the toggles prominently within each chapter card or expanded detail view without causing layout overflow or horizontal scrolling on mobile screens (320px-480px width).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
-        ]
-      },
-      {
-        "id": "REQ-59",
-        "summary": "Add a confirmation button to the War Mode configuration modal that displays a summary of the selected settings. When clicked, show a confirmation modal that previews: selected focus duration, whether break is enabled, and break duration (if enabled). Include 'Confirm & Enter War Mode' and 'Cancel' buttons in the confirmation modal. Clicking 'Cancel' returns to the configuration modal. Clicking 'Confirm' closes both modals without entering War Mode (War Mode screen not implemented yet).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx",
-          "frontend/src/components/WarModeConfigModal.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx",
-          "frontend/src/components/WarModeConfigModal.tsx"
-        ]
-      },
-      {
-        "id": "REQ-60",
-        "summary": "Implement form validation for the War Mode configuration modal. Focus duration must be selected (either preset or custom with minimum 1 minute). If custom duration is selected, validate that it is a positive integer. If break is enabled, break duration must be selected with the same validation rules. Display validation error messages if requirements are not met when attempting to proceed to confirmation.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
-        ]
-      },
-      {
-        "id": "REQ-61",
-        "summary": "Ensure the War Mode configuration modal and confirmation modal are fully mobile-responsive with optimized touch targets (minimum 44x44px), appropriate spacing for small screens (320px-480px width), and no horizontal scrolling. All buttons, toggles, and input fields must be easily tappable on Android devices.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx",
-          "frontend/src/index.css"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WarModeConfigModal.tsx"
+          "frontend/src/components/MasterPCMChapterSystem.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/OverviewDashboard.tsx",
-    "frontend/src/components/WarModeConfigModal.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/MasterPCMChapterSystem.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

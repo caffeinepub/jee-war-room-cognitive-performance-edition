@@ -15,12 +15,17 @@ import { Clock, Coffee } from 'lucide-react';
 interface WarModeConfigModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onEnterWarMode: (config: {
+    focusDuration: number;
+    breakDuration: number | null;
+    breaksEnabled: boolean;
+  }) => void;
 }
 
 type DurationOption = 'preset-60' | 'preset-90' | 'preset-120' | 'custom';
 type BreakDurationOption = 'preset-5' | 'preset-10' | 'preset-15' | 'custom';
 
-function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
+function WarModeConfigModal({ open, onOpenChange, onEnterWarMode }: WarModeConfigModalProps) {
   const [view, setView] = useState<'config' | 'confirm'>('config');
   const [selectedDuration, setSelectedDuration] = useState<DurationOption | null>(null);
   const [customDuration, setCustomDuration] = useState('');
@@ -100,8 +105,17 @@ function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
   };
 
   const handleConfirm = () => {
-    // Close modal - no War Mode screen transition yet
-    handleClose();
+    const focusDuration = getFocusDuration();
+    const breakDuration = getBreakDuration();
+    
+    if (focusDuration) {
+      onEnterWarMode({
+        focusDuration,
+        breakDuration,
+        breaksEnabled: breakNeeded,
+      });
+      handleClose();
+    }
   };
 
   const handleClose = () => {
@@ -226,7 +240,7 @@ function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
 
               {/* Break Duration Selector (conditional) */}
               {breakNeeded && (
-                <div className="space-y-3 animate-in fade-in-50 duration-200">
+                <div className="space-y-3 animate-in fade-in duration-300">
                   <Label className="text-base font-semibold text-foreground flex items-center gap-2">
                     <Coffee className="h-4 w-4" />
                     Break Duration
@@ -265,7 +279,7 @@ function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
                       id="custom-break-duration"
                       type="number"
                       min="1"
-                      placeholder="e.g., 8"
+                      placeholder="e.g., 7"
                       value={customBreakDuration}
                       onChange={(e) => {
                         setCustomBreakDuration(e.target.value);
@@ -283,19 +297,19 @@ function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
               )}
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
+            <DialogFooter className="gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                className="h-12 touch-target"
+                className="min-h-[44px] min-w-[44px]"
               >
                 Cancel
               </Button>
               <Button
                 type="button"
                 onClick={handleContinue}
-                className="h-12 touch-target bg-primary hover:bg-primary/90"
+                className="min-h-[44px] min-w-[44px]"
               >
                 Continue
               </Button>
@@ -304,8 +318,7 @@ function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-primary flex items-center gap-2">
-                <Clock className="h-6 w-6" />
+              <DialogTitle className="text-2xl font-bold text-primary">
                 Confirm War Mode Settings
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
@@ -314,43 +327,36 @@ function WarModeConfigModal({ open, onOpenChange }: WarModeConfigModalProps) {
             </DialogHeader>
 
             <div className="space-y-4 py-6">
-              <div className="rounded-lg border border-primary/30 bg-card p-4 space-y-3">
+              <div className="bg-muted/30 rounded-lg p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Focus Duration:</span>
                   <span className="text-lg font-bold text-primary">{getFocusDuration()} minutes</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Break Enabled:</span>
-                  <span className="text-lg font-bold text-foreground">{breakNeeded ? 'Yes' : 'No'}</span>
+                  <span className="text-sm text-muted-foreground">Break:</span>
+                  <span className="text-lg font-bold text-foreground">
+                    {breakNeeded ? `${getBreakDuration()} minutes` : 'No break'}
+                  </span>
                 </div>
-                {breakNeeded && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Break Duration:</span>
-                    <span className="text-lg font-bold text-chart-3">{getBreakDuration()} minutes</span>
-                  </div>
-                )}
               </div>
-
-              <div className="text-center py-4">
-                <p className="text-sm text-muted-foreground italic">
-                  "Focus. Execute. Dominate."
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground text-center">
+                War Mode will hide all navigation and distractions. You can exit anytime.
+              </p>
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
+            <DialogFooter className="gap-2">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                className="h-12 touch-target"
+                className="min-h-[44px] min-w-[44px]"
               >
                 Back
               </Button>
               <Button
                 type="button"
                 onClick={handleConfirm}
-                className="h-12 touch-target bg-primary hover:bg-primary/90"
+                className="min-h-[44px] min-w-[44px] bg-primary hover:bg-primary/90"
               >
                 Confirm & Enter War Mode
               </Button>

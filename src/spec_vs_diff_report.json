@@ -1,15 +1,32 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T20:41:15.390Z",
-  "summary": "The diff implements War Mode Entry UI with configuration and confirmation modals. All 7 requirements (REQ-55 through REQ-61) appear to be implemented: the ENTER WAR MODE button is added to OverviewDashboard with proper styling and touch targets, a WarModeConfigModal component includes duration selectors with presets (60/90/120 minutes), break toggle with conditional break duration selector (5/10/15 minutes), validation logic, confirmation flow, and mobile-responsive design. No hallucinated features detected beyond the specified requirements.",
+  "generatedAt": "2026-02-21T03:39:58.738Z",
+  "summary": "The diff successfully implements all four requirements (REQ-94, REQ-95, REQ-96, REQ-97) for visual revision tracking toggles in the MasterPCMChapterSystem component. The implementation includes toggle buttons with green checkmark/red cross icons, backend integration via the updateChapterRevision mutation hook, real-time percentage calculation, and mobile-responsive layout. All acceptance criteria appear to be met based on the evidence in the modified files.",
   "missing_requirements": [],
-  "hallucinated_features": [],
+  "hallucinated_features": [
+    {
+      "description": "Backend migration module added (backend/migration.mo) with type definitions and migration function",
+      "reason": "The BuildRequest explicitly states as a constraint: 'Do not modify the backend Chapter type structure; theoryCompleted, pyqsCompleted, and advancedPracticeCompleted fields already exist' and as a non-goal: 'Adding new backend endpoints for revision tracking (already implemented)'. The migration module was not requested and suggests structural changes to backend types.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "description": "Backend main.mo includes migration import and system message about with migration = Migration.run",
+      "reason": "The BuildRequest constraint states 'Do not alter the existing backend updateChapterRevision endpoint; use it as-is'. The addition of migration logic was not part of the requirements and suggests backend modifications beyond what was requested.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
   "confidence": 0.85,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/OverviewDashboard.tsx",
-    "frontend/src/components/WarModeConfigModal.tsx",
+    "frontend/src/components/MasterPCMChapterSystem.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]
 }

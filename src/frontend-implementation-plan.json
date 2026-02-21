@@ -1,153 +1,81 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Phase 3 Step 1: War Mode Entry UI with Duration and Break Configuration",
+  "title": "Add visual revision tracking toggles for Theory, PYQs, and Advanced Practice to chapter display",
   "requirements": [
     {
-      "id": "REQ-55",
-      "summary": "Add 'ENTER WAR MODE' button to OverviewDashboard component with neon blue styling and mobile-optimized touch target",
+      "id": "REQ-94",
+      "summary": "Update MasterPCMChapterSystem to display three prominent toggle buttons (Theory, PYQs, Advanced Practice) with visual completion indicators (green checkmark when true, red cross when false)",
       "acceptanceCriteria": [
-        "Button displays 'ENTER WAR MODE' text with appropriate styling",
-        "Button uses neon blue accent color from the theme",
-        "Button meets minimum 44x44px touch target requirement for mobile",
-        "Clicking the button opens the War Mode configuration modal"
+        "Each chapter card or detail view displays three separate toggle controls labeled 'Theory', 'PYQs', and 'Advanced Practice'",
+        "When a field is marked complete (true), display a green checkmark icon (✓)",
+        "When a field is incomplete (false), display a red cross icon (✗) or empty checkbox state",
+        "Toggles must be easily tappable on mobile devices with minimum 44x44px touch targets",
+        "The visual state updates immediately when toggled without page refresh"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/OverviewDashboard.tsx",
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
           "operation": "modify",
-          "description": "Add 'ENTER WAR MODE' button near the top of the dashboard component, positioned prominently after the title and before the statistics cards. Style with neon blue accent color (using existing theme colors from index.css), ensure minimum 44x44px touch target with appropriate padding, and wire the button to open the War Mode configuration modal using state management."
+          "description": "Add three toggle buttons for each chapter displaying theoryCompleted, pyqsCompleted, and advancedPracticeCompleted status. Display green checkmark icon (✓) when true and red cross icon (✗) when false. Ensure 44x44px minimum touch targets for mobile usability. Position toggles prominently within each chapter card below the chapter name and status fields. Use existing dark theme colors from index.css with neon accents for active states."
         }
       ]
     },
     {
-      "id": "REQ-56",
-      "summary": "Create War Mode configuration modal with duration selector featuring preset buttons and custom input",
+      "id": "REQ-95",
+      "summary": "Wire revision tracking toggles to call updateChapterRevision backend method when clicked, passing chapter ID and updated boolean field",
       "acceptanceCriteria": [
-        "Modal opens when 'ENTER WAR MODE' button is clicked",
-        "Three preset buttons display: 60m, 90m, 120m",
-        "Custom input field accepts numeric values for minutes",
-        "Only one duration option (preset or custom) can be selected at a time",
-        "Selected duration is visually highlighted",
-        "Modal matches dark theme styling"
+        "Clicking any revision toggle immediately calls the backend mutation",
+        "Backend updates the specific boolean field for the target chapter",
+        "React Query invalidates chapter queries and refetches updated data",
+        "UI reflects the new state with updated toggle visual indicators",
+        "Error handling displays user-friendly messages if the update fails"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
-          "operation": "create",
-          "description": "Create a new War Mode configuration modal component using the shadcn-ui Dialog component. Verify the component's usage instructions before implementing. Include state management for modal open/close, duration selection (preset vs custom), break toggle, and break duration. Implement duration selector section with three preset buttons (60m, 90m, 120m) and a custom input field for entering minutes. Ensure only one duration option can be selected at a time with visual highlighting. Style with dark theme background (#0f0f0f) and slightly lighter grey content area matching the existing application theme."
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a new React Query mutation hook useUpdateChapterRevision that wraps the backend updateChapterRevision method. Accept chapterId and the three boolean fields (theoryCompleted, pyqsCompleted, advancedPracticeCompleted) as parameters. Invalidate getAllChapters query on success to trigger refetch. Include error handling that returns user-friendly error messages. Handle BigInt serialization for chapterId using existing bigIntSerializer utilities."
         },
         {
-          "path": "frontend/src/components/OverviewDashboard.tsx",
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
           "operation": "modify",
-          "description": "Import and integrate the WarModeConfigModal component. Add state for controlling modal visibility. Wire the 'ENTER WAR MODE' button click handler to open the modal. Pass necessary props to the modal component for configuration data handling."
+          "description": "Import and use the useUpdateChapterRevision mutation hook. Wire each toggle button onClick handler to call the mutation with the chapter ID and updated boolean values for the specific field being toggled. On mutation success, the UI will automatically update via React Query refetch. Display error messages using existing error handling patterns if the mutation fails. Ensure optimistic UI updates are not used to prevent inconsistent state."
         }
       ]
     },
     {
-      "id": "REQ-57",
-      "summary": "Add 'Break needed?' toggle section to configuration modal with Yes/No options controlling break duration selector visibility",
+      "id": "REQ-96",
+      "summary": "Display calculated revision coverage percentage (0-100%) for each chapter based on completed revision fields, updating in real-time when toggles change",
       "acceptanceCriteria": [
-        "Toggle section displays below duration selector",
-        "Two buttons labeled 'Yes' and 'No' are clearly visible",
-        "Only one option can be selected at a time",
-        "Default selection is 'No'",
-        "Break duration selector is hidden when 'No' is selected",
-        "Break duration selector appears when 'Yes' is selected"
+        "Each chapter displays a revision percentage badge or indicator",
+        "Percentage calculation: if all three toggles are true, shows 100%; if two are true, shows 67%; if one is true, shows 33%; if none are true, shows 0%",
+        "Percentage updates immediately when any toggle is clicked without requiring page refresh",
+        "The percentage display is clearly visible and styled to match the dark theme"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
           "operation": "modify",
-          "description": "Add 'Break needed?' toggle section below the duration selector with two clearly visible option buttons labeled 'Yes' and 'No'. Implement state management with default selection set to 'No'. Ensure only one option can be selected at a time with visual highlighting. Add conditional rendering logic to control break duration selector visibility based on toggle state (hidden when 'No', visible when 'Yes')."
+          "description": "Add a utility function calculateRevisionPercentage that takes a Chapter object and returns the percentage as (count of true revision fields / 3) × 100, rounded to nearest integer. Display the calculated percentage as a badge next to each chapter name using existing badge styling from the dark theme. Position the percentage badge prominently so it's visible alongside the chapter metadata. The percentage will automatically update when React Query refetches chapter data after mutation success."
         }
       ]
     },
     {
-      "id": "REQ-58",
-      "summary": "Implement conditional break duration selector with preset buttons and custom input",
+      "id": "REQ-97",
+      "summary": "Ensure revision toggle UI integrates seamlessly with existing chapter layout, remaining responsive on mobile screens (320px-480px) without overflow or horizontal scrolling",
       "acceptanceCriteria": [
-        "Break duration selector only displays when 'Break needed?' is 'Yes'",
-        "Three preset buttons display: 5m, 10m, 15m",
-        "Custom input field accepts numeric values for minutes",
-        "Only one break duration option can be selected at a time",
-        "Selected break duration is visually highlighted",
-        "Break duration selector is completely hidden when 'No' is selected"
+        "Revision toggles are positioned in a logical location within each chapter card (e.g., below chapter name and status, above or beside other chapter metadata)",
+        "Layout remains responsive and does not break on small Android screens",
+        "No horizontal scrolling is introduced by the toggle controls",
+        "All text labels and icons remain readable at mobile viewport sizes",
+        "Spacing between toggles and other chapter elements follows the consistent 16px padding standard"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
+          "path": "frontend/src/components/MasterPCMChapterSystem.tsx",
           "operation": "modify",
-          "description": "Add break duration selector section that conditionally renders when 'Break needed?' is set to 'Yes'. Include three preset buttons (5m, 10m, 15m) and a custom input field for entering break duration in minutes. Use the same styling pattern and layout structure as the focus duration selector. Implement state management to ensure only one break duration option can be selected at a time with visual highlighting. Ensure the section is completely hidden when 'No' is selected for break toggle."
-        }
-      ]
-    },
-    {
-      "id": "REQ-59",
-      "summary": "Add confirmation flow with settings summary and two-step modal confirmation process",
-      "acceptanceCriteria": [
-        "Configuration modal includes a 'Continue' or 'Next' button at the bottom",
-        "Clicking continues to confirmation modal showing settings summary",
-        "Confirmation modal displays selected focus duration",
-        "Confirmation modal displays break status (Yes/No)",
-        "Confirmation modal displays break duration if break is enabled",
-        "Confirmation modal has 'Confirm & Enter War Mode' and 'Cancel' buttons",
-        "Cancel returns to configuration modal",
-        "Confirm closes both modals (no War Mode screen transition yet)"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
-          "operation": "modify",
-          "description": "Add a 'Continue' or 'Next' button at the bottom of the configuration form. Implement state management to track configuration vs confirmation view. When clicked, transition to confirmation view showing a summary of selected settings including focus duration, break status (Yes/No), and break duration if enabled. The confirmation view should be part of the same modal component using conditional rendering."
-        },
-        {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
-          "operation": "modify",
-          "description": "Implement confirmation view within the modal that displays when user proceeds from configuration. Show formatted summary of focus duration, break enabled status, and break duration (if applicable). Add 'Confirm & Enter War Mode' and 'Cancel' buttons. Wire 'Cancel' to return to configuration view. Wire 'Confirm & Enter War Mode' to close the modal entirely without triggering any War Mode screen transition (as War Mode screen is not implemented in this phase)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-60",
-      "summary": "Implement form validation for focus duration and break duration with error messaging",
-      "acceptanceCriteria": [
-        "Cannot proceed without selecting a focus duration",
-        "Custom focus duration must be a positive integer >= 1",
-        "If break is enabled, break duration must be selected",
-        "Custom break duration must be a positive integer >= 1",
-        "Clear validation error messages display for invalid inputs",
-        "Validation occurs before opening confirmation modal"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
-          "operation": "modify",
-          "description": "Add validation logic that runs when user clicks 'Continue' button. Ensure focus duration is selected (either preset or custom). If custom duration is used, validate it is a positive integer >= 1. If break is enabled, validate that break duration is selected with the same rules (positive integer >= 1 for custom). Display clear validation error messages using shadcn-ui toast or inline error displays when validation fails. Prevent transition to confirmation view until all validation passes."
-        }
-      ]
-    },
-    {
-      "id": "REQ-61",
-      "summary": "Ensure full mobile responsiveness with optimized touch targets and no horizontal scrolling",
-      "acceptanceCriteria": [
-        "All buttons meet minimum 44x44px touch target size",
-        "Modal content fits within mobile viewport without horizontal scroll",
-        "Input fields are large enough for easy mobile interaction",
-        "Spacing between interactive elements prevents accidental taps",
-        "Modal displays correctly on screens 320px-480px wide",
-        "Text remains readable at mobile font sizes"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/WarModeConfigModal.tsx",
-          "operation": "modify",
-          "description": "Apply mobile-responsive design patterns throughout the modal component. Ensure all buttons and interactive elements meet minimum 44x44px touch target size. Use responsive padding and spacing to prevent accidental taps. Apply Tailwind responsive utilities to ensure modal content fits within mobile viewport (320px-480px) without horizontal scrolling. Use appropriate text sizes that remain readable on mobile screens. Test input field sizes for easy mobile interaction."
-        },
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Add any additional mobile-specific utility classes or touch target helpers needed for the War Mode configuration modal if the existing 44x44px touch target utilities are insufficient. Ensure modal-specific responsive breakpoints align with the 320px-480px mobile range."
+          "description": "Arrange the three revision toggles in a flex container with flex-wrap to prevent horizontal overflow on narrow screens. Position the toggle container below the chapter name and completion status, maintaining 16px padding between elements as defined in existing layout standards. Use responsive Tailwind classes to stack toggles vertically on screens below 480px width. Ensure all toggle labels and icons remain legible with appropriate font sizes (minimum 14px) and sufficient contrast against the #0f0f0f background. Test layout behavior at 320px, 375px, and 480px viewport widths to verify no horizontal scrolling occurs."
         }
       ]
     }

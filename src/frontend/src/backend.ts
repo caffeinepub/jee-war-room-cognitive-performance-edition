@@ -135,14 +135,17 @@ export interface backendInterface {
     getTimeSlots(): Promise<Array<TimeSlot>>;
     getUserConsistency(): Promise<ConsistencyDNA>;
     getWarModeStats(): Promise<{
+        totalWarModeStudyTime: bigint;
         lastSession?: Time;
         totalStudyTime: bigint;
+        warModeOnlyStudyTime: bigint;
         completedPomodoros: bigint;
     }>;
     recordPerformanceBlock(startTime: Time, endTime: Time, focusScore: bigint, productivity: bigint): Promise<PerformanceBlock>;
     registerUser(): Promise<void>;
     toggleChapterCompletion(chapterId: bigint): Promise<Chapter>;
     toggleCompletion(id: bigint): Promise<TimeSlot>;
+    updateChapterRevision(chapterId: bigint, theoryCompleted: boolean, pyqsCompleted: boolean, advancedPracticeCompleted: boolean): Promise<void>;
     updateConsistency(isConsistent: boolean, currentDate: string): Promise<ConsistencyDNA>;
     updateTimeSlot(id: bigint, startTime: Time, endTime: Time, activityType: string, description: string): Promise<TimeSlot>;
     updateWarModeStats(pomodoros: bigint, studyTime: bigint): Promise<void>;
@@ -263,8 +266,10 @@ export class Backend implements backendInterface {
         }
     }
     async getWarModeStats(): Promise<{
+        totalWarModeStudyTime: bigint;
         lastSession?: Time;
         totalStudyTime: bigint;
+        warModeOnlyStudyTime: bigint;
         completedPomodoros: bigint;
     }> {
         if (this.processError) {
@@ -336,6 +341,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async updateChapterRevision(arg0: bigint, arg1: boolean, arg2: boolean, arg3: boolean): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateChapterRevision(arg0, arg1, arg2, arg3);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateChapterRevision(arg0, arg1, arg2, arg3);
+            return result;
+        }
+    }
     async updateConsistency(arg0: boolean, arg1: string): Promise<ConsistencyDNA> {
         if (this.processError) {
             try {
@@ -392,17 +411,23 @@ function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Ar
     return value.length === 0 ? null : value[0];
 }
 function from_candid_record_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    totalWarModeStudyTime: bigint;
     lastSession: [] | [_Time];
     totalStudyTime: bigint;
+    warModeOnlyStudyTime: bigint;
     completedPomodoros: bigint;
 }): {
+    totalWarModeStudyTime: bigint;
     lastSession?: Time;
     totalStudyTime: bigint;
+    warModeOnlyStudyTime: bigint;
     completedPomodoros: bigint;
 } {
     return {
+        totalWarModeStudyTime: value.totalWarModeStudyTime,
         lastSession: record_opt_to_undefined(from_candid_opt_n3(_uploadFile, _downloadFile, value.lastSession)),
         totalStudyTime: value.totalStudyTime,
+        warModeOnlyStudyTime: value.warModeOnlyStudyTime,
         completedPomodoros: value.completedPomodoros
     };
 }

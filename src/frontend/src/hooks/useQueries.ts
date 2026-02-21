@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import { toast } from 'sonner';
 import type { Chapter, ConsistencyDNA, PerformanceBlock, TimeSlot } from '../backend';
+import { convertBigIntsToStrings } from '../utils/bigIntSerializer';
 
 export function useRegisterUser() {
   const { actor } = useActor();
@@ -14,7 +15,8 @@ export function useRegisterUser() {
         throw new Error('Actor not initialized');
       }
       console.log('[useRegisterUser] Registering user...');
-      return actor.registerUser();
+      const result = await actor.registerUser();
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
       console.log('[useRegisterUser] User registered successfully');
@@ -44,8 +46,9 @@ export function useGetUserConsistency() {
       }
       try {
         const result = await actor.getUserConsistency();
-        console.log('[useGetUserConsistency] Success:', result);
-        return result;
+        const converted = convertBigIntsToStrings(result);
+        console.log('[useGetUserConsistency] Success, data converted');
+        return converted;
       } catch (error) {
         console.error('[useGetUserConsistency] Error:', error);
         throw error;
@@ -72,7 +75,8 @@ export function useUpdateConsistency() {
       const currentDate = istDate.toISOString().split('T')[0];
       
       console.log('[useUpdateConsistency] Updating consistency for date:', currentDate);
-      return actor.updateConsistency(isConsistent, currentDate);
+      const result = await actor.updateConsistency(isConsistent, currentDate);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
       console.log('[useUpdateConsistency] Consistency updated successfully');
@@ -104,8 +108,9 @@ export function useGetAllChapters() {
       }
       try {
         const result = await actor.getAllChapters();
-        console.log('[useGetAllChapters] Success, chapters count:', result?.length || 0);
-        return result || [];
+        const converted = convertBigIntsToStrings(result || []);
+        console.log('[useGetAllChapters] Success, chapters count:', converted.length);
+        return converted;
       } catch (error) {
         console.error('[useGetAllChapters] Error:', error);
         console.error('[useGetAllChapters] Error stack:', error instanceof Error ? error.stack : 'No stack');
@@ -122,7 +127,13 @@ export function useAddChapter() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: {
+    mutationFn: async ({
+      name,
+      subject,
+      revisionInterval,
+      difficulty,
+      importance,
+    }: {
       name: string;
       subject: string;
       revisionInterval: bigint;
@@ -133,19 +144,13 @@ export function useAddChapter() {
         console.error('[useAddChapter] Actor not initialized');
         throw new Error('Actor not initialized');
       }
-      console.log('[useAddChapter] Adding chapter:', params.name);
-      return actor.addChapter(
-        params.name,
-        params.subject,
-        params.revisionInterval,
-        params.difficulty,
-        params.importance
-      );
+      console.log('[useAddChapter] Adding chapter:', name);
+      const result = await actor.addChapter(name, subject, revisionInterval, difficulty, importance);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
       console.log('[useAddChapter] Chapter added successfully');
       queryClient.invalidateQueries({ queryKey: ['chapters'] });
-      queryClient.invalidateQueries({ queryKey: ['revisionCoverage'] });
       toast.success('Chapter added successfully');
     },
     onError: (error: Error) => {
@@ -167,7 +172,8 @@ export function useToggleChapterCompletion() {
         throw new Error('Actor not initialized');
       }
       console.log('[useToggleChapterCompletion] Toggling chapter:', chapterId);
-      return actor.toggleChapterCompletion(chapterId);
+      const result = await actor.toggleChapterCompletion(chapterId);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
       console.log('[useToggleChapterCompletion] Chapter completion toggled');
@@ -176,7 +182,7 @@ export function useToggleChapterCompletion() {
     onError: (error: Error) => {
       console.error('[useToggleChapterCompletion] Error:', error);
       console.error('[useToggleChapterCompletion] Error stack:', error.stack);
-      toast.error('Failed to toggle chapter completion: ' + error.message);
+      toast.error('Failed to update chapter: ' + error.message);
     },
   });
 }
@@ -186,171 +192,99 @@ export function useUpdateChapterRevision() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: {
+    mutationFn: async ({
+      chapterId,
+      theoryCompleted,
+      pyqsCompleted,
+      advancedPracticeCompleted,
+    }: {
       chapterId: bigint;
-      field: 'theory' | 'pyqs' | 'advanced';
+      theoryCompleted: boolean;
+      pyqsCompleted: boolean;
+      advancedPracticeCompleted: boolean;
     }) => {
       if (!actor) {
         console.error('[useUpdateChapterRevision] Actor not initialized');
         throw new Error('Actor not initialized');
       }
-      
-      console.warn('[useUpdateChapterRevision] Backend endpoint not implemented');
-      toast.error('Backend support needed: updateChapterRevision endpoint missing');
-      throw new Error('Backend endpoint not implemented');
+      console.log('[useUpdateChapterRevision] Updating chapter revision:', chapterId);
+      const result = await actor.updateChapterRevision(
+        chapterId,
+        theoryCompleted,
+        pyqsCompleted,
+        advancedPracticeCompleted
+      );
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
-      console.log('[useUpdateChapterRevision] Revision updated');
+      console.log('[useUpdateChapterRevision] Chapter revision updated successfully');
       queryClient.invalidateQueries({ queryKey: ['chapters'] });
-      queryClient.invalidateQueries({ queryKey: ['revisionCoverage'] });
-      toast.success('Revision status updated');
     },
     onError: (error: Error) => {
       console.error('[useUpdateChapterRevision] Error:', error);
-      if (!error.message.includes('Backend endpoint')) {
-        toast.error('Failed to update revision: ' + error.message);
-      }
+      console.error('[useUpdateChapterRevision] Error stack:', error.stack);
+      toast.error('Failed to update revision: ' + error.message);
     },
   });
 }
 
-export function useRevisionCoverage() {
-  const { data: chapters } = useGetAllChapters();
+export function useUpdateWarModeStats() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
 
-  return useQuery({
-    queryKey: ['revisionCoverage', chapters],
-    queryFn: () => {
-      console.log('[useRevisionCoverage] Calculating revision coverage...');
-      if (!chapters || chapters.length === 0) {
-        console.log('[useRevisionCoverage] No chapters, returning zeros');
-        return {
-          overall: 0,
-          physics: 0,
-          physicalChemistry: 0,
-          organicChemistry: 0,
-          inorganicChemistry: 0,
-          mathematics: 0,
-        };
+  return useMutation({
+    mutationFn: async ({ pomodoros, studyTime }: { pomodoros: bigint; studyTime: bigint }) => {
+      if (!actor) {
+        console.error('[useUpdateWarModeStats] Actor not initialized');
+        throw new Error('Actor not initialized');
       }
-
-      const calculateChapterRevision = (chapter: Chapter) => {
-        if (!chapter.isComplete && chapter.studyHours === BigInt(0)) {
-          return 0;
-        }
-        
-        const completed = [
-          chapter.theoryCompleted,
-          chapter.pyqsCompleted,
-          chapter.advancedPracticeCompleted,
-        ].filter(Boolean).length;
-        
-        return Math.round((completed / 3) * 100);
-      };
-
-      const getSubjectRevision = (subject: string) => {
-        const subjectChapters = chapters.filter(ch => ch?.subject === subject);
-        if (subjectChapters.length === 0) return 0;
-        
-        const total = subjectChapters.reduce((sum, ch) => sum + calculateChapterRevision(ch), 0);
-        return Math.round(total / subjectChapters.length);
-      };
-
-      const overall = Math.round(
-        chapters.reduce((sum, ch) => sum + calculateChapterRevision(ch), 0) / chapters.length
-      );
-
-      const result = {
-        overall,
-        physics: getSubjectRevision('Physics'),
-        physicalChemistry: getSubjectRevision('Physical Chemistry'),
-        organicChemistry: getSubjectRevision('Organic Chemistry'),
-        inorganicChemistry: getSubjectRevision('Inorganic Chemistry'),
-        mathematics: getSubjectRevision('Mathematics'),
-      };
-
-      console.log('[useRevisionCoverage] Calculated coverage:', result);
-      return result;
+      console.log('[useUpdateWarModeStats] Updating War Mode stats:', { pomodoros, studyTime });
+      try {
+        const result = await actor.updateWarModeStats(pomodoros, studyTime);
+        console.log('[useUpdateWarModeStats] Success');
+        return convertBigIntsToStrings(result);
+      } catch (error) {
+        console.error('[useUpdateWarModeStats] Error:', error);
+        throw error;
+      }
     },
-    enabled: !!chapters,
+    onSuccess: () => {
+      console.log('[useUpdateWarModeStats] War Mode stats updated, invalidating queries');
+      queryClient.invalidateQueries({ queryKey: ['warModeStats'] });
+      toast.success('Session saved successfully');
+    },
+    onError: (error: Error) => {
+      console.error('[useUpdateWarModeStats] Mutation error:', error);
+      console.error('[useUpdateWarModeStats] Error stack:', error.stack);
+      toast.error('Failed to save session: ' + error.message);
+    },
   });
 }
 
-export interface PYQYear {
-  year: number;
-  completed: boolean;
-}
-
-export function usePYQYears() {
+export function useGetWarModeStats() {
   const { actor, isFetching } = useActor();
 
-  return useQuery<PYQYear[]>({
-    queryKey: ['pyqYears'],
+  return useQuery({
+    queryKey: ['warModeStats'],
     queryFn: async () => {
-      console.log('[usePYQYears] Fetching PYQ years...');
+      console.log('[useGetWarModeStats] Fetching War Mode stats...');
       if (!actor) {
-        console.warn('[usePYQYears] Actor not initialized, returning default years');
-        return [];
+        console.warn('[useGetWarModeStats] Actor not initialized');
+        return null;
       }
-      
-      const defaultYears = [
-        { year: 2025, completed: false },
-        { year: 2024, completed: false },
-        { year: 2023, completed: false },
-        { year: 2022, completed: false },
-      ];
-      
-      console.log('[usePYQYears] Returning default years');
-      return defaultYears;
+      try {
+        const result = await actor.getWarModeStats();
+        const converted = convertBigIntsToStrings(result);
+        console.log('[useGetWarModeStats] Success, data converted');
+        return converted;
+      } catch (error) {
+        console.error('[useGetWarModeStats] Error:', error);
+        console.error('[useGetWarModeStats] Error stack:', error instanceof Error ? error.stack : 'No stack');
+        return null;
+      }
     },
     enabled: !!actor && !isFetching,
     retry: false,
-  });
-}
-
-export function useTogglePYQYear() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (year: number) => {
-      console.warn('[useTogglePYQYear] Backend endpoint not implemented');
-      toast.error('Backend support needed: PYQ year tracking not implemented');
-      throw new Error('Backend endpoint not implemented');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pyqYears'] });
-    },
-    onError: (error: Error) => {
-      console.error('[useTogglePYQYear] Error:', error);
-      if (!error.message.includes('Backend endpoint')) {
-        toast.error('Failed to toggle PYQ year: ' + error.message);
-      }
-    },
-  });
-}
-
-export function useAddCustomPYQYear() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (year: number) => {
-      if (year < 2000 || year > 2026) {
-        throw new Error('Year must be between 2000 and 2026');
-      }
-      
-      console.warn('[useAddCustomPYQYear] Backend endpoint not implemented');
-      toast.error('Backend support needed: Custom PYQ year addition not implemented');
-      throw new Error('Backend endpoint not implemented');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pyqYears'] });
-      toast.success('Custom year added');
-    },
-    onError: (error: Error) => {
-      console.error('[useAddCustomPYQYear] Error:', error);
-      if (!error.message.includes('Backend endpoint')) {
-        toast.error('Failed to add custom year: ' + error.message);
-      }
-    },
   });
 }
 
@@ -362,13 +296,14 @@ export function useGetPerformanceBlocks() {
     queryFn: async () => {
       console.log('[useGetPerformanceBlocks] Fetching performance blocks...');
       if (!actor) {
-        console.warn('[useGetPerformanceBlocks] Actor not initialized, returning empty array');
+        console.warn('[useGetPerformanceBlocks] Actor not initialized');
         return [];
       }
       try {
         const result = await actor.getPerformanceBlocks();
-        console.log('[useGetPerformanceBlocks] Success, blocks count:', result?.length || 0);
-        return result || [];
+        const converted = convertBigIntsToStrings(result || []);
+        console.log('[useGetPerformanceBlocks] Success, blocks count:', converted.length);
+        return converted;
       } catch (error) {
         console.error('[useGetPerformanceBlocks] Error:', error);
         return [];
@@ -384,7 +319,12 @@ export function useRecordPerformanceBlock() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: {
+    mutationFn: async ({
+      startTime,
+      endTime,
+      focusScore,
+      productivity,
+    }: {
       startTime: bigint;
       endTime: bigint;
       focusScore: bigint;
@@ -394,120 +334,19 @@ export function useRecordPerformanceBlock() {
         console.error('[useRecordPerformanceBlock] Actor not initialized');
         throw new Error('Actor not initialized');
       }
-      console.log('[useRecordPerformanceBlock] Recording performance block...');
-      return actor.recordPerformanceBlock(
-        params.startTime,
-        params.endTime,
-        params.focusScore,
-        params.productivity
-      );
+      console.log('[useRecordPerformanceBlock] Recording performance block');
+      const result = await actor.recordPerformanceBlock(startTime, endTime, focusScore, productivity);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
-      console.log('[useRecordPerformanceBlock] Performance block recorded');
+      console.log('[useRecordPerformanceBlock] Performance block recorded successfully');
       queryClient.invalidateQueries({ queryKey: ['performanceBlocks'] });
       toast.success('Performance recorded');
     },
     onError: (error: Error) => {
       console.error('[useRecordPerformanceBlock] Error:', error);
-      console.error('[useRecordPerformanceBlock] Error stack:', error.stack);
       toast.error('Failed to record performance: ' + error.message);
     },
-  });
-}
-
-// Type matching the backend interface exactly
-export type WarModeStats = {
-  completedPomodoros: bigint;
-  totalStudyTime: bigint;
-  lastSession?: bigint;
-};
-
-export function useGetWarModeStats() {
-  const { actor, isFetching } = useActor();
-
-  return useQuery<WarModeStats>({
-    queryKey: ['warModeStats'],
-    queryFn: async () => {
-      console.log('[useGetWarModeStats] Fetching war mode stats...');
-      if (!actor) {
-        console.warn('[useGetWarModeStats] Actor not initialized, returning defaults');
-        return {
-          completedPomodoros: BigInt(0),
-          totalStudyTime: BigInt(0),
-          lastSession: undefined,
-        };
-      }
-      try {
-        const result = await actor.getWarModeStats();
-        console.log('[useGetWarModeStats] Success:', result);
-        // Convert the backend response to match our type
-        return {
-          completedPomodoros: result.completedPomodoros,
-          totalStudyTime: result.totalStudyTime,
-          lastSession: result.lastSession || undefined,
-        };
-      } catch (error) {
-        console.error('[useGetWarModeStats] Error:', error);
-        return {
-          completedPomodoros: BigInt(0),
-          totalStudyTime: BigInt(0),
-          lastSession: undefined,
-        };
-      }
-    },
-    enabled: !!actor && !isFetching,
-    retry: false,
-  });
-}
-
-export function useUpdateWarModeStats() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (params: { pomodoros: bigint; studyTime: bigint }) => {
-      if (!actor) {
-        console.error('[useUpdateWarModeStats] Actor not initialized');
-        throw new Error('Actor not initialized');
-      }
-      console.log('[useUpdateWarModeStats] Updating war mode stats...');
-      return actor.updateWarModeStats(params.pomodoros, params.studyTime);
-    },
-    onSuccess: () => {
-      console.log('[useUpdateWarModeStats] War mode stats updated');
-      queryClient.invalidateQueries({ queryKey: ['warModeStats'] });
-      toast.success('War mode stats updated');
-    },
-    onError: (error: Error) => {
-      console.error('[useUpdateWarModeStats] Error:', error);
-      console.error('[useUpdateWarModeStats] Error stack:', error.stack);
-      toast.error('Failed to update war mode stats: ' + error.message);
-    },
-  });
-}
-
-export function useGetTimeSlots() {
-  const { actor, isFetching } = useActor();
-
-  return useQuery<TimeSlot[]>({
-    queryKey: ['timeSlots'],
-    queryFn: async () => {
-      console.log('[useGetTimeSlots] Fetching time slots...');
-      if (!actor) {
-        console.warn('[useGetTimeSlots] Actor not initialized, returning empty array');
-        return [];
-      }
-      try {
-        const result = await actor.getTimeSlots();
-        console.log('[useGetTimeSlots] Success, slots count:', result?.length || 0);
-        return result || [];
-      } catch (error) {
-        console.error('[useGetTimeSlots] Error:', error);
-        return [];
-      }
-    },
-    enabled: !!actor && !isFetching,
-    retry: false,
   });
 }
 
@@ -516,7 +355,12 @@ export function useAddTimeSlot() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: {
+    mutationFn: async ({
+      startTime,
+      endTime,
+      activityType,
+      description,
+    }: {
       startTime: bigint;
       endTime: bigint;
       activityType: string;
@@ -526,22 +370,17 @@ export function useAddTimeSlot() {
         console.error('[useAddTimeSlot] Actor not initialized');
         throw new Error('Actor not initialized');
       }
-      console.log('[useAddTimeSlot] Adding time slot...');
-      return actor.addTimeSlot(
-        params.startTime,
-        params.endTime,
-        params.activityType,
-        params.description
-      );
+      console.log('[useAddTimeSlot] Adding time slot');
+      const result = await actor.addTimeSlot(startTime, endTime, activityType, description);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
-      console.log('[useAddTimeSlot] Time slot added');
+      console.log('[useAddTimeSlot] Time slot added successfully');
       queryClient.invalidateQueries({ queryKey: ['timeSlots'] });
       toast.success('Time slot added');
     },
     onError: (error: Error) => {
       console.error('[useAddTimeSlot] Error:', error);
-      console.error('[useAddTimeSlot] Error stack:', error.stack);
       toast.error('Failed to add time slot: ' + error.message);
     },
   });
@@ -552,7 +391,13 @@ export function useUpdateTimeSlot() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: {
+    mutationFn: async ({
+      id,
+      startTime,
+      endTime,
+      activityType,
+      description,
+    }: {
       id: bigint;
       startTime: bigint;
       endTime: bigint;
@@ -563,23 +408,17 @@ export function useUpdateTimeSlot() {
         console.error('[useUpdateTimeSlot] Actor not initialized');
         throw new Error('Actor not initialized');
       }
-      console.log('[useUpdateTimeSlot] Updating time slot:', params.id);
-      return actor.updateTimeSlot(
-        params.id,
-        params.startTime,
-        params.endTime,
-        params.activityType,
-        params.description
-      );
+      console.log('[useUpdateTimeSlot] Updating time slot:', id);
+      const result = await actor.updateTimeSlot(id, startTime, endTime, activityType, description);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
-      console.log('[useUpdateTimeSlot] Time slot updated');
+      console.log('[useUpdateTimeSlot] Time slot updated successfully');
       queryClient.invalidateQueries({ queryKey: ['timeSlots'] });
       toast.success('Time slot updated');
     },
     onError: (error: Error) => {
       console.error('[useUpdateTimeSlot] Error:', error);
-      console.error('[useUpdateTimeSlot] Error stack:', error.stack);
       toast.error('Failed to update time slot: ' + error.message);
     },
   });
@@ -596,7 +435,8 @@ export function useToggleTimeSlotCompletion() {
         throw new Error('Actor not initialized');
       }
       console.log('[useToggleTimeSlotCompletion] Toggling time slot:', id);
-      return actor.toggleCompletion(id);
+      const result = await actor.toggleCompletion(id);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
       console.log('[useToggleTimeSlotCompletion] Time slot completion toggled');
@@ -604,8 +444,7 @@ export function useToggleTimeSlotCompletion() {
     },
     onError: (error: Error) => {
       console.error('[useToggleTimeSlotCompletion] Error:', error);
-      console.error('[useToggleTimeSlotCompletion] Error stack:', error.stack);
-      toast.error('Failed to toggle completion: ' + error.message);
+      toast.error('Failed to update time slot: ' + error.message);
     },
   });
 }
@@ -621,17 +460,99 @@ export function useDeleteTimeSlot() {
         throw new Error('Actor not initialized');
       }
       console.log('[useDeleteTimeSlot] Deleting time slot:', id);
-      return actor.deleteTimeSlot(id);
+      const result = await actor.deleteTimeSlot(id);
+      return convertBigIntsToStrings(result);
     },
     onSuccess: () => {
-      console.log('[useDeleteTimeSlot] Time slot deleted');
+      console.log('[useDeleteTimeSlot] Time slot deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['timeSlots'] });
       toast.success('Time slot deleted');
     },
     onError: (error: Error) => {
       console.error('[useDeleteTimeSlot] Error:', error);
-      console.error('[useDeleteTimeSlot] Error stack:', error.stack);
       toast.error('Failed to delete time slot: ' + error.message);
+    },
+  });
+}
+
+export function useGetTimeSlots() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<TimeSlot[]>({
+    queryKey: ['timeSlots'],
+    queryFn: async () => {
+      console.log('[useGetTimeSlots] Fetching time slots...');
+      if (!actor) {
+        console.warn('[useGetTimeSlots] Actor not initialized');
+        return [];
+      }
+      try {
+        const result = await actor.getTimeSlots();
+        const converted = convertBigIntsToStrings(result || []);
+        console.log('[useGetTimeSlots] Success, slots count:', converted.length);
+        return converted;
+      } catch (error) {
+        console.error('[useGetTimeSlots] Error:', error);
+        return [];
+      }
+    },
+    enabled: !!actor && !isFetching,
+    retry: false,
+  });
+}
+
+// Placeholder hooks for PYQ tracking (backend methods not available)
+export function usePYQYears() {
+  return useQuery({
+    queryKey: ['pyqYears'],
+    queryFn: async () => {
+      console.warn('[usePYQYears] Backend method not implemented');
+      // Return default years as placeholder
+      return [
+        { year: 2025, completed: false },
+        { year: 2024, completed: false },
+        { year: 2023, completed: false },
+        { year: 2022, completed: false },
+      ];
+    },
+    enabled: false, // Disabled until backend is implemented
+  });
+}
+
+export function useTogglePYQYear() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ year }: { year: number }) => {
+      console.warn('[useTogglePYQYear] Backend method not implemented');
+      throw new Error('Backend method togglePYQYear not available');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pyqYears'] });
+      toast.success('PYQ year updated');
+    },
+    onError: (error: Error) => {
+      console.error('[useTogglePYQYear] Error:', error);
+      toast.error('Backend method not available. Please implement PYQ tracking in backend.');
+    },
+  });
+}
+
+export function useAddPYQYear() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ year }: { year: number }) => {
+      console.warn('[useAddPYQYear] Backend method not implemented');
+      throw new Error('Backend method addPYQYear not available');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pyqYears'] });
+      toast.success('PYQ year added');
+    },
+    onError: (error: Error) => {
+      console.error('[useAddPYQYear] Error:', error);
+      toast.error('Backend method not available. Please implement PYQ tracking in backend.');
     },
   });
 }

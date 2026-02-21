@@ -1,486 +1,373 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useGetAllChapters, useAddChapter, useToggleChapterCompletion, useRegisterUser, useUpdateChapterRevision } from '../hooks/useQueries';
-import { BookOpen, Plus, Check, X, Edit, Trash2, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Plus, CheckCircle2, Circle, Loader2, Check, X } from 'lucide-react';
+import { useGetAllChapters, useAddChapter, useToggleChapterCompletion, useUpdateChapterRevision } from '../hooks/useQueries';
 import { toast } from 'sonner';
-import type { Chapter } from '../backend';
 
-const SUBJECTS = ['Physics', 'Physical Chemistry', 'Organic Chemistry', 'Inorganic Chemistry', 'Mathematics'];
-const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
-const IMPORTANCE = ['Low', 'Medium', 'High', 'Critical'];
-
-function MasterPCMChapterSystem() {
-  const { data: chapters, isLoading, error } = useGetAllChapters();
+export default function MasterPCMChapterSystem() {
+  const { data: chapters = [], isLoading } = useGetAllChapters();
   const addChapter = useAddChapter();
   const toggleCompletion = useToggleChapterCompletion();
   const updateRevision = useUpdateChapterRevision();
-  const registerUser = useRegisterUser();
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
-  const [formData, setFormData] = useState({
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [activeSubject, setActiveSubject] = useState('Physics');
+  const [newChapter, setNewChapter] = useState({
     name: '',
-    subject: SUBJECTS[0],
-    difficulty: DIFFICULTIES[1],
-    importance: IMPORTANCE[2],
+    subject: 'Physics',
     revisionInterval: '7',
+    difficulty: 'Medium',
+    importance: 'Medium',
   });
 
-  useEffect(() => {
-    if (error && error.message.includes('User not found')) {
-      registerUser.mutate();
-    }
-  }, [error]);
+  const subjects = [
+    'Physics',
+    'Physical Chemistry',
+    'Organic Chemistry',
+    'Inorganic Chemistry',
+    'Mathematics',
+  ];
 
   const handleAddChapter = async () => {
-    if (!formData.name.trim()) {
-      toast.error('Please enter a chapter name');
+    if (!newChapter.name.trim()) {
+      toast.error('Chapter name is required');
       return;
     }
 
     try {
       await addChapter.mutateAsync({
-        name: formData.name,
-        subject: formData.subject,
-        revisionInterval: BigInt(formData.revisionInterval),
-        difficulty: formData.difficulty,
-        importance: formData.importance,
+        name: newChapter.name,
+        subject: newChapter.subject,
+        revisionInterval: BigInt(newChapter.revisionInterval),
+        difficulty: newChapter.difficulty,
+        importance: newChapter.importance,
       });
-      setIsAddDialogOpen(false);
-      setFormData({
+
+      setIsAddModalOpen(false);
+      setNewChapter({
         name: '',
-        subject: SUBJECTS[0],
-        difficulty: DIFFICULTIES[1],
-        importance: IMPORTANCE[2],
+        subject: 'Physics',
         revisionInterval: '7',
+        difficulty: 'Medium',
+        importance: 'Medium',
       });
-    } catch (err) {
-      console.error('Failed to add chapter:', err);
+    } catch (error) {
+      console.error('[MasterPCMChapterSystem] Error adding chapter:', error);
     }
   };
 
-  const handleEditChapter = (chapter: Chapter) => {
-    setSelectedChapter(chapter);
-    setFormData({
-      name: chapter.name,
-      subject: chapter.subject,
-      difficulty: chapter.difficulty,
-      importance: chapter.importance,
-      revisionInterval: chapter.revisionInterval.toString(),
-    });
-    setIsEditDialogOpen(true);
-  };
-
-  const handleSaveEdit = async () => {
-    if (!selectedChapter) return;
-    
-    toast.error('Edit functionality requires backend support. Please add updateChapter method to backend.');
-    setIsEditDialogOpen(false);
-  };
-
-  const handleDeleteChapter = (chapter: Chapter) => {
-    setSelectedChapter(chapter);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    if (!selectedChapter) return;
-    
-    toast.error('Delete functionality requires backend support. Please add deleteChapter method to backend.');
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleToggleCompletion = async (chapterId: bigint) => {
+  const handleToggleCompletion = async (chapterId: string) => {
     try {
-      await toggleCompletion.mutateAsync(chapterId);
-    } catch (err) {
-      console.error('Failed to toggle completion:', err);
+      await toggleCompletion.mutateAsync(BigInt(chapterId));
+    } catch (error) {
+      console.error('[MasterPCMChapterSystem] Error toggling completion:', error);
     }
   };
 
-  const handleToggleRevision = async (chapterId: bigint, field: 'theory' | 'pyqs' | 'advanced') => {
+  const handleToggleRevisionField = async (
+    chapterId: string,
+    field: 'theory' | 'pyqs' | 'advanced',
+    currentValue: boolean,
+    chapter: { theoryCompleted: boolean; pyqsCompleted: boolean; advancedPracticeCompleted: boolean }
+  ) => {
     try {
-      await updateRevision.mutateAsync({ chapterId, field });
-    } catch (err) {
-      console.error('Failed to toggle revision:', err);
+      const updatedFields = {
+        theoryCompleted: field === 'theory' ? !currentValue : chapter.theoryCompleted,
+        pyqsCompleted: field === 'pyqs' ? !currentValue : chapter.pyqsCompleted,
+        advancedPracticeCompleted: field === 'advanced' ? !currentValue : chapter.advancedPracticeCompleted,
+      };
+
+      await updateRevision.mutateAsync({
+        chapterId: BigInt(chapterId),
+        ...updatedFields,
+      });
+    } catch (error) {
+      console.error('[MasterPCMChapterSystem] Error updating revision field:', error);
     }
   };
 
-  const calculateChapterRevision = (chapter: Chapter) => {
-    if (!chapter.isComplete && chapter.studyHours === BigInt(0)) {
-      return 0;
-    }
-    
-    const completed = [
+  const getChaptersBySubject = (subject: string) => {
+    return chapters.filter((ch) => ch.subject === subject);
+  };
+
+  const calculateRevisionPercentage = (chapter: { theoryCompleted: boolean; pyqsCompleted: boolean; advancedPracticeCompleted: boolean }) => {
+    const completedFields = [
       chapter.theoryCompleted,
       chapter.pyqsCompleted,
       chapter.advancedPracticeCompleted,
     ].filter(Boolean).length;
-    
-    return Math.round((completed / 3) * 100);
+    return Math.round((completedFields / 3) * 100);
   };
-
-  const getImportanceColor = (importance: string) => {
-    switch (importance) {
-      case 'Critical':
-        return 'bg-destructive text-destructive-foreground';
-      case 'High':
-        return 'bg-chart-4 text-white';
-      case 'Medium':
-        return 'bg-chart-3 text-white';
-      default:
-        return 'bg-muted text-muted-foreground';
-    }
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Hard':
-        return 'bg-destructive text-destructive-foreground';
-      case 'Medium':
-        return 'bg-chart-4 text-white';
-      default:
-        return 'bg-chart-2 text-white';
-    }
-  };
-
-  const [activeSubject, setActiveSubject] = useState('All');
-  const subjectTabs = ['All', ...SUBJECTS];
-
-  const filteredChapters = chapters?.filter(ch => 
-    activeSubject === 'All' || ch?.subject === activeSubject
-  ) || [];
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-          <p className="text-muted-foreground">Loading chapters...</p>
-        </div>
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  if (!chapters || chapters.length === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5" />
-              Master PCM Chapter System
-            </span>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="min-h-[44px] min-w-[44px]">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Chapter
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Chapter</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Chapter Name</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="e.g., Thermodynamics"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="subject">Subject</Label>
-                    <Select value={formData.subject} onValueChange={(value) => setFormData({ ...formData, subject: value })}>
-                      <SelectTrigger id="subject">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SUBJECTS.map((subject) => (
-                          <SelectItem key={subject} value={subject}>
-                            {subject}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="difficulty">Difficulty</Label>
-                      <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
-                        <SelectTrigger id="difficulty">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {DIFFICULTIES.map((diff) => (
-                            <SelectItem key={diff} value={diff}>
-                              {diff}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="importance">Importance</Label>
-                      <Select value={formData.importance} onValueChange={(value) => setFormData({ ...formData, importance: value })}>
-                        <SelectTrigger id="importance">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {IMPORTANCE.map((imp) => (
-                            <SelectItem key={imp} value={imp}>
-                              {imp}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddChapter} disabled={addChapter.isPending}>
-                    {addChapter.isPending ? 'Adding...' : 'Add Chapter'}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground mb-4">No chapters added yet</p>
-            <Button onClick={() => setIsAddDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Your First Chapter
+  return (
+    <div className="space-y-6">
+      {/* Add Chapter Button */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogTrigger asChild>
+          <Button className="w-full min-h-[44px]">
+            <Plus className="mr-2 h-5 w-5" />
+            Add New Chapter
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Chapter</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Chapter Name</Label>
+              <Input
+                id="name"
+                value={newChapter.name}
+                onChange={(e) => setNewChapter({ ...newChapter, name: e.target.value })}
+                placeholder="e.g., Kinematics"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subject">Subject</Label>
+              <Select
+                value={newChapter.subject}
+                onValueChange={(value) => setNewChapter({ ...newChapter, subject: value })}
+              >
+                <SelectTrigger id="subject">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {subjects.map((subject) => (
+                    <SelectItem key={subject} value={subject}>
+                      {subject}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="difficulty">Difficulty</Label>
+              <Select
+                value={newChapter.difficulty}
+                onValueChange={(value) => setNewChapter({ ...newChapter, difficulty: value })}
+              >
+                <SelectTrigger id="difficulty">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Easy">Easy</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="Hard">Hard</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="importance">Importance</Label>
+              <Select
+                value={newChapter.importance}
+                onValueChange={(value) => setNewChapter({ ...newChapter, importance: value })}
+              >
+                <SelectTrigger id="importance">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Low">Low</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="High">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="revisionInterval">Revision Interval (days)</Label>
+              <Input
+                id="revisionInterval"
+                type="number"
+                value={newChapter.revisionInterval}
+                onChange={(e) => setNewChapter({ ...newChapter, revisionInterval: e.target.value })}
+                min="1"
+              />
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={handleAddChapter} disabled={addChapter.isPending} className="flex-1">
+              {addChapter.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                'Add Chapter'
+              )}
+            </Button>
+            <Button variant="outline" onClick={() => setIsAddModalOpen(false)} className="flex-1">
+              Cancel
             </Button>
           </div>
-        </CardContent>
-      </Card>
-    );
-  }
+        </DialogContent>
+      </Dialog>
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between flex-wrap gap-4">
-          <span className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
-            Master PCM Chapter System
-          </span>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="min-h-[44px] min-w-[44px]">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Chapter
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Chapter</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Chapter Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Thermodynamics"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Select value={formData.subject} onValueChange={(value) => setFormData({ ...formData, subject: value })}>
-                    <SelectTrigger id="subject">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SUBJECTS.map((subject) => (
-                        <SelectItem key={subject} value={subject}>
-                          {subject}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="difficulty">Difficulty</Label>
-                    <Select value={formData.difficulty} onValueChange={(value) => setFormData({ ...formData, difficulty: value })}>
-                      <SelectTrigger id="difficulty">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {DIFFICULTIES.map((diff) => (
-                          <SelectItem key={diff} value={diff}>
-                            {diff}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="importance">Importance</Label>
-                    <Select value={formData.importance} onValueChange={(value) => setFormData({ ...formData, importance: value })}>
-                      <SelectTrigger id="importance">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {IMPORTANCE.map((imp) => (
-                          <SelectItem key={imp} value={imp}>
-                            {imp}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddChapter} disabled={addChapter.isPending}>
-                  {addChapter.isPending ? 'Adding...' : 'Add Chapter'}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs value={activeSubject} onValueChange={setActiveSubject} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 gap-1 h-auto p-1">
-            {subjectTabs.map((subject) => (
-              <TabsTrigger
-                key={subject}
-                value={subject}
-                className="text-xs sm:text-sm min-h-[44px] transition-all duration-200"
-              >
-                {subject}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+      {/* Subject Tabs */}
+      <Tabs value={activeSubject} onValueChange={setActiveSubject}>
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-1">
+          {subjects.map((subject) => (
+            <TabsTrigger
+              key={subject}
+              value={subject}
+              className="min-h-[44px] text-xs sm:text-sm transition-all duration-200"
+            >
+              {subject.replace(' Chemistry', '')}
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-          {subjectTabs.map((subject) => (
-            <TabsContent key={subject} value={subject} className="space-y-4">
-              {filteredChapters.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  No chapters in {subject === 'All' ? 'any subject' : subject}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-4">
-                  {filteredChapters.map((chapter) => (
-                    <Card key={Number(chapter.id)} className="border-border/50 transition-all duration-200 hover:border-primary/50">
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-base sm:text-lg truncate">{chapter.name}</h3>
-                              <p className="text-sm text-muted-foreground">{chapter.subject}</p>
-                            </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                              <Button
-                                size="sm"
-                                variant={chapter.isComplete ? 'default' : 'outline'}
-                                onClick={() => handleToggleCompletion(chapter.id)}
-                                className="min-h-[44px] min-w-[44px]"
-                              >
-                                {chapter.isComplete ? (
-                                  <Check className="h-4 w-4" />
-                                ) : (
-                                  <X className="h-4 w-4" />
-                                )}
-                              </Button>
-                            </div>
+        {subjects.map((subject) => (
+          <TabsContent key={subject} value={subject} className="space-y-4">
+            {getChaptersBySubject(subject).length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  No chapters added yet. Click "Add New Chapter" to get started.
+                </CardContent>
+              </Card>
+            ) : (
+              getChaptersBySubject(subject).map((chapter) => {
+                const revisionPercentage = calculateRevisionPercentage(chapter);
+                return (
+                  <Card key={String(chapter.id)} className="transition-all duration-200 hover:border-primary/50">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <CardTitle className="text-base sm:text-lg">{chapter.name}</CardTitle>
+                            <Badge variant="outline" className="text-xs">
+                              {revisionPercentage}%
+                            </Badge>
                           </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            <Badge className={getDifficultyColor(chapter.difficulty)}>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            <Badge variant={chapter.difficulty === 'Hard' ? 'destructive' : 'secondary'}>
                               {chapter.difficulty}
                             </Badge>
-                            <Badge className={getImportanceColor(chapter.importance)}>
+                            <Badge variant={chapter.importance === 'High' ? 'default' : 'outline'}>
                               {chapter.importance}
                             </Badge>
                           </div>
-
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-muted-foreground">Revision Coverage</span>
-                              <span className="font-semibold text-primary">
-                                {calculateChapterRevision(chapter)}%
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-3 gap-2">
-                              <Button
-                                size="sm"
-                                variant={chapter.theoryCompleted ? 'default' : 'outline'}
-                                onClick={() => handleToggleRevision(chapter.id, 'theory')}
-                                className="min-h-[44px] text-xs"
-                              >
-                                {chapter.theoryCompleted ? (
-                                  <CheckCircle2 className="mr-1 h-3 w-3" />
-                                ) : (
-                                  <XCircle className="mr-1 h-3 w-3" />
-                                )}
-                                Theory
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant={chapter.pyqsCompleted ? 'default' : 'outline'}
-                                onClick={() => handleToggleRevision(chapter.id, 'pyqs')}
-                                className="min-h-[44px] text-xs"
-                              >
-                                {chapter.pyqsCompleted ? (
-                                  <CheckCircle2 className="mr-1 h-3 w-3" />
-                                ) : (
-                                  <XCircle className="mr-1 h-3 w-3" />
-                                )}
-                                PYQs
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant={chapter.advancedPracticeCompleted ? 'default' : 'outline'}
-                                onClick={() => handleToggleRevision(chapter.id, 'advanced')}
-                                className="min-h-[44px] text-xs"
-                              >
-                                {chapter.advancedPracticeCompleted ? (
-                                  <CheckCircle2 className="mr-1 h-3 w-3" />
-                                ) : (
-                                  <XCircle className="mr-1 h-3 w-3" />
-                                )}
-                                Advanced
-                              </Button>
-                            </div>
-                          </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-          ))}
-        </Tabs>
-      </CardContent>
-    </Card>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleToggleCompletion(String(chapter.id))}
+                          disabled={toggleCompletion.isPending}
+                          className="min-h-[44px] min-w-[44px] flex-shrink-0"
+                        >
+                          {chapter.isComplete ? (
+                            <CheckCircle2 className="h-6 w-6 text-green-500" />
+                          ) : (
+                            <Circle className="h-6 w-6 text-muted-foreground" />
+                          )}
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="text-sm text-muted-foreground mb-2">Revision Tracking</div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          {/* Theory Toggle */}
+                          <Button
+                            variant="outline"
+                            onClick={() =>
+                              handleToggleRevisionField(
+                                String(chapter.id),
+                                'theory',
+                                chapter.theoryCompleted,
+                                chapter
+                              )
+                            }
+                            disabled={updateRevision.isPending}
+                            className={`min-h-[44px] flex items-center justify-between px-4 transition-all duration-200 ${
+                              chapter.theoryCompleted
+                                ? 'bg-green-500/10 border-green-500/50 hover:bg-green-500/20'
+                                : 'bg-red-500/10 border-red-500/50 hover:bg-red-500/20'
+                            }`}
+                          >
+                            <span className="text-sm font-medium">Theory</span>
+                            {chapter.theoryCompleted ? (
+                              <Check className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <X className="h-5 w-5 text-red-500" />
+                            )}
+                          </Button>
+
+                          {/* PYQs Toggle */}
+                          <Button
+                            variant="outline"
+                            onClick={() =>
+                              handleToggleRevisionField(
+                                String(chapter.id),
+                                'pyqs',
+                                chapter.pyqsCompleted,
+                                chapter
+                              )
+                            }
+                            disabled={updateRevision.isPending}
+                            className={`min-h-[44px] flex items-center justify-between px-4 transition-all duration-200 ${
+                              chapter.pyqsCompleted
+                                ? 'bg-green-500/10 border-green-500/50 hover:bg-green-500/20'
+                                : 'bg-red-500/10 border-red-500/50 hover:bg-red-500/20'
+                            }`}
+                          >
+                            <span className="text-sm font-medium">PYQs</span>
+                            {chapter.pyqsCompleted ? (
+                              <Check className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <X className="h-5 w-5 text-red-500" />
+                            )}
+                          </Button>
+
+                          {/* Advanced Practice Toggle */}
+                          <Button
+                            variant="outline"
+                            onClick={() =>
+                              handleToggleRevisionField(
+                                String(chapter.id),
+                                'advanced',
+                                chapter.advancedPracticeCompleted,
+                                chapter
+                              )
+                            }
+                            disabled={updateRevision.isPending}
+                            className={`min-h-[44px] flex items-center justify-between px-4 transition-all duration-200 ${
+                              chapter.advancedPracticeCompleted
+                                ? 'bg-green-500/10 border-green-500/50 hover:bg-green-500/20'
+                                : 'bg-red-500/10 border-red-500/50 hover:bg-red-500/20'
+                            }`}
+                          >
+                            <span className="text-sm font-medium">Advanced</span>
+                            {chapter.advancedPracticeCompleted ? (
+                              <Check className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <X className="h-5 w-5 text-red-500" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
   );
 }
-
-export default MasterPCMChapterSystem;

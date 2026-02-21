@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
+  "projectStateVersion": 27,
   "summary": "Full-stack web application called 'JEE WAR ROOM – Cognitive Performance Edition' for JEE Advanced 2026 preparation targeting AIR under 150. Features include real-time countdown (corrected to May 17, 2026), Focus Stability Index (FSI), performance analytics, consistency tracking, War Mode, comprehensive PCM chapter system with spaced repetition, daily goal tracker with study/work slots, and revision checklist. Dark-themed elite interface using React, Node.js, Express, MongoDB, and Chart.js. Fully optimized for Android mobile.",
   "architectural_notes": [
     "Dark mode only UI with #0f0f0f background, neon blue/orange accents, minimal distraction-free design",
@@ -15,7 +15,7 @@
     "All major actions use modal pop-ups instead of inline editing"
   ],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-implement-dark-mode-theme-with-background-color-0f0f0f-slightly-lighter-dark-grey-cards-neon-blue-and-orange-accent-colors-and-red-glow-for-critical-alerts-include-top-banner-displaying-air-150-no-excuses-ensure-smooth-premium-animations-throughout-the-interface",
@@ -416,6 +416,278 @@
         "REQ-61"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-new-warmodescreen-component-that-displays-when-the-user-confirms-war-mode-entry-from-the-configuration-modal-the-screen-must-render-in-full-screen-mode-hiding-all-dashboard-navigation-and-metrics",
+      "title": "Create a new WarModeScreen component that displays when the user confirms War Mode entry from the configuration modal. The screen must render in full-screen mode, hiding all dashboard navigation and metrics.",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-a-large-countdown-timer-in-the-center-of-the-war-mode-screen-showing-the-remaining-focus-duration-in-mm-ss-format-the-timer-must-update-every-second-and-count-down-from-the-user-configured-focus-duration",
+      "title": "Display a large countdown timer in the center of the War Mode screen showing the remaining focus duration in MM:SS format. The timer must update every second and count down from the user-configured focus duration.",
+      "reqIds": [
+        "REQ-63"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-start-pause-and-resume-controls-to-the-war-mode-screen-start-button-initiates-the-countdown-pause-button-stops-the-timer-without-resetting-resume-button-continues-from-paused-time-display-only-the-relevant-control-based-on-timer-state",
+      "title": "Add Start, Pause, and Resume controls to the War Mode screen. Start button initiates the countdown. Pause button stops the timer without resetting. Resume button continues from paused time. Display only the relevant control based on timer state.",
+      "reqIds": [
+        "REQ-64"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-motivational-text-focus-execute-dominate-prominently-on-the-war-mode-screen-below-the-countdown-timer-apply-smooth-fade-in-animation-when-the-screen-loads",
+      "title": "Display motivational text 'Focus. Execute. Dominate.' prominently on the War Mode screen below the countdown timer. Apply smooth fade-in animation when the screen loads.",
+      "reqIds": [
+        "REQ-65"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-exit-war-mode-button-positioned-at-the-top-right-corner-of-the-screen-when-clicked-display-a-confirmation-dialog-asking-are-you-sure-you-want-to-exit-war-mode-your-progress-will-be-saved-with-cancel-and-confirm-exit-options",
+      "title": "Add an Exit War Mode button positioned at the top-right corner of the screen. When clicked, display a confirmation dialog asking 'Are you sure you want to exit War Mode? Your progress will be saved.' with Cancel and Confirm Exit options.",
+      "reqIds": [
+        "REQ-66"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-the-focus-timer-reaches-00-00-automatically-trigger-break-mode-if-breaks-were-enabled-in-the-configuration-display-a-break-countdown-timer-in-the-same-format-showing-motivational-text-recharge-prepare-return-stronger-during-the-break-period",
+      "title": "When the focus timer reaches 00:00, automatically trigger break mode if breaks were enabled in the configuration. Display a break countdown timer in the same format, showing motivational text 'Recharge. Prepare. Return Stronger.' during the break period.",
+      "reqIds": [
+        "REQ-67"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-the-break-timer-completes-display-a-start-next-session-button-that-allows-the-user-to-begin-a-new-focus-session-with-the-same-duration-settings-or-an-exit-war-mode-button-to-return-to-the-dashboard",
+      "title": "After the break timer completes, display a 'Start Next Session' button that allows the user to begin a new focus session with the same duration settings, or an 'Exit War Mode' button to return to the dashboard.",
+      "reqIds": [
+        "REQ-68"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-the-warmodescreen-component-with-the-warmodeconfigmodal-when-the-user-clicks-confirm-enter-war-mode-in-the-confirmation-modal-close-all-modals-and-render-the-warmodescreen-with-the-configured-focus-duration-and-break-settings",
+      "title": "Integrate the WarModeScreen component with the WarModeConfigModal. When the user clicks 'Confirm & Enter War Mode' in the confirmation modal, close all modals and render the WarModeScreen with the configured focus duration and break settings.",
+      "reqIds": [
+        "REQ-69"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-track-total-active-focus-time-in-war-mode-and-persist-it-to-the-backend-when-the-user-exits-or-completes-a-session-update-the-total-war-mode-study-time-metric-on-the-overview-dashboard-after-each-completed-session",
+      "title": "Track total active focus time in War Mode and persist it to the backend when the user exits or completes a session. Update the 'Total War Mode Study Time' metric on the Overview dashboard after each completed session.",
+      "reqIds": [
+        "REQ-70"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-war-mode-screen-is-fully-mobile-responsive-with-optimized-touch-targets-for-start-pause-resume-and-exit-buttons-minimum-44x44px-the-timer-and-motivational-text-must-be-clearly-readable-on-small-screens-320px-480px-width",
+      "title": "Ensure the War Mode screen is fully mobile-responsive with optimized touch targets for Start, Pause, Resume, and Exit buttons (minimum 44x44px). The timer and motivational text must be clearly readable on small screens (320px-480px width).",
+      "reqIds": [
+        "REQ-71"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-full-screen-warmodescreen-component-that-hides-all-dashboard-navigation-and-metrics-when-war-mode-is-active-the-component-must-receive-focus-duration-and-break-configuration-as-props-from-the-war-mode-config-modal",
+      "title": "Create full-screen WarModeScreen component that hides all dashboard navigation and metrics when War Mode is active. The component must receive focus duration and break configuration as props from the War Mode config modal.",
+      "reqIds": [
+        "REQ-72"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-large-countdown-timer-in-mm-ss-format-that-updates-every-second-and-counts-down-from-the-user-configured-focus-duration-the-timer-must-maintain-accurate-state-across-pause-resume-cycles",
+      "title": "Implement large countdown timer in MM:SS format that updates every second and counts down from the user-configured focus duration. The timer must maintain accurate state across pause/resume cycles.",
+      "reqIds": [
+        "REQ-73"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-start-pause-and-resume-control-buttons-that-appear-contextually-based-on-timer-state-only-the-relevant-control-should-be-visible-at-any-time-start-when-not-running-pause-when-running-resume-when-paused",
+      "title": "Add Start, Pause, and Resume control buttons that appear contextually based on timer state. Only the relevant control should be visible at any time (Start when not running, Pause when running, Resume when paused).",
+      "reqIds": [
+        "REQ-74"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-motivational-text-focus-execute-dominate-prominently-below-the-countdown-timer-with-smooth-fade-in-animation-when-the-war-mode-screen-loads",
+      "title": "Display motivational text 'Focus. Execute. Dominate.' prominently below the countdown timer with smooth fade-in animation when the War Mode screen loads.",
+      "reqIds": [
+        "REQ-75"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-exit-war-mode-button-positioned-at-the-top-right-corner-of-the-screen-when-clicked-display-a-confirmation-dialog-asking-are-you-sure-you-want-to-exit-war-mode-your-progress-will-be-saved-with-cancel-and-confirm-exit-options",
+      "title": "Add Exit War Mode button positioned at the top-right corner of the screen. When clicked, display a confirmation dialog asking 'Are you sure you want to exit War Mode? Your progress will be saved.' with Cancel and Confirm Exit options.",
+      "reqIds": [
+        "REQ-76"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-automatic-transition-to-break-mode-when-focus-timer-reaches-00-00-but-only-if-breaks-were-enabled-in-the-configuration-display-a-break-countdown-timer-in-the-same-mm-ss-format-with-motivational-text-recharge-prepare-return-stronger-during-the-break-period",
+      "title": "Implement automatic transition to break mode when focus timer reaches 00:00, but only if breaks were enabled in the configuration. Display a break countdown timer in the same MM:SS format with motivational text 'Recharge. Prepare. Return Stronger.' during the break period.",
+      "reqIds": [
+        "REQ-77"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-start-next-session-and-exit-war-mode-buttons-after-the-break-timer-completes-start-next-session-should-begin-a-new-focus-session-with-the-same-duration-settings-exit-war-mode-should-trigger-the-exit-confirmation-flow",
+      "title": "Display 'Start Next Session' and 'Exit War Mode' buttons after the break timer completes. 'Start Next Session' should begin a new focus session with the same duration settings. 'Exit War Mode' should trigger the exit confirmation flow.",
+      "reqIds": [
+        "REQ-78"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-track-total-active-focus-time-during-war-mode-sessions-excluding-break-time-and-paused-time-when-user-exits-war-mode-or-completes-a-session-persist-the-accumulated-focus-time-to-the-backend-by-calling-the-updatewarmodestats-endpoint",
+      "title": "Track total active focus time during War Mode sessions (excluding break time and paused time). When user exits War Mode or completes a session, persist the accumulated focus time to the backend by calling the updateWarModeStats endpoint.",
+      "reqIds": [
+        "REQ-79"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-overviewdashboard-to-display-total-war-mode-study-time-metric-that-refreshes-after-each-war-mode-session-completes-the-metric-should-query-the-backend-warmodestats-and-display-total-accumulated-focus-hours",
+      "title": "Update OverviewDashboard to display 'Total War Mode Study Time' metric that refreshes after each War Mode session completes. The metric should query the backend warModeStats and display total accumulated focus hours.",
+      "reqIds": [
+        "REQ-81"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-war-mode-screen-is-fully-mobile-responsive-with-optimized-touch-targets-minimum-44x44px-for-all-interactive-elements-timer-and-motivational-text-must-be-clearly-readable-on-small-screens-320px-480px-width-test-and-verify-on-android-devices",
+      "title": "Ensure War Mode screen is fully mobile-responsive with optimized touch targets (minimum 44x44px) for all interactive elements. Timer and motivational text must be clearly readable on small screens (320px-480px width). Test and verify on Android devices.",
+      "reqIds": [
+        "REQ-82"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-timer-accuracy-and-state-management-throughout-the-war-mode-lifecycle-test-pause-resume-functionality-break-transitions-session-completion-and-exit-flows-to-ensure-no-timer-bugs-state-inconsistencies-or-data-loss-occurs",
+      "title": "Verify timer accuracy and state management throughout the War Mode lifecycle. Test pause/resume functionality, break transitions, session completion, and exit flows to ensure no timer bugs, state inconsistencies, or data loss occurs.",
+      "reqIds": [
+        "REQ-83"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-for-war-mode-timer-operations-and-backend-persistence-display-user-friendly-error-messages-if-timer-initialization-fails-or-backend-calls-to-update-study-time-fail-ensure-errors-don-t-crash-the-war-mode-screen",
+      "title": "Add comprehensive error handling for War Mode timer operations and backend persistence. Display user-friendly error messages if timer initialization fails or backend calls to update study time fail. Ensure errors don't crash the War Mode screen.",
+      "reqIds": [
+        "REQ-84"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-comprehensive-bigint-to-string-conversion-at-the-global-serialization-boundary-in-the-api-response-handler-layer-create-a-utility-function-that-recursively-traverses-all-backend-response-objects-and-converts-any-bigint-values-to-strings-before-data-reaches-react-query-cache-or-frontend-state-this-utility-must-handle-nested-objects-arrays-and-null-values-safely",
+      "title": "Implement comprehensive BigInt-to-string conversion at the global serialization boundary in the API response handler layer. Create a utility function that recursively traverses all backend response objects and converts any BigInt values to strings before data reaches React Query cache or frontend state. This utility must handle nested objects, arrays, and null values safely.",
+      "reqIds": [
+        "REQ-85"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-bigint-serialization-handling-to-all-react-query-hooks-in-frontend-src-hooks-usequeries-ts-wrap-the-query-functions-for-useuserdata-usechapters-useconsistencydata-useperformanceblocks-usetimeslots-usewarmodestats-userevisioncoverage-and-usepyqyears-to-ensure-all-data-is-converted-before-being-cached-apply-the-same-conversion-to-all-mutation-responses",
+      "title": "Add BigInt serialization handling to all React Query hooks in frontend/src/hooks/useQueries.ts. Wrap the query functions for useUserData, useChapters, useConsistencyData, usePerformanceBlocks, useTimeSlots, useWarModeStats, useRevisionCoverage, and usePYQYears to ensure all data is converted before being cached. Apply the same conversion to all mutation responses.",
+      "reqIds": [
+        "REQ-87"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-safe-json-stringify-wrapper-utility-that-handles-bigint-values-by-converting-them-to-strings-before-serialization-replace-all-json-stringify-calls-in-the-frontend-codebase-localstorage-operations-logging-debugging-with-this-safe-wrapper-to-prevent-do-not-know-how-to-serialize-a-bigint-errors",
+      "title": "Implement safe JSON.stringify wrapper utility that handles BigInt values by converting them to strings before serialization. Replace all JSON.stringify calls in the frontend codebase (localStorage operations, logging, debugging) with this safe wrapper to prevent 'Do not know how to serialize a BigInt' errors.",
+      "reqIds": [
+        "REQ-88"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-defensive-bigint-handling-to-the-overviewdashboard-component-ensure-all-numeric-data-chapter-completion-percentages-revision-coverage-war-mode-hours-consistency-scores-is-explicitly-converted-to-number-or-string-types-before-rendering-add-null-checks-to-prevent-accessing-properties-on-undefined-query-results",
+      "title": "Add defensive BigInt handling to the OverviewDashboard component. Ensure all numeric data (chapter completion percentages, revision coverage, War Mode hours, consistency scores) is explicitly converted to Number or string types before rendering. Add null checks to prevent accessing properties on undefined query results.",
+      "reqIds": [
+        "REQ-89"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-bigint-conversion-handling-to-the-masterpcmchaptersystem-component-for-all-chapter-data-fields-including-status-accuracy-percentages-revision-dates-and-numeric-ids-ensure-chapter-edit-operations-and-display-logic-safely-handle-all-numeric-data-types-without-serialization-errors",
+      "title": "Add BigInt conversion handling to the MasterPCMChapterSystem component for all chapter data fields including status, accuracy percentages, revision dates, and numeric IDs. Ensure chapter edit operations and display logic safely handle all numeric data types without serialization errors.",
+      "reqIds": [
+        "REQ-90"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-errorboundary-component-in-frontend-src-components-errorboundary-tsx-to-catch-and-display-bigint-serialization-errors-specifically-add-custom-error-messaging-for-serialization-errors-that-guides-users-to-reload-the-app-and-log-detailed-error-information-including-component-stack-and-error-type-to-console",
+      "title": "Update the ErrorBoundary component in frontend/src/components/ErrorBoundary.tsx to catch and display BigInt serialization errors specifically. Add custom error messaging for serialization errors that guides users to reload the app, and log detailed error information including component stack and error type to console.",
+      "reqIds": [
+        "REQ-91"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-console-logging-at-critical-initialization-points-to-track-the-bigint-serialization-fix-effectiveness-log-when-actor-initializes-when-backend-responses-are-converted-when-react-query-caches-data-and-when-components-mount-use-console-error-for-any-detected-bigint-values-that-were-not-converted-and-console-log-for-successful-conversions",
+      "title": "Add comprehensive console logging at critical initialization points to track the BigInt serialization fix effectiveness. Log when actor initializes, when backend responses are converted, when React Query caches data, and when components mount. Use console.error for any detected BigInt values that were not converted, and console.log for successful conversions.",
+      "reqIds": [
+        "REQ-92"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-test-the-bigint-serialization-fix-comprehensively-across-all-application-flows-initial-page-load-chapter-crud-operations-war-mode-entry-exit-revision-tracking-updates-pyq-year-management-and-consistency-tracking-verify-that-no-do-not-know-how-to-serialize-a-bigint-errors-appear-in-console-during-any-user-interaction-and-that-all-numeric-data-displays-correctly",
+      "title": "Test the BigInt serialization fix comprehensively across all application flows: initial page load, chapter CRUD operations, War Mode entry/exit, revision tracking updates, PYQ year management, and consistency tracking. Verify that no 'Do not know how to serialize a BigInt' errors appear in console during any user interaction, and that all numeric data displays correctly.",
+      "reqIds": [
+        "REQ-93"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-masterpcmchaptersystem-component-to-display-three-prominent-toggle-buttons-or-checkboxes-for-each-chapter-showing-theory-pyqs-and-advanced-practice-completion-status-each-toggle-must-visually-indicate-completion-state-with-a-green-checkmark-icon-when-true-and-a-red-cross-or-empty-state-when-false",
+      "title": "Update the MasterPCMChapterSystem component to display three prominent toggle buttons or checkboxes for each chapter showing Theory, PYQs, and Advanced Practice completion status. Each toggle must visually indicate completion state with a green checkmark icon when true and a red cross or empty state when false.",
+      "reqIds": [
+        "REQ-94"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-wire-the-revision-tracking-toggles-to-call-the-backend-updatechapterrevision-endpoint-when-any-toggle-is-clicked-pass-the-chapter-id-and-the-specific-field-being-updated-theorycompleted-pyqscompleted-or-advancedpracticecompleted-with-the-new-boolean-value",
+      "title": "Wire the revision tracking toggles to call the backend updateChapterRevision endpoint when any toggle is clicked. Pass the chapter ID and the specific field being updated (theoryCompleted, pyqsCompleted, or advancedPracticeCompleted) with the new boolean value.",
+      "reqIds": [
+        "REQ-95"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-calculated-revision-coverage-percentage-0-100-for-each-chapter-alongside-the-toggle-buttons-the-percentage-must-be-calculated-as-number-of-completed-revision-fields-3-100-and-update-in-real-time-when-any-toggle-changes",
+      "title": "Display the calculated revision coverage percentage (0-100%) for each chapter alongside the toggle buttons. The percentage must be calculated as (number of completed revision fields / 3) × 100 and update in real-time when any toggle changes.",
+      "reqIds": [
+        "REQ-96"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-revision-toggle-ui-integrates-seamlessly-with-the-existing-chapter-display-layout-in-masterpcmchaptersystem-position-the-toggles-prominently-within-each-chapter-card-or-expanded-detail-view-without-causing-layout-overflow-or-horizontal-scrolling-on-mobile-screens-320px-480px-width",
+      "title": "Ensure the revision toggle UI integrates seamlessly with the existing chapter display layout in MasterPCMChapterSystem. Position the toggles prominently within each chapter card or expanded detail view without causing layout overflow or horizontal scrolling on mobile screens (320px-480px width).",
+      "reqIds": [
+        "REQ-97"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -637,6 +909,28 @@
       "id": "AR-48",
       "summary": "Phase 3 Step 1: Add 'ENTER WAR MODE' button on Overview with duration selector (preset 60m/90m/120m + custom input), 'Break needed?' toggle, optional break duration selector, and confirmation modal. Do not implement War Mode screen, timers, or data persistence yet.",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-57",
+      "summary": "Integrate WarModeScreen with App.tsx War Mode state management. When user confirms War Mode entry from WarModeConfigModal, close all modals, set warModeActive to true, store focus and break settings, and render WarModeScreen. When user exits War Mode, set warModeActive to false and return to dashboard.",
+      "reqIds": [
+        "REQ-80"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-58",
+      "summary": "Implement comprehensive BigInt serialization fix across all data boundaries (React Query cache, JSON.stringify, localStorage, backend responses, API transformations) to prevent 'Do not know how to serialize a BigInt' errors",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-60",
+      "summary": "Update the useActor hook in frontend/src/hooks/useActor.ts to wrap the actor creation and all actor method calls with the BigInt serialization utility. Ensure that all data returned from backend methods (getUserData, getChapters, getWarModeStats, etc.) passes through the BigInt-to-string conversion before being cached by React Query.",
+      "reqIds": [
+        "REQ-86"
+      ],
       "status": "pending"
     }
   ],

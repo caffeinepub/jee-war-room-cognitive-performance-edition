@@ -4,20 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { usePYQYears, useTogglePYQYear, useAddCustomPYQYear } from '../hooks/useQueries';
+import { usePYQYears, useTogglePYQYear, useAddPYQYear } from '../hooks/useQueries';
 import { CheckCircle2, XCircle, Plus, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
 
 function TopPYQsTracker() {
   const { data: pyqYears, isLoading } = usePYQYears();
   const toggleYear = useTogglePYQYear();
-  const addCustomYear = useAddCustomPYQYear();
+  const addCustomYear = useAddPYQYear();
   const [isAddYearDialogOpen, setIsAddYearDialogOpen] = useState(false);
   const [customYear, setCustomYear] = useState('');
 
   const handleToggleYear = async (year: number) => {
     try {
-      await toggleYear.mutateAsync(year);
+      await toggleYear.mutateAsync({ year });
     } catch (err) {
       // Error already handled in hook
       console.error('Failed to toggle PYQ year:', err);
@@ -44,7 +44,7 @@ function TopPYQsTracker() {
     }
 
     try {
-      await addCustomYear.mutateAsync(yearNum);
+      await addCustomYear.mutateAsync({ year: yearNum });
       setIsAddYearDialogOpen(false);
       setCustomYear('');
     } catch (err) {

@@ -53,14 +53,17 @@ export interface backendInterface {
     getTimeSlots(): Promise<Array<TimeSlot>>;
     getUserConsistency(): Promise<ConsistencyDNA>;
     getWarModeStats(): Promise<{
+        totalWarModeStudyTime: bigint;
         lastSession?: Time;
         totalStudyTime: bigint;
+        warModeOnlyStudyTime: bigint;
         completedPomodoros: bigint;
     }>;
     recordPerformanceBlock(startTime: Time, endTime: Time, focusScore: bigint, productivity: bigint): Promise<PerformanceBlock>;
     registerUser(): Promise<void>;
     toggleChapterCompletion(chapterId: bigint): Promise<Chapter>;
     toggleCompletion(id: bigint): Promise<TimeSlot>;
+    updateChapterRevision(chapterId: bigint, theoryCompleted: boolean, pyqsCompleted: boolean, advancedPracticeCompleted: boolean): Promise<void>;
     updateConsistency(isConsistent: boolean, currentDate: string): Promise<ConsistencyDNA>;
     updateTimeSlot(id: bigint, startTime: Time, endTime: Time, activityType: string, description: string): Promise<TimeSlot>;
     updateWarModeStats(pomodoros: bigint, studyTime: bigint): Promise<void>;

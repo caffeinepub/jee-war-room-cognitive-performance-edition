@@ -61,8 +61,10 @@ export interface _SERVICE {
   'getWarModeStats' : ActorMethod<
     [],
     {
+      'totalWarModeStudyTime' : bigint,
       'lastSession' : [] | [Time],
       'totalStudyTime' : bigint,
+      'warModeOnlyStudyTime' : bigint,
       'completedPomodoros' : bigint,
     }
   >,
@@ -73,6 +75,10 @@ export interface _SERVICE {
   'registerUser' : ActorMethod<[], undefined>,
   'toggleChapterCompletion' : ActorMethod<[bigint], Chapter>,
   'toggleCompletion' : ActorMethod<[bigint], TimeSlot>,
+  'updateChapterRevision' : ActorMethod<
+    [bigint, boolean, boolean, boolean],
+    undefined
+  >,
   'updateConsistency' : ActorMethod<[boolean, string], ConsistencyDNA>,
   'updateTimeSlot' : ActorMethod<
     [bigint, Time, Time, string, string],

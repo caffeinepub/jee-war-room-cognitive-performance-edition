@@ -7,14 +7,25 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CountdownTimer from './components/CountdownTimer';
 import OverviewDashboard from './components/OverviewDashboard';
 import MasterPCMChapterSystem from './components/MasterPCMChapterSystem';
+import WarModeScreen from './components/WarModeScreen';
+import { useUpdateWarModeStats } from './hooks/useQueries';
 import { Target, BookOpen, LogIn, LogOut, Heart, Loader2 } from 'lucide-react';
+
+interface WarModeConfig {
+  focusDuration: number;
+  breakDuration: number | null;
+  breaksEnabled: boolean;
+}
 
 function App() {
   const { identity, login, clear, isLoggingIn, isInitializing } = useInternetIdentity();
   const [activeTab, setActiveTab] = useState('overview');
   const [isAppInitializing, setIsAppInitializing] = useState(true);
   const [initError, setInitError] = useState<string | null>(null);
+  const [isWarModeActive, setIsWarModeActive] = useState(false);
+  const [warModeConfig, setWarModeConfig] = useState<WarModeConfig | null>(null);
   
+  const updateWarModeStats = useUpdateWarModeStats();
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   // Touch swipe handling for mobile
@@ -78,6 +89,28 @@ function App() {
     }
   };
 
+  const handleStartWarMode = (config: WarModeConfig) => {
+    console.log('[App] Starting War Mode with config:', config);
+    setWarModeConfig(config);
+    setIsWarModeActive(true);
+  };
+
+  const handleExitWarMode = () => {
+    console.log('[App] Exiting War Mode');
+    setIsWarModeActive(false);
+    setWarModeConfig(null);
+  };
+
+  const handleWarModeSessionEnd = (totalFocusMinutes: number) => {
+    console.log('[App] War Mode session ended, total focus minutes:', totalFocusMinutes);
+    if (totalFocusMinutes > 0) {
+      updateWarModeStats.mutate({
+        pomodoros: BigInt(1),
+        studyTime: BigInt(totalFocusMinutes),
+      });
+    }
+  };
+
   // Show loading state during initialization
   if (isAppInitializing || isInitializing) {
     console.log('[App] Rendering loading state');
@@ -113,6 +146,22 @@ function App() {
   }
 
   console.log('[App] Rendering main application');
+
+  // Render War Mode screen when active
+  if (isWarModeActive && warModeConfig) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <WarModeScreen
+          focusDuration={warModeConfig.focusDuration}
+          breakDuration={warModeConfig.breakDuration}
+          breaksEnabled={warModeConfig.breaksEnabled}
+          onExit={handleExitWarMode}
+          onSessionEnd={handleWarModeSessionEnd}
+        />
+        <Toaster />
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
@@ -195,7 +244,7 @@ function App() {
                   </TabsList>
 
                   <TabsContent value="overview" className="space-y-6">
-                    <OverviewDashboard />
+                    <OverviewDashboard onStartWarMode={handleStartWarMode} />
                   </TabsContent>
 
                   <TabsContent value="chapters" className="space-y-6">

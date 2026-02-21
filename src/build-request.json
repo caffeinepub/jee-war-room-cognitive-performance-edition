@@ -1,167 +1,98 @@
 {
   "kind": "build_request",
-  "title": "Phase 3 Step 1: War Mode Entry UI with Duration and Break Configuration",
+  "title": "Add visual revision tracking toggles for Theory, PYQs, and Advanced Practice to chapter display",
   "projectName": "JEE WAR ROOM",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-55",
-      "text": "Add 'ENTER WAR MODE' button to the OverviewDashboard component. Position it prominently near the top of the dashboard, styled with neon blue accent color to match the application theme. The button must be easily tappable on mobile (minimum 44x44px touch target).",
+      "id": "REQ-94",
+      "text": "Update the MasterPCMChapterSystem component to display three prominent toggle buttons or checkboxes for each chapter showing Theory, PYQs, and Advanced Practice completion status. Each toggle must visually indicate completion state with a green checkmark icon when true and a red cross or empty state when false.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-recent"
         ],
         "quotes": [
-          "Add the 'ENTER WAR MODE' button on the Overview"
+          "no option to tick or cross theory pyqs and advanced options so change that",
+          "yuup"
         ]
       },
       "acceptanceCriteria": [
-        "Button displays 'ENTER WAR MODE' text with appropriate styling",
-        "Button uses neon blue accent color from the theme",
-        "Button meets minimum 44x44px touch target requirement for mobile",
-        "Clicking the button opens the War Mode configuration modal"
+        "Each chapter card or detail view displays three separate toggle controls labeled 'Theory', 'PYQs', and 'Advanced Practice'",
+        "When a field is marked complete (true), display a green checkmark icon (✓)",
+        "When a field is incomplete (false), display a red cross icon (✗) or empty checkbox state",
+        "Toggles must be easily tappable on mobile devices with minimum 44x44px touch targets",
+        "The visual state updates immediately when toggled without page refresh"
       ]
     },
     {
-      "id": "REQ-56",
-      "text": "Create a War Mode configuration modal component that displays when the 'ENTER WAR MODE' button is clicked. The modal must include a duration selector section with three preset buttons (60 minutes, 90 minutes, 120 minutes) and a custom input field for entering any duration in minutes. Style the modal with the dark theme background (#0f0f0f) and slightly lighter grey for the modal content area.",
-      "target": "frontend",
+      "id": "REQ-95",
+      "text": "Wire the revision tracking toggles to call the backend updateChapterRevision endpoint when any toggle is clicked. Pass the chapter ID and the specific field being updated (theoryCompleted, pyqsCompleted, or advancedPracticeCompleted) with the new boolean value.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-recent"
         ],
         "quotes": [
-          "Add duration selector (preset buttons + custom input)"
+          "no option to tick or cross theory pyqs and advanced options"
         ]
       },
       "acceptanceCriteria": [
-        "Modal opens when 'ENTER WAR MODE' button is clicked",
-        "Three preset buttons display: 60m, 90m, 120m",
-        "Custom input field accepts numeric values for minutes",
-        "Only one duration option (preset or custom) can be selected at a time",
-        "Selected duration is visually highlighted",
-        "Modal matches dark theme styling"
+        "Clicking any revision toggle immediately calls the backend mutation",
+        "Backend updates the specific boolean field for the target chapter",
+        "React Query invalidates chapter queries and refetches updated data",
+        "UI reflects the new state with updated toggle visual indicators",
+        "Error handling displays user-friendly messages if the update fails"
       ]
     },
     {
-      "id": "REQ-57",
-      "text": "Add a 'Break needed?' toggle section to the War Mode configuration modal below the duration selector. Display two clear option buttons labeled 'Yes' and 'No'. When 'No' is selected, the break duration selector must be hidden. When 'Yes' is selected, show the break duration selector. Default selection should be 'No'.",
+      "id": "REQ-96",
+      "text": "Display the calculated revision coverage percentage (0-100%) for each chapter alongside the toggle buttons. The percentage must be calculated as (number of completed revision fields / 3) × 100 and update in real-time when any toggle changes.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Add 'Break needed?' toggle"
+          "msg-recent"
         ]
       },
       "acceptanceCriteria": [
-        "Toggle section displays below duration selector",
-        "Two buttons labeled 'Yes' and 'No' are clearly visible",
-        "Only one option can be selected at a time",
-        "Default selection is 'No'",
-        "Break duration selector is hidden when 'No' is selected",
-        "Break duration selector appears when 'Yes' is selected"
+        "Each chapter displays a revision percentage badge or indicator",
+        "Percentage calculation: if all three toggles are true, shows 100%; if two are true, shows 67%; if one is true, shows 33%; if none are true, shows 0%",
+        "Percentage updates immediately when any toggle is clicked without requiring page refresh",
+        "The percentage display is clearly visible and styled to match the dark theme"
       ]
     },
     {
-      "id": "REQ-58",
-      "text": "Implement a break duration selector that appears conditionally in the War Mode configuration modal when 'Break needed?' is set to 'Yes'. Include preset break duration buttons (5 minutes, 10 minutes, 15 minutes) and a custom input field for entering any break duration in minutes. Use the same styling pattern as the focus duration selector.",
+      "id": "REQ-97",
+      "text": "Ensure the revision toggle UI integrates seamlessly with the existing chapter display layout in MasterPCMChapterSystem. Position the toggles prominently within each chapter card or expanded detail view without causing layout overflow or horizontal scrolling on mobile screens (320px-480px width).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Add optional break duration selector"
+          "msg-recent"
         ]
       },
       "acceptanceCriteria": [
-        "Break duration selector only displays when 'Break needed?' is 'Yes'",
-        "Three preset buttons display: 5m, 10m, 15m",
-        "Custom input field accepts numeric values for minutes",
-        "Only one break duration option can be selected at a time",
-        "Selected break duration is visually highlighted",
-        "Break duration selector is completely hidden when 'No' is selected"
-      ]
-    },
-    {
-      "id": "REQ-59",
-      "text": "Add a confirmation button to the War Mode configuration modal that displays a summary of the selected settings. When clicked, show a confirmation modal that previews: selected focus duration, whether break is enabled, and break duration (if enabled). Include 'Confirm & Enter War Mode' and 'Cancel' buttons in the confirmation modal. Clicking 'Cancel' returns to the configuration modal. Clicking 'Confirm' closes both modals without entering War Mode (War Mode screen not implemented yet).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Only show confirmation modal"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Configuration modal includes a 'Continue' or 'Next' button at the bottom",
-        "Clicking continues to confirmation modal showing settings summary",
-        "Confirmation modal displays selected focus duration",
-        "Confirmation modal displays break status (Yes/No)",
-        "Confirmation modal displays break duration if break is enabled",
-        "Confirmation modal has 'Confirm & Enter War Mode' and 'Cancel' buttons",
-        "Cancel returns to configuration modal",
-        "Confirm closes both modals (no War Mode screen transition yet)"
-      ]
-    },
-    {
-      "id": "REQ-60",
-      "text": "Implement form validation for the War Mode configuration modal. Focus duration must be selected (either preset or custom with minimum 1 minute). If custom duration is selected, validate that it is a positive integer. If break is enabled, break duration must be selected with the same validation rules. Display validation error messages if requirements are not met when attempting to proceed to confirmation.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Cannot proceed without selecting a focus duration",
-        "Custom focus duration must be a positive integer >= 1",
-        "If break is enabled, break duration must be selected",
-        "Custom break duration must be a positive integer >= 1",
-        "Clear validation error messages display for invalid inputs",
-        "Validation occurs before opening confirmation modal"
-      ]
-    },
-    {
-      "id": "REQ-61",
-      "text": "Ensure the War Mode configuration modal and confirmation modal are fully mobile-responsive with optimized touch targets (minimum 44x44px), appropriate spacing for small screens (320px-480px width), and no horizontal scrolling. All buttons, toggles, and input fields must be easily tappable on Android devices.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ]
-      },
-      "acceptanceCriteria": [
-        "All buttons meet minimum 44x44px touch target size",
-        "Modal content fits within mobile viewport without horizontal scroll",
-        "Input fields are large enough for easy mobile interaction",
-        "Spacing between interactive elements prevents accidental taps",
-        "Modal displays correctly on screens 320px-480px wide",
-        "Text remains readable at mobile font sizes"
+        "Revision toggles are positioned in a logical location within each chapter card (e.g., below chapter name and status, above or beside other chapter metadata)",
+        "Layout remains responsive and does not break on small Android screens",
+        "No horizontal scrolling is introduced by the toggle controls",
+        "All text labels and icons remain readable at mobile viewport sizes",
+        "Spacing between toggles and other chapter elements follows the consistent 16px padding standard"
       ]
     }
   ],
   "constraints": [
-    "Do NOT implement the War Mode screen itself in this step",
-    "Do NOT implement any timer functionality yet",
-    "Do NOT modify dashboard metrics or data persistence",
-    "Do NOT touch Phase 1 or Phase 2 features",
-    "Do NOT modify the existing WarMode.tsx component that implements Pomodoro functionality",
-    "The confirmation action must only close the modals, not transition to War Mode screen"
+    "Do not modify the backend Chapter type structure; theoryCompleted, pyqsCompleted, and advancedPracticeCompleted fields already exist",
+    "Do not alter the existing backend updateChapterRevision endpoint; use it as-is",
+    "Maintain the existing dark theme styling with #0f0f0f background and neon accent colors",
+    "Preserve all existing chapter management functionality (edit, delete, status changes)",
+    "Do not modify any immutable frontend paths listed in SYSTEM_CONTEXT"
   ],
   "nonGoals": [
-    "War Mode screen implementation",
-    "Timer functionality (focus timer or break timer)",
-    "Session tracking or data persistence",
-    "Backend integration for War Mode sessions",
-    "Modifications to existing War Mode Pomodoro component",
-    "Dashboard metric updates based on War Mode usage",
-    "Exit confirmation for War Mode (not applicable yet)"
+    "Adding new backend endpoints for revision tracking (already implemented)",
+    "Modifying the global revision coverage calculation logic on the Overview dashboard",
+    "Changing the PYQ years tracking system or TopPYQsTracker component",
+    "Adding new revision tracking fields beyond the existing three (theory, PYQs, advanced practice)",
+    "Implementing bulk revision marking actions",
+    "Adding revision scheduling or notification features"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,16 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Add War Mode entry UI with configuration modal for duration and break settings to the Overview Dashboard.
+**Goal:** Add visual revision tracking toggles for Theory, PYQs, and Advanced Practice to each chapter in the MasterPCMChapterSystem with completion indicators and live percentage updates.
 
 **Planned changes:**
-- Add "ENTER WAR MODE" button to OverviewDashboard component with neon blue styling
-- Create War Mode configuration modal with focus duration selector (60m/90m/120m presets + custom input)
-- Add "Break needed?" toggle with Yes/No options
-- Implement conditional break duration selector (5m/10m/15m presets + custom input) that appears when break is enabled
-- Add confirmation modal showing settings summary with "Confirm & Enter War Mode" and "Cancel" buttons
-- Implement form validation for duration inputs (minimum 1 minute, positive integers)
-- Ensure mobile-responsive design with 44x44px minimum touch targets for all interactive elements
-- Confirmation button closes modals without entering War Mode (War Mode screen not implemented in this phase)
+- Add three prominent toggle buttons/checkboxes (Theory, PYQs, Advanced Practice) to each chapter card
+- Display green checkmark icon (✓) for completed fields and red cross icon (✗) for incomplete fields
+- Wire toggles to call the backend updateChapterRevision endpoint on click
+- Display real-time revision coverage percentage (0-100%) calculated from completed toggles
+- Ensure responsive mobile layout without horizontal scrolling on 320px-480px screens
+- Update UI immediately on toggle changes without page refresh
 
-**User-visible outcome:** Users can tap the "ENTER WAR MODE" button on the Overview Dashboard to open a configuration modal where they select focus duration (with preset or custom options), optionally enable breaks with duration selection, review their settings in a confirmation modal, and either confirm or cancel. The modals close after confirmation, but War Mode does not start yet.
+**User-visible outcome:** Users can now visually track and toggle their Theory, PYQs, and Advanced Practice completion status for each chapter with clear checkmark/cross indicators and see the revision coverage percentage update in real-time.
