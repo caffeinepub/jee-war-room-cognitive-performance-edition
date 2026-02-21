@@ -42,7 +42,12 @@ function ConsistencyDNATracker() {
 
   const handleMarkDay = async (isConsistent: boolean) => {
     try {
-      await updateConsistency.mutateAsync(isConsistent);
+      const now = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istDate = new Date(now.getTime() + istOffset);
+      const currentDate = istDate.toISOString().split('T')[0];
+      
+      await updateConsistency.mutateAsync({ isConsistent, currentDate });
     } catch (err) {
       console.error('Failed to update consistency:', err);
     }
@@ -158,17 +163,11 @@ function ConsistencyDNATracker() {
                 className="min-h-[44px] transition-all duration-200"
               >
                 <XCircle className="mr-2 h-5 w-5" />
-                Missed
+                Inconsistent
               </Button>
             </div>
           </div>
         )}
-
-        <div className="pt-4 border-t border-border">
-          <p className="text-xs text-center text-muted-foreground">
-            Track your daily consistency to build unstoppable momentum
-          </p>
-        </div>
       </CardContent>
     </Card>
   );

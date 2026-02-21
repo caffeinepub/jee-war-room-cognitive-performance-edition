@@ -1,14 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Add visual revision tracking toggles for Theory, PYQs, and Advanced Practice to each chapter in the MasterPCMChapterSystem with completion indicators and live percentage updates.
+**Goal:** Remove AIR rank projection and sleep tracker features, and add chapter names to time block cards.
 
 **Planned changes:**
-- Add three prominent toggle buttons/checkboxes (Theory, PYQs, Advanced Practice) to each chapter card
-- Display green checkmark icon (✓) for completed fields and red cross icon (✗) for incomplete fields
-- Wire toggles to call the backend updateChapterRevision endpoint on click
-- Display real-time revision coverage percentage (0-100%) calculated from completed toggles
-- Ensure responsive mobile layout without horizontal scrolling on 320px-480px screens
-- Update UI immediately on toggle changes without page refresh
+- Remove AIR rank projection section from IntelligenceEngine component (keep weakness detection, burnout detection, and daily suggestions)
+- Remove SleepTracker component and all sleep-related UI elements
+- Remove sleep quality factor from FSI calculation formula and redistribute weighting to 50% deep work, 25% task switching, 25% distraction
+- Remove all backend sleep tracking endpoints, data models, and storage
+- Remove all sleep-related React Query hooks from frontend
+- Add chapter name display to time block cards in FlexibleScheduleGrid, positioned below time range
+- Update time block data model to ensure chapter field is populated and displayed
+- Update FocusStabilityIndex component UI to reflect new formula without sleep references
 
-**User-visible outcome:** Users can now visually track and toggle their Theory, PYQs, and Advanced Practice completion status for each chapter with clear checkmark/cross indicators and see the revision coverage percentage update in real-time.
+**User-visible outcome:** The Intelligence tab no longer shows rank projections, the sleep tracker is completely removed from the dashboard and FSI calculation, and time block cards now clearly display the chapter name below the time range for better study tracking.

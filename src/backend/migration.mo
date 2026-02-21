@@ -1,20 +1,23 @@
 import Map "mo:core/Map";
 import Nat "mo:core/Nat";
+import Time "mo:core/Time";
+import Principal "mo:core/Principal";
+import Text "mo:core/Text";
 
 module {
-  type OldConsistencyDNA = {
+  type ConsistencyDNA = {
     daysTracked : Nat;
     daysConsistent : Nat;
-    lastUpdate : Int;
+    lastUpdate : Time.Time;
     lastEntryDate : ?Text;
   };
 
-  type OldChapter = {
+  type Chapter = {
     id : Nat;
     name : Text;
     subject : Text;
     revisionInterval : Nat;
-    lastStudied : ?Int;
+    lastStudied : ?Time.Time;
     difficulty : Text;
     importance : Text;
     studyHours : Nat;
@@ -24,95 +27,65 @@ module {
     advancedPracticeCompleted : Bool;
   };
 
-  type OldPerformanceBlock = {
+  type PerformanceBlock = {
     blockId : Nat;
-    startTime : Int;
-    endTime : Int;
+    startTime : Time.Time;
+    endTime : Time.Time;
     focusScore : Nat;
     productivity : Nat;
   };
 
   type OldTimeSlot = {
     id : Nat;
-    startTime : Int;
-    endTime : Int;
+    startTime : Time.Time;
+    endTime : Time.Time;
     activityType : Text;
     description : Text;
     isComplete : Bool;
   };
 
-  type OldWarModeStats = {
+  type NewTimeSlot = {
+    id : Nat;
+    startTime : Time.Time;
+    endTime : Time.Time;
+    activityType : Text;
+    description : Text;
+    isComplete : Bool;
+    chapter : Text;
+  };
+
+  type WarModeStats = {
     completedPomodoros : Nat;
     totalStudyTime : Nat;
-    lastSession : ?Int;
+    lastSession : ?Time.Time;
     warModeOnlyStudyTime : Nat;
     totalWarModeStudyTime : Nat;
   };
 
+  type OldSleepEntry = {
+    date : Text;
+    hoursSlept : Float;
+    qualityRating : Nat;
+  };
+
   type OldUserData = {
-    consistency : OldConsistencyDNA;
-    chapters : [OldChapter];
-    performanceBlocks : [OldPerformanceBlock];
-    warModeStats : OldWarModeStats;
+    consistency : ConsistencyDNA;
+    chapters : [Chapter];
+    performanceBlocks : [PerformanceBlock];
+    warModeStats : WarModeStats;
     timeSlots : [OldTimeSlot];
+    sleepData : [OldSleepEntry];
   };
 
   type OldActor = {
     users : Map.Map<Principal, OldUserData>;
   };
 
-  type NewConsistencyDNA = {
-    daysTracked : Nat;
-    daysConsistent : Nat;
-    lastUpdate : Int;
-    lastEntryDate : ?Text;
-  };
-
-  type NewChapter = {
-    id : Nat;
-    name : Text;
-    subject : Text;
-    revisionInterval : Nat;
-    lastStudied : ?Int;
-    difficulty : Text;
-    importance : Text;
-    studyHours : Nat;
-    isComplete : Bool;
-    theoryCompleted : Bool;
-    pyqsCompleted : Bool;
-    advancedPracticeCompleted : Bool;
-  };
-
-  type NewPerformanceBlock = {
-    blockId : Nat;
-    startTime : Int;
-    endTime : Int;
-    focusScore : Nat;
-    productivity : Nat;
-  };
-
-  type NewTimeSlot = {
-    id : Nat;
-    startTime : Int;
-    endTime : Int;
-    activityType : Text;
-    description : Text;
-    isComplete : Bool;
-  };
-
-  type NewWarModeStats = {
-    completedPomodoros : Nat;
-    totalStudyTime : Nat;
-    lastSession : ?Int;
-    warModeOnlyStudyTime : Nat;
-    totalWarModeStudyTime : Nat;
-  };
-
   type NewUserData = {
-    consistency : NewConsistencyDNA;
-    chapters : [NewChapter];
-    performanceBlocks : [NewPerformanceBlock];
-    warModeStats : NewWarModeStats;
+    consistency : ConsistencyDNA;
+    chapters : [Chapter];
+    performanceBlocks : [PerformanceBlock];
+    warModeStats : WarModeStats;
     timeSlots : [NewTimeSlot];
   };
 
@@ -121,6 +94,19 @@ module {
   };
 
   public func run(old : OldActor) : NewActor {
-    old;
+    let newUsers = old.users.map<Principal, OldUserData, NewUserData>(
+      func(_id, oldUser) {
+        let newTimeSlots = oldUser.timeSlots.map(
+          func(oldSlot) {
+            {
+              oldSlot with
+              chapter = "Unspecified";
+            };
+          }
+        );
+        { oldUser with timeSlots = newTimeSlots };
+      }
+    );
+    { users = newUsers };
   };
 };

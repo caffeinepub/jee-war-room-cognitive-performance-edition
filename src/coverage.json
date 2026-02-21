@@ -1,59 +1,95 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T03:39:58.744Z",
+  "generatedAt": "2026-02-21T04:31:52.257Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 8,
+    "implemented": 6,
     "items": [
       {
-        "id": "REQ-94",
-        "summary": "Update the MasterPCMChapterSystem component to display three prominent toggle buttons or checkboxes for each chapter showing Theory, PYQs, and Advanced Practice completion status. Each toggle must visually indicate completion state with a green checkmark icon when true and a red cross or empty state when false.",
+        "id": "REQ-121",
+        "summary": "Remove the AIR rank projection estimator section from the IntelligenceEngine component. Delete all rank projection calculation logic, UI elements displaying projected rank range, confidence indicators, and contributing factors (chapter mastery, consistency, weak areas). Keep the weakness detection algorithm, burnout detection algorithm, and automated daily suggestions system intact.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/components/IntelligenceEngine.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/components/IntelligenceEngine.tsx"
         ]
       },
       {
-        "id": "REQ-95",
-        "summary": "Wire the revision tracking toggles to call the backend updateChapterRevision endpoint when any toggle is clicked. Pass the chapter ID and the specific field being updated (theoryCompleted, pyqsCompleted, or advancedPracticeCompleted) with the new boolean value.",
+        "id": "REQ-122",
+        "summary": "Remove the SleepTracker component from the OverviewDashboard. Delete the SleepTracker component file (frontend/src/components/SleepTracker.tsx) and remove all imports and references to it in OverviewDashboard and other components.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/components/OverviewDashboard.tsx",
+          "frontend/src/components/SleepTracker.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/components/OverviewDashboard.tsx",
+          "frontend/src/components/SleepTracker.tsx"
         ]
       },
       {
-        "id": "REQ-96",
-        "summary": "Display the calculated revision coverage percentage (0-100%) for each chapter alongside the toggle buttons. The percentage must be calculated as (number of completed revision fields / 3) × 100 and update in real-time when any toggle changes.",
+        "id": "REQ-123",
+        "summary": "Remove the sleep quality factor (10%) from the Focus Stability Index (FSI) calculation formula. Update the FSI calculation to redistribute the weighting: 50% deep work hours, 25% task switching penalty, 25% distraction penalty. Remove all sleep-related data dependencies from FSI calculation logic.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-124",
+        "summary": "Remove all backend endpoints and data models related to sleep tracking. Delete sleep data storage structures, CRUD operations for sleep entries, and any queries that fetch sleep history. Remove the sleepData field from the UserData type in backend/main.mo.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-125",
+        "summary": "Remove all React Query hooks related to sleep tracking from frontend/src/hooks/useQueries.ts. Delete useSleepData, useCreateSleepEntry, and any other sleep-related query hooks. Remove all references to these hooks throughout the frontend codebase.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
-        "id": "REQ-97",
-        "summary": "Ensure the revision toggle UI integrates seamlessly with the existing chapter display layout in MasterPCMChapterSystem. Position the toggles prominently within each chapter card or expanded detail view without causing layout overflow or horizontal scrolling on mobile screens (320px-480px width).",
+        "id": "REQ-126",
+        "summary": "Add a chapter name display field to each time block card in the FlexibleScheduleGrid component. Display the selected chapter name prominently below the time range (05:40 AM - 08:50 AM) and above or alongside the subject field. The chapter name should be clearly visible and styled consistently with the dark theme. Use a slightly lighter text color than the time display for visual hierarchy.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/components/FlexibleScheduleGrid.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/MasterPCMChapterSystem.tsx"
+          "frontend/src/components/FlexibleScheduleGrid.tsx"
+        ]
+      },
+      {
+        "id": "REQ-127",
+        "summary": "Update the time block data model in the FlexibleScheduleGrid component to ensure the chapter field is always populated when a time block is created or edited. If the chapter field already exists in the data model but is not being displayed, wire it to the UI. If it does not exist, add it to the time block form and backend storage.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/FlexibleScheduleGrid.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/FlexibleScheduleGrid.tsx"
+        ]
+      },
+      {
+        "id": "REQ-128",
+        "summary": "Update the FocusStabilityIndex component to reflect the new FSI calculation formula without sleep quality. Update any UI text, tooltips, or help information that previously mentioned sleep as a factor in FSI calculation. Ensure the circular progress meter and color-coded rings continue to display correctly with the updated formula.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/FocusStabilityIndex.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/FocusStabilityIndex.tsx"
         ]
       }
     ]
@@ -65,9 +101,16 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/MasterPCMChapterSystem.tsx",
+    "frontend/src/components/ConsistencyDNATracker.tsx",
+    "frontend/src/components/FlexibleScheduleGrid.tsx",
+    "frontend/src/components/FocusStabilityIndex.tsx",
+    "frontend/src/components/IntelligenceEngine.tsx",
+    "frontend/src/components/OverviewDashboard.tsx",
+    "frontend/src/components/RevisionChecklist.tsx",
+    "frontend/src/components/SleepTracker.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",

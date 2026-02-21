@@ -7,25 +7,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CountdownTimer from './components/CountdownTimer';
 import OverviewDashboard from './components/OverviewDashboard';
 import MasterPCMChapterSystem from './components/MasterPCMChapterSystem';
-import WarModeScreen from './components/WarModeScreen';
-import { useUpdateWarModeStats } from './hooks/useQueries';
-import { Target, BookOpen, LogIn, LogOut, Heart, Loader2 } from 'lucide-react';
-
-interface WarModeConfig {
-  focusDuration: number;
-  breakDuration: number | null;
-  breaksEnabled: boolean;
-}
+import IntelligenceEngine from './components/IntelligenceEngine';
+import IntelligentAlerts from './components/IntelligentAlerts';
+import { Target, BookOpen, Brain, LogIn, LogOut, Heart, Loader2 } from 'lucide-react';
 
 function App() {
   const { identity, login, clear, isLoggingIn, isInitializing } = useInternetIdentity();
   const [activeTab, setActiveTab] = useState('overview');
   const [isAppInitializing, setIsAppInitializing] = useState(true);
   const [initError, setInitError] = useState<string | null>(null);
-  const [isWarModeActive, setIsWarModeActive] = useState(false);
-  const [warModeConfig, setWarModeConfig] = useState<WarModeConfig | null>(null);
   
-  const updateWarModeStats = useUpdateWarModeStats();
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   // Touch swipe handling for mobile
@@ -33,7 +24,7 @@ function App() {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const minSwipeDistance = 50;
-  const tabs = ['overview', 'chapters'];
+  const tabs = ['overview', 'chapters', 'intelligence'];
 
   // Initialize app with comprehensive error logging
   useEffect(() => {
@@ -89,28 +80,6 @@ function App() {
     }
   };
 
-  const handleStartWarMode = (config: WarModeConfig) => {
-    console.log('[App] Starting War Mode with config:', config);
-    setWarModeConfig(config);
-    setIsWarModeActive(true);
-  };
-
-  const handleExitWarMode = () => {
-    console.log('[App] Exiting War Mode');
-    setIsWarModeActive(false);
-    setWarModeConfig(null);
-  };
-
-  const handleWarModeSessionEnd = (totalFocusMinutes: number) => {
-    console.log('[App] War Mode session ended, total focus minutes:', totalFocusMinutes);
-    if (totalFocusMinutes > 0) {
-      updateWarModeStats.mutate({
-        pomodoros: BigInt(1),
-        studyTime: BigInt(totalFocusMinutes),
-      });
-    }
-  };
-
   // Show loading state during initialization
   if (isAppInitializing || isInitializing) {
     console.log('[App] Rendering loading state');
@@ -146,22 +115,6 @@ function App() {
   }
 
   console.log('[App] Rendering main application');
-
-  // Render War Mode screen when active
-  if (isWarModeActive && warModeConfig) {
-    return (
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-        <WarModeScreen
-          focusDuration={warModeConfig.focusDuration}
-          breakDuration={warModeConfig.breakDuration}
-          breaksEnabled={warModeConfig.breaksEnabled}
-          onExit={handleExitWarMode}
-          onSessionEnd={handleWarModeSessionEnd}
-        />
-        <Toaster />
-      </ThemeProvider>
-    );
-  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
@@ -232,7 +185,7 @@ function App() {
                 onTouchEnd={onTouchEnd}
               >
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-2 gap-1 sm:gap-2 h-auto p-1">
+                  <TabsList className="grid w-full grid-cols-3 gap-1 sm:gap-2 h-auto p-1">
                     <TabsTrigger value="overview" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm transition-all duration-200">
                       <Target className="h-4 w-4" />
                       <span>Overview</span>
@@ -241,14 +194,23 @@ function App() {
                       <BookOpen className="h-4 w-4" />
                       <span>Chapters</span>
                     </TabsTrigger>
+                    <TabsTrigger value="intelligence" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm transition-all duration-200">
+                      <Brain className="h-4 w-4" />
+                      <span>Intelligence</span>
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="overview" className="space-y-6">
-                    <OverviewDashboard onStartWarMode={handleStartWarMode} />
+                    <OverviewDashboard />
                   </TabsContent>
 
                   <TabsContent value="chapters" className="space-y-6">
                     <MasterPCMChapterSystem />
+                  </TabsContent>
+
+                  <TabsContent value="intelligence" className="space-y-6">
+                    <IntelligentAlerts />
+                    <IntelligenceEngine />
                   </TabsContent>
                 </Tabs>
               </div>

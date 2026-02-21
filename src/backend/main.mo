@@ -7,6 +7,7 @@ import Runtime "mo:core/Runtime";
 import List "mo:core/List";
 import Principal "mo:core/Principal";
 import Nat "mo:core/Nat";
+import Iter "mo:core/Iter";
 import Array "mo:core/Array";
 import Migration "migration";
 
@@ -19,15 +20,6 @@ actor {
     lastEntryDate : ?Text;
   };
 
-  module ConsistencyDNA {
-    public func compare(dna1 : ConsistencyDNA, dna2 : ConsistencyDNA) : Order.Order {
-      switch (Int.compare(dna1.daysConsistent, dna2.daysConsistent)) {
-        case (#equal) { if (dna1.daysTracked < dna2.daysTracked) { #less } else { #greater } };
-        case (order) { order };
-      };
-    };
-  };
-
   type Chapter = {
     id : Nat;
     name : Text;
@@ -38,9 +30,9 @@ actor {
     importance : Text;
     studyHours : Nat;
     isComplete : Bool;
-    theoryCompleted : Bool; // Revision tracking fields
-    pyqsCompleted : Bool; // PYQs tracking field
-    advancedPracticeCompleted : Bool; // Advanced practice field
+    theoryCompleted : Bool;
+    pyqsCompleted : Bool;
+    advancedPracticeCompleted : Bool;
   };
 
   type PerformanceBlock = {
@@ -58,6 +50,7 @@ actor {
     activityType : Text;
     description : Text;
     isComplete : Bool;
+    chapter : Text;
   };
 
   type WarModeStats = {
@@ -108,7 +101,7 @@ actor {
     subject : Text,
     revisionInterval : Nat,
     difficulty : Text,
-    importance : Text
+    importance : Text,
   ) : async Chapter {
     let currentTime = Time.now();
     let chapter = {
@@ -186,7 +179,6 @@ actor {
       case (?userData) {
         let currentTime = Time.now();
 
-        // Check if the entry for today already exists
         switch (userData.consistency.lastEntryDate) {
           case (?lastDate) {
             if (lastDate == currentDate) {
@@ -225,7 +217,7 @@ actor {
     startTime : Time.Time,
     endTime : Time.Time,
     focusScore : Nat,
-    productivity : Nat
+    productivity : Nat,
   ) : async PerformanceBlock {
     let block = {
       blockId = Int.abs(startTime);
@@ -327,13 +319,12 @@ actor {
     );
   };
 
-  // BEGIN COMP-DAILY-GOAL-TRACKER
-
   public shared ({ caller }) func addTimeSlot(
     startTime : Time.Time,
     endTime : Time.Time,
     activityType : Text,
-    description : Text
+    description : Text,
+    chapter : Text,
   ) : async TimeSlot {
     let slot = {
       id = Int.abs(Time.now());
@@ -342,6 +333,7 @@ actor {
       activityType;
       description;
       isComplete = false;
+      chapter;
     };
 
     switch (users.get(caller)) {
@@ -366,7 +358,8 @@ actor {
     startTime : Time.Time,
     endTime : Time.Time,
     activityType : Text,
-    description : Text
+    description : Text,
+    chapter : Text,
   ) : async TimeSlot {
     switch (users.get(caller)) {
       case (?userData) {
@@ -383,6 +376,7 @@ actor {
                 endTime;
                 activityType;
                 description;
+                chapter;
               };
             } else { slot };
           }
@@ -481,9 +475,12 @@ actor {
     };
   };
 
-  // END COMP-DAILY-GOAL-TRACKER
-
-  public shared ({ caller }) func updateChapterRevision(chapterId : Nat, theoryCompleted : Bool, pyqsCompleted : Bool, advancedPracticeCompleted : Bool) : async () {
+  public shared ({ caller }) func updateChapterRevision(
+    chapterId : Nat,
+    theoryCompleted : Bool,
+    pyqsCompleted : Bool,
+    advancedPracticeCompleted : Bool,
+  ) : async () {
     switch (users.get(caller)) {
       case (?userData) {
         var chapterFound = false : Bool;

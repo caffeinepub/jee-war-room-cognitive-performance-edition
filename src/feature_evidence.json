@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-masterpcmchaptersystem-component-to-display-three-prominent-toggle-buttons-or-checkboxes-for-each-chapter-showing-theory-pyqs-and-advanced-practice-completion-status-each-toggle-must-visually-indicate-completion-state-with-a-green-checkmark-icon-when-true-and-a-red-cross-or-empty-state-when-false",
-      "featureTitle": "Update the MasterPCMChapterSystem component to display three prominent toggle buttons or checkboxes for each chapter showing Theory, PYQs, and Advanced Practice completion status. Each toggle must visually indicate completion state with a green checkmark icon when true and a red cross or empty state when false.",
+      "featureId": "feature-remove-the-air-rank-projection-estimator-section-from-the-intelligenceengine-component-delete-all-rank-projection-calculation-logic-ui-elements-displaying-projected-rank-range-confidence-indicators-and-contributing-factors-chapter-mastery-consistency-weak-areas-keep-the-weakness-detection-algorithm-burnout-detection-algorithm-and-automated-daily-suggestions-system-intact",
+      "featureTitle": "Remove the AIR rank projection estimator section from the IntelligenceEngine component. Delete all rank projection calculation logic, UI elements displaying projected rank range, confidence indicators, and contributing factors (chapter mastery, consistency, weak areas). Keep the weakness detection algorithm, burnout detection algorithm, and automated daily suggestions system intact.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx"
+        "frontend/src/components/IntelligenceEngine.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,15 +15,33 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-94"
+        "REQ-121"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-wire-the-revision-tracking-toggles-to-call-the-backend-updatechapterrevision-endpoint-when-any-toggle-is-clicked-pass-the-chapter-id-and-the-specific-field-being-updated-theorycompleted-pyqscompleted-or-advancedpracticecompleted-with-the-new-boolean-value",
-      "featureTitle": "Wire the revision tracking toggles to call the backend updateChapterRevision endpoint when any toggle is clicked. Pass the chapter ID and the specific field being updated (theoryCompleted, pyqsCompleted, or advancedPracticeCompleted) with the new boolean value.",
+      "featureId": "feature-remove-the-sleeptracker-component-from-the-overviewdashboard-delete-the-sleeptracker-component-file-frontend-src-components-sleeptracker-tsx-and-remove-all-imports-and-references-to-it-in-overviewdashboard-and-other-components",
+      "featureTitle": "Remove the SleepTracker component from the OverviewDashboard. Delete the SleepTracker component file (frontend/src/components/SleepTracker.tsx) and remove all imports and references to it in OverviewDashboard and other components.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx",
+        "frontend/src/components/OverviewDashboard.tsx",
+        "frontend/src/components/SleepTracker.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-122"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-all-react-query-hooks-related-to-sleep-tracking-from-frontend-src-hooks-usequeries-ts-delete-usesleepdata-usecreatesleepentry-and-any-other-sleep-related-query-hooks-remove-all-references-to-these-hooks-throughout-the-frontend-codebase",
+      "featureTitle": "Remove all React Query hooks related to sleep tracking from frontend/src/hooks/useQueries.ts. Delete useSleepData, useCreateSleepEntry, and any other sleep-related query hooks. Remove all references to these hooks throughout the frontend codebase.",
+      "files": [
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -34,15 +52,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-95"
+        "REQ-125"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-display-the-calculated-revision-coverage-percentage-0-100-for-each-chapter-alongside-the-toggle-buttons-the-percentage-must-be-calculated-as-number-of-completed-revision-fields-3-100-and-update-in-real-time-when-any-toggle-changes",
-      "featureTitle": "Display the calculated revision coverage percentage (0-100%) for each chapter alongside the toggle buttons. The percentage must be calculated as (number of completed revision fields / 3) × 100 and update in real-time when any toggle changes.",
+      "featureId": "feature-add-a-chapter-name-display-field-to-each-time-block-card-in-the-flexibleschedulegrid-component-display-the-selected-chapter-name-prominently-below-the-time-range-05-40-am-08-50-am-and-above-or-alongside-the-subject-field-the-chapter-name-should-be-clearly-visible-and-styled-consistently-with-the-dark-theme-use-a-slightly-lighter-text-color-than-the-time-display-for-visual-hierarchy",
+      "featureTitle": "Add a chapter name display field to each time block card in the FlexibleScheduleGrid component. Display the selected chapter name prominently below the time range (05:40 AM - 08:50 AM) and above or alongside the subject field. The chapter name should be clearly visible and styled consistently with the dark theme. Use a slightly lighter text color than the time display for visual hierarchy.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx"
+        "frontend/src/components/FlexibleScheduleGrid.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -52,15 +70,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-96"
+        "REQ-126"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-revision-toggle-ui-integrates-seamlessly-with-the-existing-chapter-display-layout-in-masterpcmchaptersystem-position-the-toggles-prominently-within-each-chapter-card-or-expanded-detail-view-without-causing-layout-overflow-or-horizontal-scrolling-on-mobile-screens-320px-480px-width",
-      "featureTitle": "Ensure the revision toggle UI integrates seamlessly with the existing chapter display layout in MasterPCMChapterSystem. Position the toggles prominently within each chapter card or expanded detail view without causing layout overflow or horizontal scrolling on mobile screens (320px-480px width).",
+      "featureId": "feature-update-the-time-block-data-model-in-the-flexibleschedulegrid-component-to-ensure-the-chapter-field-is-always-populated-when-a-time-block-is-created-or-edited-if-the-chapter-field-already-exists-in-the-data-model-but-is-not-being-displayed-wire-it-to-the-ui-if-it-does-not-exist-add-it-to-the-time-block-form-and-backend-storage",
+      "featureTitle": "Update the time block data model in the FlexibleScheduleGrid component to ensure the chapter field is always populated when a time block is created or edited. If the chapter field already exists in the data model but is not being displayed, wire it to the UI. If it does not exist, add it to the time block form and backend storage.",
       "files": [
-        "frontend/src/components/MasterPCMChapterSystem.tsx"
+        "frontend/src/components/FlexibleScheduleGrid.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -70,7 +88,25 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-97"
+        "REQ-127"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-focusstabilityindex-component-to-reflect-the-new-fsi-calculation-formula-without-sleep-quality-update-any-ui-text-tooltips-or-help-information-that-previously-mentioned-sleep-as-a-factor-in-fsi-calculation-ensure-the-circular-progress-meter-and-color-coded-rings-continue-to-display-correctly-with-the-updated-formula",
+      "featureTitle": "Update the FocusStabilityIndex component to reflect the new FSI calculation formula without sleep quality. Update any UI text, tooltips, or help information that previously mentioned sleep as a factor in FSI calculation. Ensure the circular progress meter and color-coded rings continue to display correctly with the updated formula.",
+      "files": [
+        "frontend/src/components/FocusStabilityIndex.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-128"
       ],
       "confidence": "high"
     }

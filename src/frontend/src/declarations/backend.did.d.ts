@@ -44,11 +44,12 @@ export interface TimeSlot {
   'activityType' : string,
   'endTime' : Time,
   'description' : string,
+  'chapter' : string,
   'isComplete' : boolean,
 }
 export interface _SERVICE {
   'addChapter' : ActorMethod<[string, string, bigint, string, string], Chapter>,
-  'addTimeSlot' : ActorMethod<[Time, Time, string, string], TimeSlot>,
+  'addTimeSlot' : ActorMethod<[Time, Time, string, string, string], TimeSlot>,
   'deleteTimeSlot' : ActorMethod<[bigint], undefined>,
   'getAllChapters' : ActorMethod<[], Array<Chapter>>,
   'getPerformanceBlocks' : ActorMethod<[], Array<PerformanceBlock>>,
@@ -81,7 +82,7 @@ export interface _SERVICE {
   >,
   'updateConsistency' : ActorMethod<[boolean, string], ConsistencyDNA>,
   'updateTimeSlot' : ActorMethod<
-    [bigint, Time, Time, string, string],
+    [bigint, Time, Time, string, string, string],
     TimeSlot
   >,
   'updateWarModeStats' : ActorMethod<[bigint, bigint], undefined>,

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 27,
+  "projectStateVersion": 31,
   "summary": "Full-stack web application called 'JEE WAR ROOM – Cognitive Performance Edition' for JEE Advanced 2026 preparation targeting AIR under 150. Features include real-time countdown (corrected to May 17, 2026), Focus Stability Index (FSI), performance analytics, consistency tracking, War Mode, comprehensive PCM chapter system with spaced repetition, daily goal tracker with study/work slots, and revision checklist. Dark-themed elite interface using React, Node.js, Express, MongoDB, and Chart.js. Fully optimized for Android mobile.",
   "architectural_notes": [
     "Dark mode only UI with #0f0f0f background, neon blue/orange accents, minimal distraction-free design",
@@ -15,7 +15,7 @@
     "All major actions use modal pop-ups instead of inline editing"
   ],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-implement-dark-mode-theme-with-background-color-0f0f0f-slightly-lighter-dark-grey-cards-neon-blue-and-orange-accent-colors-and-red-glow-for-critical-alerts-include-top-banner-displaying-air-150-no-excuses-ensure-smooth-premium-animations-throughout-the-interface",
@@ -688,6 +688,174 @@
         "REQ-97"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-replace-the-existing-dailygoaltracker-component-with-a-new-flexibleschedulegrid-component-that-allows-users-to-create-unlimited-time-blocks-with-fully-customizable-start-and-end-times-any-duration-not-limited-to-1-hour-slots-each-time-block-must-include-fields-for-subject-selection-chapter-selection-topic-description-priority-level-high-medium-low-energy-level-high-medium-low-completion-status-toggle-and-notes-users-must-be-able-to-add-blocks-at-any-time-of-day-including-outside-7-am-11-pm-range-and-edit-or-delete-any-existing-block",
+      "title": "Replace the existing DailyGoalTracker component with a new FlexibleScheduleGrid component that allows users to create unlimited time blocks with fully customizable start and end times (any duration, not limited to 1-hour slots). Each time block must include fields for: subject selection, chapter selection, topic description, priority level (High/Medium/Low), energy level (High/Medium/Low), completion status toggle, and notes. Users must be able to add blocks at any time of day, including outside 7 AM-11 PM range, and edit or delete any existing block.",
+      "reqIds": [
+        "REQ-98"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-daily-progress-tracking-metrics-to-the-flexibleschedulegrid-component-displaying-daily-progress-bar-showing-percentage-of-completed-time-blocks-pcm-percentage-tracker-showing-distribution-of-physics-chemistry-mathematics-blocks-deep-work-counter-showing-total-minutes-spent-on-completed-blocks-current-study-streak-counter-consecutive-days-with-at-least-one-completed-block-and-overall-productivity-score-calculated-from-completion-rate-and-deep-work-hours",
+      "title": "Add daily progress tracking metrics to the FlexibleScheduleGrid component displaying: daily progress bar showing percentage of completed time blocks, PCM percentage tracker showing distribution of Physics/Chemistry/Mathematics blocks, deep work counter showing total minutes spent on completed blocks, current study streak counter (consecutive days with at least one completed block), and overall productivity score calculated from completion rate and deep work hours.",
+      "reqIds": [
+        "REQ-99"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-sleeptracker-component-with-manual-daily-input-form-for-sleep-data-the-form-must-include-a-numeric-input-for-hours-slept-0-24-range-with-0-5-increment-support-and-an-optional-sleep-quality-rating-selector-1-5-scale-with-visual-indicators-display-today-s-sleep-entry-if-already-logged-and-prevent-multiple-entries-per-day-with-date-based-validation-show-historical-sleep-data-for-the-last-7-days-with-visual-chart-or-list",
+      "title": "Create a SleepTracker component with manual daily input form for sleep data. The form must include a numeric input for hours slept (0-24 range with 0.5 increment support) and an optional sleep quality rating selector (1-5 scale with visual indicators). Display today's sleep entry if already logged, and prevent multiple entries per day with date-based validation. Show historical sleep data for the last 7 days with visual chart or list.",
+      "reqIds": [
+        "REQ-101"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-existing-focusstabilityindex-component-with-a-circular-progress-meter-visualization-displaying-the-fsi-score-0-100-with-color-coded-rings-elite-80-100-green-stable-60-79-yellow-unstable-40-59-orange-distracted-40-red-replace-or-augment-the-current-display-with-this-circular-meter-do-not-modify-the-existing-fsi-calculation-formula",
+      "title": "Enhance the existing FocusStabilityIndex component with a circular progress meter visualization displaying the FSI score (0-100) with color-coded rings (Elite 80-100 green, Stable 60-79 yellow, Unstable 40-59 orange, Distracted <40 red). Replace or augment the current display with this circular meter. Do not modify the existing FSI calculation formula.",
+      "reqIds": [
+        "REQ-103"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-7-day-rolling-trend-line-graph-to-the-focusstabilityindex-component-showing-fsi-score-changes-over-the-last-7-days-display-historical-fsi-scores-as-connected-line-graph-with-date-labels-on-x-axis-and-score-values-on-y-axis-include-visual-indicators-for-significant-score-changes-between-consecutive-days",
+      "title": "Add a 7-day rolling trend line graph to the FocusStabilityIndex component showing FSI score changes over the last 7 days. Display historical FSI scores as connected line graph with date labels on x-axis and score values on y-axis. Include visual indicators for significant score changes between consecutive days.",
+      "reqIds": [
+        "REQ-104"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-fsi-drop-alert-system-that-monitors-for-3-consecutive-days-of-score-decline-when-fsi-score-decreases-for-3-days-in-a-row-display-a-prominent-alert-banner-or-notification-in-the-focusstabilityindex-component-warning-the-user-of-the-declining-trend-include-suggested-actions-to-improve-fsi-increase-deep-work-reduce-task-switching-improve-sleep-quality",
+      "title": "Implement FSI drop alert system that monitors for 3 consecutive days of score decline. When FSI score decreases for 3 days in a row, display a prominent alert banner or notification in the FocusStabilityIndex component warning the user of the declining trend. Include suggested actions to improve FSI (increase deep work, reduce task switching, improve sleep quality).",
+      "reqIds": [
+        "REQ-105"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-intelligenceengine-component-that-implements-a-weakness-detection-algorithm-analyzing-chapter-accuracy-percentages-and-revision-patterns-to-identify-weak-topics-display-a-weakness-report-showing-chapters-with-accuracy-60-or-marked-as-weak-status-prioritized-by-importance-level-include-suggested-focus-areas-based-on-upcoming-revision-due-dates-and-exam-proximity",
+      "title": "Build an IntelligenceEngine component that implements a weakness detection algorithm analyzing chapter accuracy percentages and revision patterns to identify weak topics. Display a weakness report showing chapters with accuracy <60% or marked as 'Weak' status, prioritized by importance level. Include suggested focus areas based on upcoming revision due dates and exam proximity.",
+      "reqIds": [
+        "REQ-110"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-burnout-detection-algorithm-to-the-intelligenceengine-component-that-monitors-deep-work-hours-consistency-scores-sleep-quality-and-fsi-trends-to-identify-burnout-risk-display-burnout-risk-level-low-moderate-high-with-visual-indicator-when-burnout-risk-is-detected-show-alert-with-recommended-recovery-actions-reduce-study-hours-take-rest-day-improve-sleep-schedule",
+      "title": "Add burnout detection algorithm to the IntelligenceEngine component that monitors deep work hours, consistency scores, sleep quality, and FSI trends to identify burnout risk. Display burnout risk level (Low/Moderate/High) with visual indicator. When burnout risk is detected, show alert with recommended recovery actions (reduce study hours, take rest day, improve sleep schedule).",
+      "reqIds": [
+        "REQ-111"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-rank-projection-estimator-in-the-intelligenceengine-component-that-analyzes-current-chapter-completion-percentages-revision-adherence-rates-mock-test-accuracy-and-time-remaining-until-jee-advanced-2026-to-estimate-projected-air-rank-range-display-projected-rank-as-range-e-g-projected-air-120-180-with-confidence-level-indicator-include-factors-contributing-to-projection-chapter-mastery-consistency-weak-areas",
+      "title": "Implement rank projection estimator in the IntelligenceEngine component that analyzes current chapter completion percentages, revision adherence rates, mock test accuracy, and time remaining until JEE Advanced 2026 to estimate projected AIR rank range. Display projected rank as range (e.g., 'Projected AIR: 120-180') with confidence level indicator. Include factors contributing to projection (chapter mastery, consistency, weak areas).",
+      "reqIds": [
+        "REQ-112"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-automated-daily-suggestions-system-to-the-intelligenceengine-component-that-generates-personalized-recommendations-based-on-performance-data-upcoming-revisions-weak-chapters-and-productivity-patterns-display-3-5-actionable-daily-suggestions-such-as-focus-on-organic-chemistry-chapter-3-revision-due-schedule-physics-problems-during-your-peak-10-am-1-pm-slot-weak-area-calculus-dedicate-2-hours-today-suggestions-must-refresh-daily",
+      "title": "Add automated daily suggestions system to the IntelligenceEngine component that generates personalized recommendations based on performance data, upcoming revisions, weak chapters, and productivity patterns. Display 3-5 actionable daily suggestions such as 'Focus on Organic Chemistry Chapter 3 (revision due)', 'Schedule Physics problems during your peak 10 AM-1 PM slot', 'Weak area: Calculus - dedicate 2 hours today'. Suggestions must refresh daily.",
+      "reqIds": [
+        "REQ-113"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-intelligentalerts-component-that-monitors-and-displays-three-types-of-alerts-fsi-drop-alerts-when-fsi-declines-3-consecutive-days-revision-stagnation-warnings-when-no-revisions-completed-for-7-days-and-deep-hours-threshold-alerts-when-daily-deep-work-exceeds-10-hours-without-adequate-breaks-display-alerts-as-prominent-banners-with-critical-red-glow-styling-and-dismiss-functionality",
+      "title": "Create an IntelligentAlerts component that monitors and displays three types of alerts: FSI drop alerts (when FSI declines 3 consecutive days), revision stagnation warnings (when no revisions completed for 7+ days), and deep hours threshold alerts (when daily deep work exceeds 10 hours without adequate breaks). Display alerts as prominent banners with critical red glow styling and dismiss functionality.",
+      "reqIds": [
+        "REQ-115"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-all-new-components-flexibleschedulegrid-sleeptracker-enhanced-focusstabilityindex-consistencydnatracker-intelligenceengine-intelligentalerts-into-the-existing-app-tsx-navigation-structure-create-a-new-intelligence-tab-alongside-overview-and-chapters-tabs-place-flexibleschedulegrid-and-sleeptracker-in-overview-tab-place-enhanced-fsi-consistencydnatracker-in-overview-tab-place-intelligenceengine-and-intelligentalerts-in-new-intelligence-tab-ensure-mobile-swipe-gestures-work-across-all-three-tabs",
+      "title": "Integrate all new components (FlexibleScheduleGrid, SleepTracker, enhanced FocusStabilityIndex, ConsistencyDNATracker, IntelligenceEngine, IntelligentAlerts) into the existing App.tsx navigation structure. Create a new 'Intelligence' tab alongside Overview and Chapters tabs. Place FlexibleScheduleGrid and SleepTracker in Overview tab. Place enhanced FSI, ConsistencyDNATracker in Overview tab. Place IntelligenceEngine and IntelligentAlerts in new Intelligence tab. Ensure mobile swipe gestures work across all three tabs.",
+      "reqIds": [
+        "REQ-117"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-all-react-query-hooks-in-frontend-src-hooks-usequeries-ts-to-support-new-data-endpoints-for-time-blocks-sleep-tracking-fsi-history-consistency-dna-history-and-intelligence-reports-implement-hooks-for-usetimeblocks-usecreatetimeblock-useupdatetimeblock-usedeletetimeblock-usesleepdata-usecreatesleepentry-usefsihistory-useconsistencyhistory-useintelligencereport-useactivealerts-configure-automatic-query-invalidation-to-refresh-dependent-data-when-changes-occur",
+      "title": "Update all React Query hooks in frontend/src/hooks/useQueries.ts to support new data endpoints for time blocks, sleep tracking, FSI history, consistency DNA history, and intelligence reports. Implement hooks for: useTimeBlocks, useCreateTimeBlock, useUpdateTimeBlock, useDeleteTimeBlock, useSleepData, useCreateSleepEntry, useFSIHistory, useConsistencyHistory, useIntelligenceReport, useActiveAlerts. Configure automatic query invalidation to refresh dependent data when changes occur.",
+      "reqIds": [
+        "REQ-118"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-new-components-and-features-maintain-the-existing-dark-theme-with-background-color-0f0f0f-slightly-lighter-dark-grey-cards-neon-blue-and-orange-accent-colors-and-red-glow-for-critical-alerts-apply-consistent-padding-minimum-16px-smooth-transitions-200-300ms-and-mobile-optimized-touch-targets-minimum-44x44px-across-all-new-ui-elements-verify-no-horizontal-scrolling-on-screens-320px-480px-width",
+      "title": "Ensure all new components and features maintain the existing dark theme with background color #0f0f0f, slightly lighter dark grey cards, neon blue and orange accent colors, and red glow for critical alerts. Apply consistent padding (minimum 16px), smooth transitions (200-300ms), and mobile-optimized touch targets (minimum 44x44px) across all new UI elements. Verify no horizontal scrolling on screens 320px-480px width.",
+      "reqIds": [
+        "REQ-119"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-verify-that-all-existing-core-systems-remain-unchanged-chapter-management-crud-operations-revision-tracking-core-logic-theory-pyqs-advanced-practice-toggles-pyq-year-tracker-structure-war-mode-base-system-with-timer-and-break-functionality-new-features-must-only-extend-functionality-without-modifying-these-existing-systems",
+      "title": "Verify that all existing core systems remain unchanged: Chapter Management CRUD operations, Revision tracking core logic (theory/PYQs/advanced practice toggles), PYQ year tracker structure, War Mode base system with timer and break functionality. New features must only extend functionality without modifying these existing systems.",
+      "reqIds": [
+        "REQ-120"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-air-rank-projection-estimator-section-from-the-intelligenceengine-component-delete-all-rank-projection-calculation-logic-ui-elements-displaying-projected-rank-range-confidence-indicators-and-contributing-factors-chapter-mastery-consistency-weak-areas-keep-the-weakness-detection-algorithm-burnout-detection-algorithm-and-automated-daily-suggestions-system-intact",
+      "title": "Remove the AIR rank projection estimator section from the IntelligenceEngine component. Delete all rank projection calculation logic, UI elements displaying projected rank range, confidence indicators, and contributing factors (chapter mastery, consistency, weak areas). Keep the weakness detection algorithm, burnout detection algorithm, and automated daily suggestions system intact.",
+      "reqIds": [
+        "REQ-121"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-sleeptracker-component-from-the-overviewdashboard-delete-the-sleeptracker-component-file-frontend-src-components-sleeptracker-tsx-and-remove-all-imports-and-references-to-it-in-overviewdashboard-and-other-components",
+      "title": "Remove the SleepTracker component from the OverviewDashboard. Delete the SleepTracker component file (frontend/src/components/SleepTracker.tsx) and remove all imports and references to it in OverviewDashboard and other components.",
+      "reqIds": [
+        "REQ-122"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-all-react-query-hooks-related-to-sleep-tracking-from-frontend-src-hooks-usequeries-ts-delete-usesleepdata-usecreatesleepentry-and-any-other-sleep-related-query-hooks-remove-all-references-to-these-hooks-throughout-the-frontend-codebase",
+      "title": "Remove all React Query hooks related to sleep tracking from frontend/src/hooks/useQueries.ts. Delete useSleepData, useCreateSleepEntry, and any other sleep-related query hooks. Remove all references to these hooks throughout the frontend codebase.",
+      "reqIds": [
+        "REQ-125"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-chapter-name-display-field-to-each-time-block-card-in-the-flexibleschedulegrid-component-display-the-selected-chapter-name-prominently-below-the-time-range-05-40-am-08-50-am-and-above-or-alongside-the-subject-field-the-chapter-name-should-be-clearly-visible-and-styled-consistently-with-the-dark-theme-use-a-slightly-lighter-text-color-than-the-time-display-for-visual-hierarchy",
+      "title": "Add a chapter name display field to each time block card in the FlexibleScheduleGrid component. Display the selected chapter name prominently below the time range (05:40 AM - 08:50 AM) and above or alongside the subject field. The chapter name should be clearly visible and styled consistently with the dark theme. Use a slightly lighter text color than the time display for visual hierarchy.",
+      "reqIds": [
+        "REQ-126"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-time-block-data-model-in-the-flexibleschedulegrid-component-to-ensure-the-chapter-field-is-always-populated-when-a-time-block-is-created-or-edited-if-the-chapter-field-already-exists-in-the-data-model-but-is-not-being-displayed-wire-it-to-the-ui-if-it-does-not-exist-add-it-to-the-time-block-form-and-backend-storage",
+      "title": "Update the time block data model in the FlexibleScheduleGrid component to ensure the chapter field is always populated when a time block is created or edited. If the chapter field already exists in the data model but is not being displayed, wire it to the UI. If it does not exist, add it to the time block form and backend storage.",
+      "reqIds": [
+        "REQ-127"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-focusstabilityindex-component-to-reflect-the-new-fsi-calculation-formula-without-sleep-quality-update-any-ui-text-tooltips-or-help-information-that-previously-mentioned-sleep-as-a-factor-in-fsi-calculation-ensure-the-circular-progress-meter-and-color-coded-rings-continue-to-display-correctly-with-the-updated-formula",
+      "title": "Update the FocusStabilityIndex component to reflect the new FSI calculation formula without sleep quality. Update any UI text, tooltips, or help information that previously mentioned sleep as a factor in FSI calculation. Ensure the circular progress meter and color-coded rings continue to display correctly with the updated formula.",
+      "reqIds": [
+        "REQ-128"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -930,6 +1098,146 @@
       "summary": "Update the useActor hook in frontend/src/hooks/useActor.ts to wrap the actor creation and all actor method calls with the BigInt serialization utility. Ensure that all data returned from backend methods (getUserData, getChapters, getWarModeStats, etc.) passes through the BigInt-to-string conversion before being cached by React Query.",
       "reqIds": [
         "REQ-86"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-61",
+      "summary": "Replace existing daily goal tracker with flexible daily schedule grid. Users can add unlimited time blocks with custom start/end times (any duration), add blocks outside 7 AM-11 PM if needed, and edit/delete any block. Each block includes subject, chapter, topic, priority, energy level, completion toggle, and notes fields.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-62",
+      "summary": "Add daily progress tracking to schedule grid showing: daily progress bar, PCM percentage tracker, deep work counter, streak system, and productivity score.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-63",
+      "summary": "Add manual sleep tracking with daily input form for hours slept and optional sleep quality rating (1-5 scale). Sleep data must feed into Focus Stability Index calculation and burnout detection algorithm.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-64",
+      "summary": "Enhance existing Focus Stability Index (FSI) visualization with circular progress meter, 7-day rolling trend graph, and alert system that triggers when score decreases for 3 consecutive days. Keep existing FSI calculation formula unchanged.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-65",
+      "summary": "Implement full 30-day Consistency DNA Tracker with scoring system based on study consistency, PCM ratio maintenance, revision adherence, and streak strength. Display as animated DNA-style vertical bar with 30-day trend graph and volatility detection.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-66",
+      "summary": "Build Intelligence Engine with: weakness detection algorithm analyzing chapter accuracy and revision patterns, burnout detection based on deep work hours and consistency scores, rank projection estimator using performance data, and automated daily suggestions system.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-67",
+      "summary": "Implement intelligence-based alert system with: FSI drop alerts (3 consecutive days decline), revision stagnation warnings (no revisions for set period), and deep hours threshold notifications (excessive study without breaks).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-70",
+      "summary": "Create backend endpoints to persist time blocks with all fields (start time, end time, subject, chapter, topic, priority, energy level, completion status, notes) and daily progress metrics. Implement CRUD operations for time blocks and calculation logic for daily progress percentage, PCM distribution, deep work minutes, streak counter, and productivity score. All time block data must be stored per user using Principal-based authentication.",
+      "reqIds": [
+        "REQ-100"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-72",
+      "summary": "Add backend endpoints to store and retrieve sleep tracking data per user. Each sleep entry must include date, hours slept, and optional quality rating (1-5). Implement date-based validation to prevent multiple entries per day. Create endpoint to fetch sleep history for last 7 days and calculate average sleep quality for FSI integration.",
+      "reqIds": [
+        "REQ-102"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-76",
+      "summary": "Add backend support for storing daily FSI scores with timestamps to enable 7-day trend analysis. Create endpoint to calculate and return FSI score history for the last 7 days. Implement backend logic to detect 3 consecutive days of FSI score decline and return alert status to frontend.",
+      "reqIds": [
+        "REQ-106"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-77",
+      "summary": "Create a ConsistencyDNATracker component implementing a 30-day consistency scoring system with score range 0-100 calculated using: 40% study consistency (days studied in last 30 days), 20% PCM ratio maintenance (balance across Physics/Chemistry/Math), 20% revision adherence percentage (on-time revisions), and 20% streak strength (longest no-missed-day streak). Display score as animated vertical DNA-style bar with color-coded segments.",
+      "reqIds": [
+        "REQ-107"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-78",
+      "summary": "Add a 30-day trend graph to the ConsistencyDNATracker component showing consistency score evolution over the last 30 days. Display as line graph with date labels and score values. Include volatility detection algorithm that identifies significant score fluctuations (>15 point swings between days) and displays volatility warnings when detected.",
+      "reqIds": [
+        "REQ-108"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-79",
+      "summary": "Implement backend calculation for Consistency DNA score based on: 40% study consistency (number of days with completed time blocks in last 30 days / 30), 20% PCM ratio maintenance (standard deviation from equal 33.3% distribution across Physics/Chemistry/Math), 20% revision adherence (percentage of revisions completed on schedule per 1-7-21 system), and 20% streak strength (longest consecutive days with study activity). Create endpoints to return consistency score, 30-day history, and volatility metrics.",
+      "reqIds": [
+        "REQ-109"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-84",
+      "summary": "Implement backend intelligence algorithms supporting weakness detection, burnout detection, rank projection, and daily suggestions. Create endpoints that analyze user data (chapters, revisions, time blocks, sleep, FSI, consistency) and return intelligence reports. Include calculation logic for identifying weak topics, detecting burnout patterns, projecting rank based on progress trajectory, and generating personalized daily recommendations.",
+      "reqIds": [
+        "REQ-114"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-86",
+      "summary": "Add backend alert monitoring system that tracks conditions for FSI decline, revision stagnation, and excessive deep work hours. Create endpoints to check alert conditions and return active alerts list. Implement alert history tracking to prevent repeatedly triggering same alert. Store alert dismissal status per user.",
+      "reqIds": [
+        "REQ-116"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-87",
+      "summary": "Remove AIR rank projection estimator from Intelligence Engine component",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-88",
+      "summary": "Remove SleepTracker component entirely and remove sleep quality (10%) from FSI calculation formula",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-89",
+      "summary": "Add chapter name display field within each time block card in FlexibleScheduleGrid component, showing it prominently alongside time, subject, and topic",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-92",
+      "summary": "Remove the sleep quality factor (10%) from the Focus Stability Index (FSI) calculation formula. Update the FSI calculation to redistribute the weighting: 50% deep work hours, 25% task switching penalty, 25% distraction penalty. Remove all sleep-related data dependencies from FSI calculation logic.",
+      "reqIds": [
+        "REQ-123"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-93",
+      "summary": "Remove all backend endpoints and data models related to sleep tracking. Delete sleep data storage structures, CRUD operations for sleep entries, and any queries that fetch sleep history. Remove the sleepData field from the UserData type in backend/main.mo.",
+      "reqIds": [
+        "REQ-124"
       ],
       "status": "pending"
     }

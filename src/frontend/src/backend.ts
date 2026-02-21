@@ -95,6 +95,7 @@ export interface TimeSlot {
     activityType: string;
     endTime: Time;
     description: string;
+    chapter: string;
     isComplete: boolean;
 }
 export type Time = bigint;
@@ -127,7 +128,7 @@ export interface Chapter {
 }
 export interface backendInterface {
     addChapter(name: string, subject: string, revisionInterval: bigint, difficulty: string, importance: string): Promise<Chapter>;
-    addTimeSlot(startTime: Time, endTime: Time, activityType: string, description: string): Promise<TimeSlot>;
+    addTimeSlot(startTime: Time, endTime: Time, activityType: string, description: string, chapter: string): Promise<TimeSlot>;
     deleteTimeSlot(id: bigint): Promise<void>;
     getAllChapters(): Promise<Array<Chapter>>;
     getPerformanceBlocks(): Promise<Array<PerformanceBlock>>;
@@ -147,7 +148,7 @@ export interface backendInterface {
     toggleCompletion(id: bigint): Promise<TimeSlot>;
     updateChapterRevision(chapterId: bigint, theoryCompleted: boolean, pyqsCompleted: boolean, advancedPracticeCompleted: boolean): Promise<void>;
     updateConsistency(isConsistent: boolean, currentDate: string): Promise<ConsistencyDNA>;
-    updateTimeSlot(id: bigint, startTime: Time, endTime: Time, activityType: string, description: string): Promise<TimeSlot>;
+    updateTimeSlot(id: bigint, startTime: Time, endTime: Time, activityType: string, description: string, chapter: string): Promise<TimeSlot>;
     updateWarModeStats(pomodoros: bigint, studyTime: bigint): Promise<void>;
 }
 import type { Chapter as _Chapter, ConsistencyDNA as _ConsistencyDNA, Time as _Time } from "./declarations/backend.did.d.ts";
@@ -167,17 +168,17 @@ export class Backend implements backendInterface {
             return from_candid_Chapter_n1(this._uploadFile, this._downloadFile, result);
         }
     }
-    async addTimeSlot(arg0: Time, arg1: Time, arg2: string, arg3: string): Promise<TimeSlot> {
+    async addTimeSlot(arg0: Time, arg1: Time, arg2: string, arg3: string, arg4: string): Promise<TimeSlot> {
         if (this.processError) {
             try {
-                const result = await this.actor.addTimeSlot(arg0, arg1, arg2, arg3);
+                const result = await this.actor.addTimeSlot(arg0, arg1, arg2, arg3, arg4);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addTimeSlot(arg0, arg1, arg2, arg3);
+            const result = await this.actor.addTimeSlot(arg0, arg1, arg2, arg3, arg4);
             return result;
         }
     }
@@ -369,17 +370,17 @@ export class Backend implements backendInterface {
             return from_candid_ConsistencyDNA_n7(this._uploadFile, this._downloadFile, result);
         }
     }
-    async updateTimeSlot(arg0: bigint, arg1: Time, arg2: Time, arg3: string, arg4: string): Promise<TimeSlot> {
+    async updateTimeSlot(arg0: bigint, arg1: Time, arg2: Time, arg3: string, arg4: string, arg5: string): Promise<TimeSlot> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateTimeSlot(arg0, arg1, arg2, arg3, arg4);
+                const result = await this.actor.updateTimeSlot(arg0, arg1, arg2, arg3, arg4, arg5);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateTimeSlot(arg0, arg1, arg2, arg3, arg4);
+            const result = await this.actor.updateTimeSlot(arg0, arg1, arg2, arg3, arg4, arg5);
             return result;
         }
     }

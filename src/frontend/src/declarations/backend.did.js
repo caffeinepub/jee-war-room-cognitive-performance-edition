@@ -29,6 +29,7 @@ export const TimeSlot = IDL.Record({
   'activityType' : IDL.Text,
   'endTime' : Time,
   'description' : IDL.Text,
+  'chapter' : IDL.Text,
   'isComplete' : IDL.Bool,
 });
 export const PerformanceBlock = IDL.Record({
@@ -51,7 +52,11 @@ export const idlService = IDL.Service({
       [Chapter],
       [],
     ),
-  'addTimeSlot' : IDL.Func([Time, Time, IDL.Text, IDL.Text], [TimeSlot], []),
+  'addTimeSlot' : IDL.Func(
+      [Time, Time, IDL.Text, IDL.Text, IDL.Text],
+      [TimeSlot],
+      [],
+    ),
   'deleteTimeSlot' : IDL.Func([IDL.Nat], [], []),
   'getAllChapters' : IDL.Func([], [IDL.Vec(Chapter)], ['query']),
   'getPerformanceBlocks' : IDL.Func([], [IDL.Vec(PerformanceBlock)], ['query']),
@@ -90,7 +95,7 @@ export const idlService = IDL.Service({
     ),
   'updateConsistency' : IDL.Func([IDL.Bool, IDL.Text], [ConsistencyDNA], []),
   'updateTimeSlot' : IDL.Func(
-      [IDL.Nat, Time, Time, IDL.Text, IDL.Text],
+      [IDL.Nat, Time, Time, IDL.Text, IDL.Text, IDL.Text],
       [TimeSlot],
       [],
     ),
@@ -121,6 +126,7 @@ export const idlFactory = ({ IDL }) => {
     'activityType' : IDL.Text,
     'endTime' : Time,
     'description' : IDL.Text,
+    'chapter' : IDL.Text,
     'isComplete' : IDL.Bool,
   });
   const PerformanceBlock = IDL.Record({
@@ -143,7 +149,11 @@ export const idlFactory = ({ IDL }) => {
         [Chapter],
         [],
       ),
-    'addTimeSlot' : IDL.Func([Time, Time, IDL.Text, IDL.Text], [TimeSlot], []),
+    'addTimeSlot' : IDL.Func(
+        [Time, Time, IDL.Text, IDL.Text, IDL.Text],
+        [TimeSlot],
+        [],
+      ),
     'deleteTimeSlot' : IDL.Func([IDL.Nat], [], []),
     'getAllChapters' : IDL.Func([], [IDL.Vec(Chapter)], ['query']),
     'getPerformanceBlocks' : IDL.Func(
@@ -186,7 +196,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'updateConsistency' : IDL.Func([IDL.Bool, IDL.Text], [ConsistencyDNA], []),
     'updateTimeSlot' : IDL.Func(
-        [IDL.Nat, Time, Time, IDL.Text, IDL.Text],
+        [IDL.Nat, Time, Time, IDL.Text, IDL.Text, IDL.Text],
         [TimeSlot],
         [],
       ),

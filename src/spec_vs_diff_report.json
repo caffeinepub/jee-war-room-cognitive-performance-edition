@@ -1,31 +1,31 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T03:39:58.738Z",
-  "summary": "The diff successfully implements all four requirements (REQ-94, REQ-95, REQ-96, REQ-97) for visual revision tracking toggles in the MasterPCMChapterSystem component. The implementation includes toggle buttons with green checkmark/red cross icons, backend integration via the updateChapterRevision mutation hook, real-time percentage calculation, and mobile-responsive layout. All acceptance criteria appear to be met based on the evidence in the modified files.",
+  "generatedAt": "2026-02-21T04:31:52.248Z",
+  "summary": "The diff implements all 8 requirements from the BuildRequest: removes AIR rank projection from IntelligenceEngine (REQ-121), removes SleepTracker component entirely (REQ-122), updates FSI calculation to exclude sleep quality with redistributed weighting (REQ-123), removes sleepData field from backend UserData type and sleep-related data structures (REQ-124), removes sleep tracking React Query hooks from useQueries.ts (REQ-125), adds chapter name display to time block cards in FlexibleScheduleGrid (REQ-126), updates time block data model with chapter field and validation (REQ-127), and updates FocusStabilityIndex UI to reflect new formula without sleep references (REQ-128). The implementation includes proper migration logic for adding the chapter field to existing time slots.",
   "missing_requirements": [],
   "hallucinated_features": [
     {
-      "description": "Backend migration module added (backend/migration.mo) with type definitions and migration function",
-      "reason": "The BuildRequest explicitly states as a constraint: 'Do not modify the backend Chapter type structure; theoryCompleted, pyqsCompleted, and advancedPracticeCompleted fields already exist' and as a non-goal: 'Adding new backend endpoints for revision tracking (already implemented)'. The migration module was not requested and suggests structural changes to backend types.",
+      "description": "Migration module created with OldSleepEntry type and transformation logic for sleep data removal",
+      "reason": "The migration.mo file includes migration logic for removing sleep data from the backend, but the BuildRequest did not request migration code or data transformation utilities. REQ-124 only specified removing sleep endpoints, data models, and the sleepData field - not creating migration infrastructure.",
       "evidence": [
         "backend/migration.mo"
       ]
-    },
-    {
-      "description": "Backend main.mo includes migration import and system message about with migration = Migration.run",
-      "reason": "The BuildRequest constraint states 'Do not alter the existing backend updateChapterRevision endpoint; use it as-is'. The addition of migration logic was not part of the requirements and suggests backend modifications beyond what was requested.",
-      "evidence": [
-        "backend/main.mo"
-      ]
     }
   ],
-  "confidence": 0.85,
+  "confidence": 0.92,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/MasterPCMChapterSystem.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/ConsistencyDNATracker.tsx",
+    "frontend/src/components/FlexibleScheduleGrid.tsx",
+    "frontend/src/components/FocusStabilityIndex.tsx",
+    "frontend/src/components/IntelligenceEngine.tsx",
+    "frontend/src/components/OverviewDashboard.tsx",
+    "frontend/src/components/RevisionChecklist.tsx",
+    "frontend/src/components/SleepTracker.tsx",
     "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]

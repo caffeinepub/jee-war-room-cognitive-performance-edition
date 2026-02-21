@@ -1,254 +1,162 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Zap, BookOpen, Target, Clock, AlertTriangle, Loader2 } from 'lucide-react';
-import { useGetAllChapters, useGetWarModeStats } from '../hooks/useQueries';
-import TopPYQsTracker from './TopPYQsTracker';
-import WarModeConfigModal from './WarModeConfigModal';
+import { useGetAllChapters } from '../hooks/useQueries';
+import FlexibleScheduleGrid from './FlexibleScheduleGrid';
+import ConsistencyDNATracker from './ConsistencyDNATracker';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { BookOpen, CheckCircle2, TrendingUp } from 'lucide-react';
 
-interface WarModeConfig {
-  focusDuration: number;
-  breakDuration: number | null;
-  breaksEnabled: boolean;
-}
+export default function OverviewDashboard() {
+  const { data: chapters = [], isLoading } = useGetAllChapters();
 
-interface OverviewDashboardProps {
-  onStartWarMode: (config: WarModeConfig) => void;
-}
-
-export default function OverviewDashboard({ onStartWarMode }: OverviewDashboardProps) {
-  const [isWarModeModalOpen, setIsWarModeModalOpen] = useState(false);
-  const { data: chapters = [], isLoading: chaptersLoading } = useGetAllChapters();
-  const { data: warModeStats, isLoading: statsLoading } = useGetWarModeStats();
-
-  // Calculate chapter completion percentage
   const totalChapters = chapters.length;
-  const completedChapters = chapters.filter((ch) => ch.isComplete).length;
-  const chapterCompletionPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+  const completedChapters = chapters.filter((c) => c.isComplete).length;
+  const completionPercentage = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
 
-  // Calculate overall revision coverage
-  const calculateRevisionCoverage = () => {
-    if (totalChapters === 0) return 0;
-    
-    const totalRevisionPercentage = chapters.reduce((sum, chapter) => {
-      const completedFields = [
-        chapter.theoryCompleted,
-        chapter.pyqsCompleted,
-        chapter.advancedPracticeCompleted,
-      ].filter(Boolean).length;
-      return sum + (completedFields / 3) * 100;
-    }, 0);
-    
-    return Math.round(totalRevisionPercentage / totalChapters);
-  };
+  const physicsChapters = chapters.filter((c) => c.subject === 'Physics');
+  const chemistryChapters = chapters.filter((c) => c.subject === 'Chemistry');
+  const mathsChapters = chapters.filter((c) => c.subject === 'Maths');
 
-  const overallRevisionCoverage = calculateRevisionCoverage();
-
-  // Calculate subject-wise revision coverage
-  const calculateSubjectRevision = (subject: string) => {
-    const subjectChapters = chapters.filter((ch) => ch.subject === subject);
-    if (subjectChapters.length === 0) return 0;
-    
-    const totalRevisionPercentage = subjectChapters.reduce((sum, chapter) => {
-      const completedFields = [
-        chapter.theoryCompleted,
-        chapter.pyqsCompleted,
-        chapter.advancedPracticeCompleted,
-      ].filter(Boolean).length;
-      return sum + (completedFields / 3) * 100;
-    }, 0);
-    
-    return Math.round(totalRevisionPercentage / subjectChapters.length);
-  };
-
-  // Get critical incomplete chapters (not complete and high importance)
-  const criticalIncompleteChapters = chapters
-    .filter((ch) => !ch.isComplete && ch.importance === 'High')
-    .slice(0, 3);
-
-  // Calculate PCM ratio
-  const physicsChapters = chapters.filter((ch) => ch.subject === 'Physics').length;
-  const chemistryChapters = chapters.filter((ch) => ch.subject.includes('Chemistry')).length;
-  const mathsChapters = chapters.filter((ch) => ch.subject === 'Mathematics').length;
-
-  // Convert War Mode study time from minutes to hours with 1 decimal place
-  const totalWarModeHours = warModeStats?.totalWarModeStudyTime 
-    ? (Number(warModeStats.totalWarModeStudyTime) / 60).toFixed(1)
-    : '0.0';
-
-  const handleEnterWarMode = (config: WarModeConfig) => {
-    console.log('[OverviewDashboard] War Mode config received:', config);
-    setIsWarModeModalOpen(false);
-    onStartWarMode(config);
-  };
-
-  if (chaptersLoading || statsLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  const physicsComplete = physicsChapters.filter((c) => c.isComplete).length;
+  const chemistryComplete = chemistryChapters.filter((c) => c.isComplete).length;
+  const mathsComplete = mathsChapters.filter((c) => c.isComplete).length;
 
   return (
     <div className="space-y-6">
-      {/* War Mode Button */}
-      <Card className="border-primary/50 bg-gradient-to-br from-primary/10 to-primary/5">
-        <CardContent className="pt-6">
-          <Button
-            onClick={() => setIsWarModeModalOpen(true)}
-            size="lg"
-            className="w-full h-16 text-lg font-bold bg-primary hover:bg-primary/90 transition-all duration-200"
-          >
-            <Zap className="mr-2 h-6 w-6" />
-            ENTER WAR MODE
-          </Button>
-        </CardContent>
-      </Card>
+      {/* Flexible Schedule Grid */}
+      <FlexibleScheduleGrid />
 
-      {/* Key Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Chapter Completion */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-primary" />
-              Chapter Completion
-            </CardTitle>
+      {/* Consistency DNA Tracker */}
+      <ConsistencyDNATracker />
+
+      {/* Chapter Metrics */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="border-blue-500/20 bg-card">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Chapters</CardTitle>
+            <BookOpen className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold">{chapterCompletionPercentage}%</span>
-                <span className="text-sm text-muted-foreground">
-                  {completedChapters}/{totalChapters}
-                </span>
-              </div>
-              <Progress value={chapterCompletionPercentage} className="h-2" />
-            </div>
+            <div className="text-2xl font-bold text-foreground">{totalChapters}</div>
+            <p className="text-xs text-muted-foreground">Across PCM subjects</p>
           </CardContent>
         </Card>
 
-        {/* Overall Revision Coverage */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
-              Revision Coverage
-            </CardTitle>
+        <Card className="border-green-500/20 bg-card">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold">{overallRevisionCoverage}%</span>
-              </div>
-              <Progress value={overallRevisionCoverage} className="h-2" />
-            </div>
+            <div className="text-2xl font-bold text-foreground">{completedChapters}</div>
+            <p className="text-xs text-muted-foreground">{completionPercentage}% completion rate</p>
           </CardContent>
         </Card>
 
-        {/* Total War Mode Hours */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Clock className="h-4 w-4 text-primary" />
-              War Mode Study Time
-            </CardTitle>
+        <Card className="border-orange-500/20 bg-card">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Progress</CardTitle>
+            <TrendingUp className="h-4 w-4 text-orange-400" />
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold">{totalWarModeHours}</span>
-                <span className="text-sm text-muted-foreground">hours</span>
-              </div>
-            </div>
+            <div className="text-2xl font-bold text-foreground">{completionPercentage}%</div>
+            <p className="text-xs text-muted-foreground">Overall completion</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Subject-wise Revision Coverage */}
-      <Card>
+      {/* Subject-wise Revision Status */}
+      <Card className="border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-base">Subject-wise Revision</CardTitle>
+          <CardTitle className="text-foreground">Subject-wise Revision</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {['Physics', 'Chemistry', 'Mathematics'].map((subject) => {
-            const coverage = calculateSubjectRevision(subject);
-            return (
-              <div key={subject} className="space-y-2">
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-3">
+              <div className="h-12 animate-pulse rounded bg-muted" />
+              <div className="h-12 animate-pulse rounded bg-muted" />
+              <div className="h-12 animate-pulse rounded bg-muted" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Physics */}
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{subject}</span>
-                  <span className="text-sm text-muted-foreground">{coverage}%</span>
+                  <span className="text-sm font-medium text-blue-400">Physics</span>
+                  <span className="text-xs text-muted-foreground">
+                    {physicsComplete}/{physicsChapters.length} chapters
+                  </span>
                 </div>
-                <Progress value={coverage} className="h-2" />
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full bg-blue-500 transition-all duration-300"
+                    style={{
+                      width: `${physicsChapters.length > 0 ? (physicsComplete / physicsChapters.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
               </div>
-            );
-          })}
+
+              {/* Chemistry */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-green-400">Chemistry</span>
+                  <span className="text-xs text-muted-foreground">
+                    {chemistryComplete}/{chemistryChapters.length} chapters
+                  </span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full bg-green-500 transition-all duration-300"
+                    style={{
+                      width: `${chemistryChapters.length > 0 ? (chemistryComplete / chemistryChapters.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Maths */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-orange-400">Maths</span>
+                  <span className="text-xs text-muted-foreground">
+                    {mathsComplete}/{mathsChapters.length} chapters
+                  </span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full bg-orange-500 transition-all duration-300"
+                    style={{
+                      width: `${mathsChapters.length > 0 ? (mathsComplete / mathsChapters.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* PCM Ratio */}
-      <Card>
+      {/* PCM Distribution */}
+      <Card className="border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-base">PCM Chapter Distribution</CardTitle>
+          <CardTitle className="text-foreground">PCM Distribution</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-around">
+          <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-500">{physicsChapters}</div>
-              <div className="text-xs text-muted-foreground">Physics</div>
+              <div className="text-2xl font-bold text-blue-400">{physicsChapters.length}</div>
+              <p className="text-xs text-muted-foreground">Physics</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-500">{chemistryChapters}</div>
-              <div className="text-xs text-muted-foreground">Chemistry</div>
+              <div className="text-2xl font-bold text-green-400">{chemistryChapters.length}</div>
+              <p className="text-xs text-muted-foreground">Chemistry</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-500">{mathsChapters}</div>
-              <div className="text-xs text-muted-foreground">Maths</div>
+              <div className="text-2xl font-bold text-orange-400">{mathsChapters.length}</div>
+              <p className="text-xs text-muted-foreground">Maths</p>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Critical Incomplete Chapters */}
-      {criticalIncompleteChapters.length > 0 && (
-        <Card className="border-destructive/50">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              Critical Incomplete Chapters
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {criticalIncompleteChapters.map((chapter) => (
-                <div
-                  key={String(chapter.id)}
-                  className="flex items-center justify-between p-3 bg-destructive/10 rounded-lg"
-                >
-                  <div>
-                    <div className="font-medium">{chapter.name}</div>
-                    <div className="text-sm text-muted-foreground">{chapter.subject}</div>
-                  </div>
-                  <Badge variant="destructive">{chapter.importance}</Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Top PYQs Tracker */}
-      <TopPYQsTracker />
-
-      {/* War Mode Config Modal */}
-      <WarModeConfigModal
-        open={isWarModeModalOpen}
-        onOpenChange={setIsWarModeModalOpen}
-        onEnterWarMode={handleEnterWarMode}
-      />
     </div>
   );
 }
